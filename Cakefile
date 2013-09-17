@@ -1,5 +1,6 @@
 {print} = require 'util'
 {spawn} = require 'child_process'
+jade   = require 'jade'
 
 task 'build', 'Build lib/ from src/', ->
   coffee = spawn 'node_modules/.bin/coffee', ['-c', '-m', '-o', 'lib', 'src']

@@ -1,2 +1,2 @@
 Nex = @Nex = {}
-module?.exports  = Nex
+module?.exports = Nex
