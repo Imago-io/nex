@@ -1,3 +1,5 @@
+Nex  = @Nex or require('nex')
+
 requestAnimationFrame = do ->
   request =
     window.requestAnimationFrame or
@@ -106,7 +108,7 @@ alphaNumSort = alphanum = (a, b) ->
     x++
   aa.length - bb.length
 
-module.exports =
+Nex.Utils =
   requestAnimationFrame: requestAnimationFrame
   cookie               : cookie
   sha                  : sha
@@ -115,3 +117,5 @@ module.exports =
   queryfy              : queryfy
   normalize            : normalize
   alphaNumSort         : alphaNumSort
+
+module.exports = Nex.Utils

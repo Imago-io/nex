@@ -1,4 +1,6 @@
-Gallery =
+Nex  = @Nex or require('nex')
+
+Nex.Gallery =
   next: =>
     return unless @cur < (@manager.controllers.length - 1)
     @cur++
@@ -10,4 +12,4 @@ Gallery =
     @manager.controllers[@cur].active()
 
 
-module.exports = Gallery
+module.exports = Nex.Gallery
