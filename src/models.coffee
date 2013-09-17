@@ -207,7 +207,7 @@ class Asset extends Spine.Model
     return @get_model(id).exists(id)
 
   @get_model: (id_or_kind) ->
-    return models[id_or_kind] or models[@id_to_kind(id_or_kind)]
+    return Nex.Models[id_or_kind] or Nex.Models[@id_to_kind(id_or_kind)]
 
   @create_or_update: (attrs, options) ->
     model = @get_model(attrs.id)
