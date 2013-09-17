@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "widgets.js",
+  "sourceRoot": "..",
+  "sources": [
+    "src/widgets.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;CAAA,CAAA,CAAG,IAAH;CACE,CAAO,EAAP,CAAA,EAAO,EAAA;CAAP,CACO,EAAP,CAAA,EAAO,EAAA;CAFT,GAAA;;CAAA,CAIA,CAAiB,GAAX,CAAN;CAJA"
+}

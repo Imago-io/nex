@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "nex.js",
+  "sourceRoot": "..",
+  "sources": [
+    "src/nex.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;CAAA,EAAA,GAAA;;CAAA,CAAA,CAAA,CAAO;;;CACC,EAAU,CAAlB,EAAM,CAAN;IADA;CAAA"
+}
