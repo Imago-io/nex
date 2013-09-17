@@ -9,6 +9,7 @@ class Video extends Spine.Controller
     # keyShortcut : true
     size        : 'hd'
     align       : 'left top'
+    sizemode    : 'fit'
 
   events:
     'mousemove'       : 'activateControls'
