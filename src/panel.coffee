@@ -1,5 +1,5 @@
-Asset   = require('models/model').Asset
-Setting = require('models/model').Setting
+Asset   = require('./model').Asset
+Setting = require('./model').Setting
 
 
 Panel =
