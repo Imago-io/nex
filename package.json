@@ -1,5 +1,5 @@
 {
-  "name": "nexspine",
+  "name": "nex",
   "description": "Lazy Framework",
   "version": "0.0.1",
   "author": {
@@ -24,15 +24,9 @@
   "devDependencies": {
     "coffee-script": ">=1.6.3"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/spine/spine/blob/master/LICENSE"
-    }
-  ],
   "repository": {
     "type": "git",
-    "url": "ssh://git@git.nex9.com/repo/nex.spine"
+    "url": "git+ssh://git@git.nex9.com/repo/nex"
   },
   "main": "./index.js",
   "scripts": {
@@ -40,6 +34,6 @@
   },
   "readme": "lazy coding",
   "readmeFilename": "README.md",
-  "_id": "nexspine@0.0.1",
-  "_from": "nexspine@~0.0.1"
+  "_id": "nex@0.0.1",
+  "_from": "nex@~0.0.1"
 }
