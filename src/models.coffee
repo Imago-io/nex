@@ -106,6 +106,8 @@ Search =
       unless !!Object.keys(params).length
         toFetch = (id for id in collection.assets when not @globalExists(id))
         assets  = (@globalFind(id) for id in collection.assets when @globalExists(id))
+        if not toFetch.length
+          assets = (a for a in assets when a.id not in collection.hidden)
       return deferred.resolve(assets) unless !!toFetch.length
 
       # fetch assets
