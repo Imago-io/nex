@@ -3,9 +3,10 @@ Nex  = @Nex or require('nex')
 Nex.Panel =
   getData: (path) ->
     return @log "Panel: path is empty, aborting #{path}" unless path
-    return if path is @path
+    # return if path is @path
 
     @path = path
+    console.log '(Nex.Panel) path: ', path if Nex.debug
     Nex.Models.Asset.get(path: path)
       .done(=> @trigger 'ready', arguments...)
       .fail(=> @log "Panel: Could not get data for panel #{path}")

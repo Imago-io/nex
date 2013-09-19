@@ -110,7 +110,6 @@ Search =
         assets  = (@globalFind(id) for id in collection.assets when @globalExists(id))
       return deferred.resolve(assets) unless !!toFetch.length
 
-      console.log 'going to fetch...'
       # fetch assets
       params.ids = toFetch
       params.ancestor = collection.id

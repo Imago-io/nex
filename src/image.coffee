@@ -1,12 +1,3 @@
-# Variables
-
-# @w        jQuery window object
-
-# @width    width requested
-# @height   height requested
-
-
-
 class Image extends Spine.Controller
   className: 'imagoimage'
 
@@ -72,12 +63,17 @@ class Image extends Spine.Controller
     @status = 'preloading'
 
     # use pvrovided dimentions or current size of @el
-    width  =  @width  * @scale or @el.width()
-    height =  @height * @scale or @el.height()
+    # fallback if element is not in dom rendered it has no dimensions yet
+    width  =  (@width  * @scale) or @el.width()  or 500
+    height =  (@height * @scale) or @el.height() or 500
+
+    # @log 'real', width, @width, @el.width()
 
     # limit size to steps
     width  = Math.round(width  / 50) * 50 if width
     height = Math.round(height / 50) * 50 if height
+
+    # @log 'rounded', width, height
 
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
     @serving_url = @src
@@ -85,6 +81,8 @@ class Image extends Spine.Controller
     # @serving_url += "-c" if @sizemode is 'crop'
     @serving_url += "-w#{width  * dpr}" if Number(width)
     @serving_url += "-h#{height * dpr}" if Number(height)
+
+    # @log '@serving_url', @serving_url
 
     # create image and bind load event
     img = $('<img>').bind 'load', @imgLoaded
@@ -112,7 +110,7 @@ class Image extends Spine.Controller
     @el.removeClass('loaded')
     @image.css(css)
 
-    @delay @loadedClass, 10
+    @delay @loadedClass, 500
 
   calcMediaSize: =>
     width  =  @width  or @el.width()
