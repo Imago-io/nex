@@ -67,7 +67,9 @@ Search =
       contentType: 'application/json'
       dataType: 'json'
       processData: false
-      headers: {'X-Requested-With': 'XMLHttpRequest'}
+      headers:
+        'X-Requested-With': 'XMLHttpRequest'
+        'NexClient':        'public'
       type: 'POST'
       data: JSON.stringify(params)
       url:  if Spine.debug then "http://#{Spine.settings.tenant}.pepe.imagoapp.com/api/v2/search" else "/api/v2/search"
