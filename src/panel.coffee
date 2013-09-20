@@ -8,7 +8,10 @@ Nex.Panel =
     @path = path
     console.log '(Nex.Panel) path: ', path if Nex.debug
     Nex.Models.Asset.get(path: path)
-      .done(=> @trigger 'ready', arguments...)
+      .done(=>
+        @log '(Nex.Panel) result: ', arguments... if Nex.debug
+        @trigger 'ready', arguments...
+      )
       .fail(=> @log "Panel: Could not get data for panel #{path}")
 
   setTitle: (result) ->
