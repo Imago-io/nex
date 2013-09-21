@@ -78,9 +78,9 @@ class Image extends Spine.Controller
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
     @serving_url = @src
     @serving_url += "=s#{ Math.min(Math.max(width, height) * dpr, 2000) }"
-    @serving_url += "-c" if @sizemode is 'crop'
-    @serving_url += "-w#{width  * dpr}" if Number(width)
-    @serving_url += "-h#{height * dpr}" if Number(height)
+    # @serving_url += "-c" if @sizemode is 'crop'
+    # @serving_url += "-w#{width  * dpr}" if Number(width)
+    # @serving_url += "-h#{height * dpr}" if Number(height)
 
     # @log '@serving_url', @serving_url
 
