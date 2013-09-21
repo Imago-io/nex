@@ -64,8 +64,8 @@ class Image extends Spine.Controller
 
     # use pvrovided dimentions or current size of @el
     # fallback if element is not in dom rendered it has no dimensions yet
-    width  =  (@width  * @scale) or @el.width()  #or 500
-    height =  (@height * @scale) or @el.height() #or 500
+    width  =  (@width  * @scale) or @el.width()  or 500
+    height =  (@height * @scale) or @el.height() or 500
 
     @log 'preload', width, height
 
