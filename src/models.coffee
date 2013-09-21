@@ -72,7 +72,7 @@ Search =
         'NexClient':        'public'
       type: 'POST'
       data: JSON.stringify(params)
-      url:  if Nex.debug then "http://#{Spine.settings.tenant}.imagoapp.com/api/v2/search" else "/api/v2/search")
+      url:  if Nex.debug then "http://#{Nex.tenant}.imagoapp.com/api/v2/search" else "/api/v2/search")
 
     @jqXHR
 
@@ -278,6 +278,8 @@ class Setting extends Spine.Model
     settings
 
   @extend Spine.Model.Ajax
+
+
 
 Nex.Models =
   Collection: Collection

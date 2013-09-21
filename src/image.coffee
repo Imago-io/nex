@@ -67,7 +67,7 @@ class Image extends Spine.Controller
     width  =  (@width  * @scale) or @el.width()  or 500
     height =  (@height * @scale) or @el.height() or 500
 
-    @log 'preload', width, height
+    # @log 'preload', width, height
 
     # limit size to steps
     width  = Math.round(width  / 50) * 50 if width
@@ -110,7 +110,7 @@ class Image extends Spine.Controller
     @el.removeClass('loaded')
     @image.css(css)
 
-    @delay @loadedClass, 500
+    @delay @loadedClass, 1
 
   calcMediaSize: =>
     width  =  @width  or @el.width()

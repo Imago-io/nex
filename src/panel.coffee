@@ -6,10 +6,10 @@ Nex.Panel =
     # return if path is @path
 
     @path = path
-    console.log '(Nex.Panel) path: ', path if Nex.debug
+    # @log '(Nex.Panel) path: ', path if Nex.debug
     Nex.Models.Asset.get(path: path)
       .done(=>
-        @log '(Nex.Panel) result: ', arguments... if Nex.debug
+        # @log '(Nex.Panel) result: ', arguments... if Nex.debug
         @trigger 'ready', arguments...
       )
       .fail(=> @log "Panel: Could not get data for panel #{path}")
