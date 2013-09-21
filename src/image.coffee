@@ -64,10 +64,10 @@ class Image extends Spine.Controller
 
     # use pvrovided dimentions or current size of @el
     # fallback if element is not in dom rendered it has no dimensions yet
-    width  =  (@width  * @scale) or @el.width()  or 500
-    height =  (@height * @scale) or @el.height() or 500
+    width  =  (@width  * @scale) or @el.width()  #or 500
+    height =  (@height * @scale) or @el.height() #or 500
 
-    # @log 'real', width, @width, @el.width()
+    @log 'preload', width, height
 
     # limit size to steps
     width  = Math.round(width  / 50) * 50 if width
@@ -77,8 +77,8 @@ class Image extends Spine.Controller
 
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
     @serving_url = @src
-    @serving_url += "=s#{ Math.min(Math.max(width, height) * dpr, 1600) }"
-    # @serving_url += "-c" if @sizemode is 'crop'
+    @serving_url += "=s#{ Math.min(Math.max(width, height) * dpr, 2000) }"
+    @serving_url += "-c" if @sizemode is 'crop'
     @serving_url += "-w#{width  * dpr}" if Number(width)
     @serving_url += "-h#{height * dpr}" if Number(height)
 
