@@ -12,7 +12,7 @@ Search =
       items: []
       count: 0
 
-    # @jqXHR.abort('abort') if @jqXHR
+    @jqXHR.abort('abort') if @jqXHR
 
     getAssetsDone = (assets) =>
       if assets.length and result.kind is 'Collection'

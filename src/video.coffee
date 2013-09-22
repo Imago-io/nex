@@ -249,6 +249,7 @@ class VideoElement extends Spine.Controller
     @video.load()
 
   play: ->
+    @player.el.css 'background', 'none'
     @video.play()
 
   pause: ->
