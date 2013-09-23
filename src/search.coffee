@@ -90,7 +90,9 @@ Nex.Search =
       return deferred.resolve(collection)
     else
       # fetch collection
-      @getSearch(params).done( (data, status, xhr) =>
+      colparams = {'path' : params.path}
+      @getSearch(colparams).done( (data, status, xhr) =>
+        delete params.path
         collection = @parseData(data)[0]
         deferred.resolve(collection)
       )
