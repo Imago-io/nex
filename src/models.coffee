@@ -99,6 +99,13 @@ class Setting extends Spine.Model
   @extend Spine.Model.Ajax
 
 
+class CartItem extends Spine.Model
+  @configure 'CartItem', 'headline', 'description', 'serving_url',
+                         'quantity', 'taxable', 'price', 'weight'
+
+  @extend Spine.Model.Ajax
+
+
 
 Nex.Models =
   Collection: Collection
@@ -108,5 +115,6 @@ Nex.Models =
   Proxy     : Proxy
   Setting   : Setting
   Generic   : Generic
+  CartItem  : CartItem
 
 module.exports = Nex.Models
