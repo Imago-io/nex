@@ -77,7 +77,6 @@ Nex.Pusher =
     # VideoModel      = @get_model('Video')
     CollectionModel = @get_model('Collection')
     asset = @globalFind(message.from_id)
-    console.log 'asset is', asset
     if @globalExists(message.to_id)
       # the destination video is already in the system
       p_holder = asset

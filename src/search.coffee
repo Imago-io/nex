@@ -3,6 +3,9 @@ Nex  = @Nex or require('nex')
 Nex.Search =
 
   get: (params, abortable) ->
+    if abortable is undefined and Nex.client is 'public'
+      abortable = true
+
     @jqXHR.abort('abort') if abortable and @jqXHR
 
     params   = @objListToDict(params)
