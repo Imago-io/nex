@@ -150,7 +150,7 @@ Nex.Search =
     else
       for key of obj_or_list
         value = obj_or_list[key]
-        querydict[key] = value if Spine.isArray(value) else value
+        querydict[key] = if Spine.isArray(value) then value else [value]
 
     if querydict.collection?
       querydict['path'] = querydict.collection
