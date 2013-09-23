@@ -14,10 +14,9 @@ Nex.Search =
       count: 0
 
     getAssetsDone = (assets) =>
-      if assets.length and result.kind is 'Collection'
+      if result.kind is 'Collection'
         result.items = @sortassets(result.assets, assets)
         result.count = assets.length
-
       deferred.resolve(result)
 
     getAssetsFail = () ->
@@ -151,10 +150,7 @@ Nex.Search =
     else
       for key of obj_or_list
         value = obj_or_list[key]
-        if not Spine.isArray(value)
-          querydict[key] = [value]
-        else
-          querydict[key] = value
+        querydict[key] = value if Spine.isArray(value) else value
 
     if querydict.collection?
       querydict['path'] = querydict.collection
