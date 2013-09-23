@@ -14,23 +14,19 @@ Nex.Pusher =
     methods[message.action](message)
 
   parse_data: (data, options = {ajax : false}) ->
-    console.log 'parse_data', data
     for asset in data
       continue unless asset
       # console.log 'asset is', asset
       if asset.kind == 'Collection'
         existing = @globalExists(asset.id)
-        console.log 'existing', existing
         if existing
           tgllist   = @_diffresult(asset.hidden, existing.hidden)
           assetchng = @_diffresult(asset.assets, existing.assets)
           adds      = (i for i in assetchng when i not in existing.assets)
           deletes   = (i for i in assetchng when i not in asset.assets)
-          console.log 'assets', assetchng
           if not assetchng.length
             orderchange = @_orderdiff(existing.assets, asset.assets)
           # console.log 'in successResponse adds:', adds.length, 'deletes', deletes.length
-          console.log 'orderchange', orderchange
       item = @create_or_update(asset, options)
       if tgllist?
         for id in tgllist
@@ -67,7 +63,10 @@ Nex.Pusher =
     if message.data
       @parse_data(message.data)
     else
-      @get(ids : [message.id], false)
+      @getSearch(ids : [message.id])
+        .done((data, status, xhr) =>
+          @parse_data(data)
+        )
 
   _delete: (message) =>
     # console.log 'delete message', message
