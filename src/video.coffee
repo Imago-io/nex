@@ -10,6 +10,7 @@ class Video extends Spine.Controller
     size        : 'hd'
     align       : 'left top'
     sizemode    : 'fit'
+    lazy        : true
 
   events:
     'mousemove'       : 'activateControls'
@@ -28,6 +29,8 @@ class Video extends Spine.Controller
     super
     @logPrefix = '(App) Video: '
 
+    @id = Nex.Utils.uuid()
+
     @append @videoEl = new VideoElement(player: @)
     @video = @videoEl.video
 
@@ -44,7 +47,7 @@ class Video extends Spine.Controller
     @el.width(@width)   if @width
     @el.height(@height) if @height
 
-    w = $(window).on 'resize', @resize
+    w = $(window).on "resize.#{@id}", @resize
 
     # convert resolution string to object
     if typeof @resolution is 'string'
@@ -126,7 +129,7 @@ class Video extends Spine.Controller
           height: "#{ height }px"
 
   setupPosterFrame: ->
-    # @log 'setupPosterFrame'
+    return if not ($.inviewport @el, threshold: 0) and @lazy
     # use pvrovided dimentions or current size of @el
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
     width  = @width  or @el.width()

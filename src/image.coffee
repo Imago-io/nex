@@ -6,6 +6,8 @@ class Image extends Spine.Controller
     sizemode  : 'fit'              # fit, crop
     hires     : true
     scale     : 1
+    lazy      : true
+    maxSize   : 2000
 
   events:
     'resize' : 'render'
@@ -21,6 +23,8 @@ class Image extends Spine.Controller
     super
     @logPrefix = '(App) Image: '
 
+    @id = Nex.Utils.uuid()
+
     @html '<div class="image"></div><div class="spin"></div><div class="spin2"></div>'
 
     # set size of wrapper if provided
@@ -29,12 +33,13 @@ class Image extends Spine.Controller
 
     @el.addClass(@class)
 
-    w = $(window)
+    @window = $(window)
     # bind to window resize if no dimentions are provided
     if not @width and not @height
-      w.on 'resizestop', @preload
+      @window.on "resizestop.#{@id}", @preload
     # bind css background size calculation
-    w.on 'resize', @resize
+    @window.on "resize.#{@id}", @resize
+    @window.one "scrollstop.#{@id}", @preload if @lazy
 
     # convert resolution string to object
     if typeof @resolution is 'string'
@@ -46,12 +51,13 @@ class Image extends Spine.Controller
     @render()
 
   render: =>
+    return unless @src
     # wait till @el is added to dom
+
     unless @el.width()
       @delay @render, 250
       return
 
-    return unless @src
     @preload()
 
   resize: =>
@@ -60,6 +66,8 @@ class Image extends Spine.Controller
 
   preload: =>
     return if @status is 'preloading'
+    return if not ($.inviewport @el, threshold: 0) and @lazy
+
     @status = 'preloading'
 
     # use pvrovided dimentions or current size of @el
@@ -73,22 +81,22 @@ class Image extends Spine.Controller
     width  = Math.round(width  / 50) * 50 if width
     height = Math.round(height / 50) * 50 if height
 
-    # @log 'rounded', width, height
 
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
-    @serving_url = @src
-    @serving_url += "=s#{ Math.min(Math.max(width, height) * dpr, 2000) }"
-    # @serving_url += "-c" if @sizemode is 'crop'
-    # @serving_url += "-w#{width  * dpr}" if Number(width)
-    # @serving_url += "-h#{height * dpr}" if Number(height)
+    sevingSize = Math.min(Math[if @sizemode is 'fit' then 'min' else 'max'](width, height) * dpr, @maxSize)
 
-    # @log '@serving_url', @serving_url
+    # make sure we only load a new size
+    if sevingSize is @sevingSize
+      @log 'abort load. same size', @sevingSize, sevingSize
+      @status = 'loaded'
+      return
+
+    @sevingSize = sevingSize
+    @servingUrl = "#{ @src }=s#{ @sevingSize }"
 
     # create image and bind load event
     img = $('<img>').bind 'load', @imgLoaded
-    img.attr('src', @serving_url)
-
-    # @log 'preloading', @serving_url.split('=')[@serving_url.split('=').length - 1]
+    img.attr('src', @servingUrl)
 
 
   imgLoaded: =>
@@ -99,7 +107,7 @@ class Image extends Spine.Controller
     # @log 'align', @align
 
     css =
-      backgroundImage    : "url(#{@serving_url})"
+      backgroundImage    : "url(#{@servingUrl})"
       backgroundPosition : @align
       display            : "inline-block"
 
@@ -124,5 +132,9 @@ class Image extends Spine.Controller
 
   loadedClass: ->
     @el.addClass('loaded')
+
+  release: ->
+    @window.off @id
+    super
 
 module.exports = Image
