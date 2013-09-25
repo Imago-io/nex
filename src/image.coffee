@@ -87,7 +87,7 @@ class Image extends Spine.Controller
 
     # make sure we only load a new size
     if sevingSize is @sevingSize
-      @log 'abort load. same size', @sevingSize, sevingSize
+      # @log 'abort load. same size', @sevingSize, sevingSize
       @status = 'loaded'
       return
 
