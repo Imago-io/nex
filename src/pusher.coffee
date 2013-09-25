@@ -26,7 +26,7 @@ Nex.Pusher =
           deletes   = (i for i in assetchng when i not in asset.assets)
           if not assetchng.length
             orderchange = @_orderdiff(existing.assets, asset.assets)
-          console.log 'in successResponse adds:', adds.length, 'deletes', deletes.length
+          # console.log 'in successResponse adds:', adds.length, 'deletes', deletes.length
       item = @create_or_update(asset, options)
 
       if tgllist?
@@ -35,11 +35,17 @@ Nex.Pusher =
 
       if deletes?.length
         assets = (asset for asset in (@globalExists(id) for id in deletes) when asset)
-        console.log 'assets', assets.length
         item.trigger 'delete.assets', assets if assets.length
 
-      item.trigger 'add.assets', adds if adds?.length
+      if adds?.length
+        @_triggeradds(adds, item)
+
       item.trigger 'update.assets' if orderchange?.length
+
+  _triggeradds: (assetids, collection) ->
+    @get(ids: assetids).done( (result) =>
+      collection.trigger 'add.assets', result.items if result.count > 0
+      )
 
   _diffresult: (a, b) ->
     result = (i for i in a when i not in b)
