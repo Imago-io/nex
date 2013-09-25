@@ -251,7 +251,7 @@ class VideoElement extends Spine.Controller
     @el.attr 'src', srcs[(if size is "hd" then 0 else srcs.length - 1)].src
     @video.load()
 
-  play: ->
+  play: =>
     @player.el.css 'background', 'none'
     @video.play()
 
