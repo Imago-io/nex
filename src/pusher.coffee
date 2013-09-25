@@ -26,14 +26,18 @@ Nex.Pusher =
           deletes   = (i for i in assetchng when i not in asset.assets)
           if not assetchng.length
             orderchange = @_orderdiff(existing.assets, asset.assets)
-          # console.log 'in successResponse adds:', adds.length, 'deletes', deletes.length
+          console.log 'in successResponse adds:', adds.length, 'deletes', deletes.length
       item = @create_or_update(asset, options)
+
       if tgllist?
         for id in tgllist
-          # console.log 'record', @get_model(id).irecords[id]
-          @globalFind(id)?.trigger 'visibility.tile'
+          @globalExists(id)?.trigger 'visibility.tile'
 
-      item.trigger 'delete.assets', deletes if deletes?.length
+      if deletes?.length
+        assets = (asset for asset in (@globalExists(id) for id in deletes) when asset)
+        console.log 'assets', assets.length
+        item.trigger 'delete.assets', assets if assets.length
+
       item.trigger 'add.assets', adds if adds?.length
       item.trigger 'update.assets' if orderchange?.length
 
@@ -76,7 +80,8 @@ Nex.Pusher =
   _swith_ids: (message) ->
     # VideoModel      = @get_model('Video')
     CollectionModel = @get_model('Collection')
-    asset = @globalFind(message.from_id)
+    asset = @globalExists(message.from_id)
+    return unless asset
     if @globalExists(message.to_id)
       # the destination video is already in the system
       p_holder = asset
