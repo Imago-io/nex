@@ -108,14 +108,31 @@ alphaNumSort = alphanum = (a, b) ->
     x++
   aa.length - bb.length
 
+isiOS = ->
+  return !!navigator.userAgent.match(/iPad|iPhone|iPod/i)
+
+isiPad = ->
+  return !!navigator.userAgent.match(/iPad/i)
+
+isiPhone = ->
+  return !!navigator.userAgent.match(/iPhone/i)
+
+isiPod = ->
+  return !!navigator.userAgent.match(/iPod/i)
+
+
 Nex.Utils =
-  requestAnimationFrame: requestAnimationFrame
-  cookie               : cookie
-  sha                  : sha
-  uuid                 : uuid
-  urlify               : urlify
-  queryfy              : queryfy
-  normalize            : normalize
-  alphaNumSort         : alphaNumSort
+  requestAnimationFrame : requestAnimationFrame
+  cookie                : cookie
+  sha                   : sha
+  uuid                  : uuid
+  urlify                : urlify
+  queryfy               : queryfy
+  normalize             : normalize
+  alphaNumSort          : alphaNumSort
+  isiOS                 : isiOS
+  isiPad                : isiPad
+  isiPhone              : isiPhone
+  isiPod                : isiPod
 
 module.exports = Nex.Utils

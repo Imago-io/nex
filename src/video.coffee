@@ -73,15 +73,24 @@ class Video extends Spine.Controller
       height = @height or @el.height()
       wrapperRatio = width / height
       if assetRatio < wrapperRatio
-          # full width
-        s =
-          width: '100%'
-          height: 'auto'
-        if @align is 'center center'
-          s.top  = '50%'
-          s.left = 'auto'
-          s.marginTop  = "-#{ (width / assetRatio / 2) }px"
-          s.marginLeft = "0px"
+        # full width
+        if Nex.Utils.isiOS()
+          s =
+            width:  '100%'
+            height: '100%'
+          if @align is 'center center'
+            s.top  = '0'
+            s.left = '0'
+        else
+          s =
+            width:  '100%'
+            height: 'auto'
+          if @align is 'center center'
+            s.top  = '50%'
+            s.left = 'auto'
+            s.marginTop  = "-#{ (width / assetRatio / 2) }px"
+            s.marginLeft = "0px"
+
         @videoEl.el.css s
         @el.css
           backgroundSize: '100% auto'
@@ -89,14 +98,23 @@ class Video extends Spine.Controller
 
       else
         # full height
-        s =
-          width: 'auto'
-          height: '100%'
-        if @align is 'center center'
-          s.top  = 'auto'
-          s.left = '50%'
-          s.marginTop  = "0px"
-          s.marginLeft = "-#{ (height * assetRatio / 2) }px"
+        if Nex.Utils.isiOS()
+          s =
+            width:  '100%'
+            height: '100%'
+          if @align is 'center center'
+            s.top  = '0'
+            s.left = '0'
+        else
+          s =
+            width:  'auto'
+            height: '100%'
+          if @align is 'center center'
+            s.top  = 'auto'
+            s.left = '50%'
+            s.marginTop  = "0px"
+            s.marginLeft = "-#{ (height * assetRatio / 2) }px"
+
         @videoEl.el.css s
         @el.css
           backgroundSize: 'auto 100%'
@@ -252,7 +270,6 @@ class VideoElement extends Spine.Controller
     @video.load()
 
   play: =>
-    @player.el.css 'background', 'none'
     @video.play()
 
   pause: ->
