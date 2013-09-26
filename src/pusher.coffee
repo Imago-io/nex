@@ -26,7 +26,6 @@ Nex.Pusher =
           deletes   = (i for i in assetchng when i not in asset.assets)
           if not assetchng.length
             orderchange = @_orderdiff(existing.assets, asset.assets)
-          # console.log 'in successResponse adds:', adds.length, 'deletes', deletes.length
       item = @create_or_update(asset, options)
 
       if tgllist?
@@ -44,6 +43,30 @@ Nex.Pusher =
 
   _triggeradds: (assetids, collection) ->
     @get(ids: assetids).done( (result) =>
+      if assetids.length > result.items.length
+        toCreate = (i for i in assetids when i not in (x.id for x in result.items))
+        newObjs = []
+        for id in toCreate
+          kind = if id.indexOf('Col') != 0 then 'Upload' else 'Collection'
+          attrs =
+              id     : id
+              kind   : kind
+              name   : 'Processing'
+              meta   : {}
+
+          if kind is 'Collection'
+              attrs.assets = []
+              attrs.hidden = []
+
+          elem = @get_model(i).create(attrs, {ajax:false})
+          newObjs.push(elem)
+
+        result.items = result.items.concat(newObjs)
+        result.count = result.items.length
+      # sort the elems based on the collections order
+      result.items.sort( (a, b) => collection.assets.indexOf(a.id) - collection.assets.indexOf(b.id) )
+      result.items.reverse() # reverse the result to prepend them in the right order
+
       collection.trigger 'add.assets', result.items if result.count > 0
       )
 
