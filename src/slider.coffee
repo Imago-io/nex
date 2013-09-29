@@ -7,7 +7,7 @@ class Nex.Slider extends Spine.Controller
     '(App) Nex.Slider: '
 
   className:
-    'nexslider'
+    'nexslider carousel'
 
   events:
     'tap .next': 'next'
