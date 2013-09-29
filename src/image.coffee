@@ -75,7 +75,6 @@ class Image extends Spine.Controller
 
     width  =  (@width  * @scale) or @el.width()  or 500
     height =  (@height * @scale) or @el.height() or 500
-    # @log 'preload', width, height
 
     # limit size to steps
     # width  = Math.round(width  / 50) * 50 if width
@@ -83,7 +82,6 @@ class Image extends Spine.Controller
 
 
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
-    @log 'width, height', width, height
     # servingSize = Math.min(Math[if @sizemode is 'fit' then 'min' else 'max'](width, height) * dpr, @maxSize)
 
     # sizemode crop
