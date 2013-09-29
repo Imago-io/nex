@@ -72,27 +72,45 @@ class Image extends Spine.Controller
 
     # use pvrovided dimentions or current size of @el
     # fallback if element is not in dom rendered it has no dimensions yet
+
     width  =  (@width  * @scale) or @el.width()  or 500
     height =  (@height * @scale) or @el.height() or 500
-
     # @log 'preload', width, height
 
     # limit size to steps
-    width  = Math.round(width  / 50) * 50 if width
-    height = Math.round(height / 50) * 50 if height
+    # width  = Math.round(width  / 50) * 50 if width
+    # height = Math.round(height / 50) * 50 if height
 
 
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
-    sevingSize = Math.min(Math[if @sizemode is 'fit' then 'min' else 'max'](width, height) * dpr, @maxSize)
+    @log 'width, height', width, height
+    # servingSize = Math.min(Math[if @sizemode is 'fit' then 'min' else 'max'](width, height) * dpr, @maxSize)
+
+    # sizemode crop
+    if @sizemode is 'crop'
+      assetRatio = @resolution.width / @resolution.height
+      wrapperRatio = width / height
+      if assetRatio < wrapperRatio
+        # full width
+        servingSize = Math.min((Math.round(width / assetRatio) * dpr), @maxSize)
+      else
+        # full height
+        servingSize = Math.min((Math.round(height * assetRatio) * dpr), @maxSize)
+
+    # sizemode fit
+    else
+      servingSize = Math.min(Math.min(width, height) * dpr, @maxSize)
+
+
 
     # make sure we only load a new size
-    if sevingSize is @sevingSize
-      # @log 'abort load. same size', @sevingSize, sevingSize
+    if servingSize is @servingSize
+      # @log 'abort load. same size', @servingSize, servingSize
       @status = 'loaded'
       return
 
-    @sevingSize = sevingSize
-    @servingUrl = "#{ @src }=s#{ @sevingSize }"
+    @servingSize = servingSize
+    @servingUrl = "#{ @src }=s#{ @servingSize }"
 
     # create image and bind load event
     img = $('<img>').bind 'load', @imgLoaded
