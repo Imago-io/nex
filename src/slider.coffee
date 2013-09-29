@@ -26,6 +26,7 @@ class Nex.Slider extends Spine.Controller
       @[key] = value
 
     super
+    @manager = new Spine.Manager
 
     @bind 'ready', @render
     if @path then @getData @path else @active @getData
@@ -33,7 +34,7 @@ class Nex.Slider extends Spine.Controller
     @el.height(@height)
 
     @html '<div class="prev"></div><div class="next"></div>'
-    @manager = new Spine.Manager
+
 
 
   render: (result) =>
