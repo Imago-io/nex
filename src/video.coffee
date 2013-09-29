@@ -65,13 +65,13 @@ class Video extends Spine.Controller
     @
 
   resize: =>
+    width  = @width  or @el.width()
+    height = @height or @el.height()
+    wrapperRatio = width / height
     assetRatio   = @resolution.width / @resolution.height
 
     # sizemode crop
     if @sizemode is 'crop'
-      width  = @width  or @el.width()
-      height = @height or @el.height()
-      wrapperRatio = width / height
       if assetRatio < wrapperRatio
         # full width
         if Nex.Utils.isiOS()
@@ -122,9 +122,6 @@ class Video extends Spine.Controller
 
     # sizemode fit
     else
-      width  = @width  or @el.parent().width()
-      height = @height or @el.parent().height()
-      wrapperRatio = width / height
       if assetRatio > wrapperRatio
         # full width
         @videoEl.el.css

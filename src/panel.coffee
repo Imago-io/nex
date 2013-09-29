@@ -7,7 +7,7 @@ Nex.Panel =
 
     @path = path
     # @log '(Nex.Panel) path: ', path if Nex.debug
-    Nex.Models.Asset.get(path: path)
+    Nex.Models.Asset.get(path: path, false)
       .done(=>
         # @log '(Nex.Panel) result: ', arguments... if Nex.debug
         @trigger 'ready', arguments...

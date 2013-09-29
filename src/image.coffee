@@ -85,19 +85,26 @@ class Image extends Spine.Controller
     # servingSize = Math.min(Math[if @sizemode is 'fit' then 'min' else 'max'](width, height) * dpr, @maxSize)
 
     # sizemode crop
+    assetRatio = @resolution.width / @resolution.height
+    wrapperRatio = width / height
     if @sizemode is 'crop'
-      assetRatio = @resolution.width / @resolution.height
-      wrapperRatio = width / height
       if assetRatio < wrapperRatio
         # full width
-        servingSize = Math.min((Math.round(width / assetRatio) * dpr), @maxSize)
+        servingSize = Math.round(width / assetRatio)
       else
         # full height
-        servingSize = Math.min((Math.round(height * assetRatio) * dpr), @maxSize)
+        servingSize = Math.round(height * assetRatio)
 
     # sizemode fit
     else
-      servingSize = Math.min(Math.min(width, height) * dpr, @maxSize)
+      if assetRatio > wrapperRatio
+        @log 'full height'
+        servingSize = Math.round(Math.max(width, width / assetRatio))
+      else
+        @log 'full width'
+        servingSize = Math.round(Math.max(height, height * assetRatio))
+
+    servingSize = Math.min(servingSize * dpr, @maxSize)
 
 
 
