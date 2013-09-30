@@ -77,7 +77,6 @@ class Nex.Slider extends Spine.Controller
       @current = @manager.controllers.length - 1
     @manager.controllers[@current].active()
 
-
 module.exports = Nex.Slider
 
 class Slide extends Spine.Controller
@@ -115,7 +114,4 @@ class Slide extends Spine.Controller
       @controllers[0].release()
     @controllers =[]
     @html ''
-
-
-module.exports = Slide
 
