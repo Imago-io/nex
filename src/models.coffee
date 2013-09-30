@@ -100,19 +100,25 @@ class Setting extends Spine.Model
 
 
 class CartItem extends Spine.Model
-  @configure 'CartItem', 'headline', 'description', 'serving_url',
-                         'quantity', 'taxable', 'price', 'weight', 'itemid'
+  @configure 'CartItem', 'meta', 'serving_url', 'quantity', 'price',
+                                 'color', 'size', 'itemid'
 
 
-  @addToCart: (itemid, quantity) ->
+  @addToCart: (itemid, quantity, options={'size':'', 'color':''}) ->
     existing = @select((item) -> item.itemid is itemid)
     if existing.length
-      cartitem = existing[0]
-      cartitem.quantity = cartitem.quantity + quantity
-    else
-      cartitem = new @({'itemid':itemid, 'quantity': quantity})
+      item = existing[0]
+      if item?.size == options?.size and item?.color == options?.color
+        item.quantity = item.quantity + quantity
+        item.save()
+        return
 
-    cartitem.save()
+    item =
+      itemid   : itemid
+      quantity : quantity
+      color    : options?.color
+      size     : options?.size
+    @create(item)
 
 
   @extend Spine.Model.Ajax
