@@ -30,7 +30,7 @@ Nex.Pusher =
 
       if tgllist?
         for id in tgllist
-          @globalExists(id)?.trigger 'visibility.tile'
+          @globalExists(id)?.trigger 'visibility.tile', collection: item.id
 
       if deletes?.length
         assets = (asset for asset in (@globalExists(id) for id in deletes) when asset)
