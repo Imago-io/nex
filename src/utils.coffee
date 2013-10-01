@@ -120,6 +120,8 @@ isiPhone = ->
 isiPod = ->
   return !!navigator.userAgent.match(/iPod/i)
 
+isChrome = ->
+  return !!navigator.userAgent.match(/Chrome/i)
 
 Nex.Utils =
   requestAnimationFrame : requestAnimationFrame
@@ -134,5 +136,6 @@ Nex.Utils =
   isiPad                : isiPad
   isiPhone              : isiPhone
   isiPod                : isiPod
+  isChrome              : isChrome
 
 module.exports = Nex.Utils
