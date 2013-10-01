@@ -36,11 +36,11 @@ class Nex.Slider extends Spine.Controller
 
     document.addEventListener 'keydown', @onKeyup if @enablekeys
 
-    if @path then @getData @path else @active @getData
-
     @el.addClass @class if @class
 
     @html '<div class="prev"></div><div class="next"></div>'
+
+    if @path then @getData @path else @active @getData
 
   onKeyup: (e) =>
     return unless @enablekeys and @isActive()
