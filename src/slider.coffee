@@ -19,9 +19,9 @@ class Nex.Slider extends Spine.Controller
     easing:     'swing'
     sizemode:   'fit'
     current:    0
-    height:     500
     autoplay:   true
     enablekeys: true
+    sizemode:   'fit'
 
   constructor: ->
     # set default values before init
@@ -38,7 +38,7 @@ class Nex.Slider extends Spine.Controller
 
     if @path then @getData @path else @active @getData
 
-    @el.height(@height)
+    @el.addClass @class if @class
 
     @html '<div class="prev"></div><div class="next"></div>'
 
@@ -53,7 +53,9 @@ class Nex.Slider extends Spine.Controller
   render: (result) =>
     @activate()
     for asset,i in result.items
-      @add new Slide asset: asset
+      @add new Slide
+        asset:    asset
+        sizemode: @sizemode
     @manager.controllers[@current].active()
 
   clear: ->
@@ -113,7 +115,7 @@ class Slide extends Spine.Controller
         resolution:   asset.resolution
         uuid:         asset.id
         formats:      asset.formats
-        sizemode:     'crop'
+        sizemode:     @sizemode
         lazy:         false
 
       html = asset.getMeta('html', '')
