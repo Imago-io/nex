@@ -7,7 +7,7 @@ class Nex.Slider extends Spine.Controller
     '(App) Nex.Slider: '
 
   className:
-    'nexslider carousel'
+    'nexslider'
 
   events:
     'tap .next': 'next'
@@ -29,6 +29,7 @@ class Nex.Slider extends Spine.Controller
       @[key] = value
 
     super
+    @el.addClass @animation
     @manager = new Spine.Manager
 
     @bind 'ready', @render
@@ -60,8 +61,8 @@ class Nex.Slider extends Spine.Controller
       @controllers[0].release()
 
   add: (controller) ->
-    @manager.add(controller)
-    @append(controller)
+    @manager.add controller
+    @append controller
 
   next: =>
     if @current < (@manager.controllers.length - 1)
@@ -80,6 +81,8 @@ class Nex.Slider extends Spine.Controller
 module.exports = Nex.Slider
 
 class Slide extends Spine.Controller
+  @include Nex.Panel
+
   logPrefix:
     '(App) Slide: '
 
@@ -92,7 +95,19 @@ class Slide extends Spine.Controller
     @controllers = []
     assets = @asset.items or [@asset]
 
+    @bind 'ready', @render
+
+    if @asset.assets
+      @getData @asset.path
+    else
+      @render()
+
+  render: (result) ->
+    assets = result?.items or [@asset]
+    return unless assets?.length > 0
+    @el.addClass "_#{assets.length}"
     for asset,i in assets
+      @log 'create ', asset, i
       @add @["asset#{i}"] = new Nex.Widgets[if asset in ['Image', 'Video'] then asset.kind else 'Image']
         src:          asset.serving_url
         align:        asset.meta.crop?.value or 'center center'
@@ -107,7 +122,7 @@ class Slide extends Spine.Controller
 
   add: (controller) ->
     @controllers.push controller
-    @append(controller)
+    @append controller
 
   clear: ->
     for cont in @controllers
