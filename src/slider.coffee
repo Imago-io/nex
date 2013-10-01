@@ -107,7 +107,6 @@ class Slide extends Spine.Controller
     return unless assets?.length > 0
     @el.addClass "_#{assets.length}"
     for asset,i in assets
-      @log 'create ', asset, i
       @add @["asset#{i}"] = new Nex.Widgets[if asset in ['Image', 'Video'] then asset.kind else 'Image']
         src:          asset.serving_url
         align:        asset.meta.crop?.value or 'center center'
