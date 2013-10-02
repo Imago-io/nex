@@ -123,6 +123,18 @@ isiPod = ->
 isChrome = ->
   return !!navigator.userAgent.match(/Chrome/i)
 
+isIE = ->
+  return !!navigator.userAgent.match(/MSIE/i)
+
+isFirefox = ->
+  return !!navigator.userAgent.match(/Firefox/i)
+
+isOpera = ->
+  return !!navigator.userAgent.match(/Presto/i)
+
+isSafari = ->
+  return !!navigator.userAgent.match(/Safari/i) and not @isChrome()
+
 Nex.Utils =
   requestAnimationFrame : requestAnimationFrame
   cookie                : cookie
@@ -137,5 +149,9 @@ Nex.Utils =
   isiPhone              : isiPhone
   isiPod                : isiPod
   isChrome              : isChrome
+  isIE                  : isIE
+  isFirefox             : isFirefox
+  isOpera               : isOpera
+  isSafari              : isSafari
 
 module.exports = Nex.Utils
