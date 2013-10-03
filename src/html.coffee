@@ -1,6 +1,6 @@
 Nex  = @Nex or require('nex')
 
-class Nex.Html extends Spine.Controller
+class Nex.Widgets.Html extends Spine.Controller
   @include Nex.Panel
 
   logPrefix:
@@ -16,4 +16,4 @@ class Nex.Html extends Spine.Controller
     @append html if html
 
 
-module.exports = Nex.Html
+module.exports = Nex.Widgets.Html

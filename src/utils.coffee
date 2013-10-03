@@ -13,7 +13,6 @@ requestAnimationFrame = do ->
   (callback) ->
     request.call(window, callback)
 
-
 cookie = (name, value) ->
   unless value
     # get cookie

@@ -1,7 +1,8 @@
 require('./jquery.viewport')
 
-Nex.Widgets =
-  Image: require("./image")
-  Video: require("./video")
+require("./image")
+require("./video")
+require("./slider")
+require("./html")
 
-module.exports = Nex.Widgets
+module.exports = Nex

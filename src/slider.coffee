@@ -1,6 +1,6 @@
 Nex  = @Nex or require('nex')
 
-class Nex.Slider extends Spine.Controller
+class Nex.Widgets.Slider extends Spine.Controller
   @include Nex.Panel
 
   logPrefix:
@@ -54,8 +54,8 @@ class Nex.Slider extends Spine.Controller
     @activate()
     for asset,i in result.items
       @add new Slide
-        asset:    asset
-        sizemode: @sizemode
+        asset:     asset
+        sizemode:  @sizemode
     @manager.controllers[@current].active()
 
   clear: ->
@@ -80,7 +80,7 @@ class Nex.Slider extends Spine.Controller
       @current = @manager.controllers.length - 1
     @manager.controllers[@current].active()
 
-module.exports = Nex.Slider
+module.exports = Nex.Widgets.Slider
 
 class Slide extends Spine.Controller
   @include Nex.Panel
@@ -107,19 +107,26 @@ class Slide extends Spine.Controller
   render: (result) ->
     assets = result?.items or [@asset]
     return unless assets?.length > 0
-    @el.addClass "_#{assets.length}"
-    for asset,i in assets
-      @add @["asset#{i}"] = new Nex.Widgets[if asset in ['Image', 'Video'] then asset.kind else 'Image']
-        src:          asset.serving_url
-        align:        asset.meta.crop?.value or 'center center'
-        resolution:   asset.resolution
-        uuid:         asset.id
-        formats:      asset.formats
-        sizemode:     @sizemode
-        lazy:         false
 
-      html = asset.getMeta('html', '')
-      @append html if html
+    if assets.length > 1
+      for asset,i in assets
+        @add new Slide
+          asset: asset
+          sizemode: @sizemode
+          className: 'slidecontent'
+    else
+      for asset, i in assets
+        @add @["asset#{i}"] = new Nex.Widgets[if asset in ['Image', 'Video'] then asset.kind else 'Image']
+          src:          asset.serving_url
+          align:        asset.meta.crop?.value or 'center center'
+          resolution:   asset.resolution
+          uuid:         asset.id
+          formats:      asset.formats
+          sizemode:     @sizemode
+          lazy:         false
+        html = asset.getMeta('html', '')
+        @append html if html
+
 
   add: (controller) ->
     @controllers.push controller
@@ -130,4 +137,3 @@ class Slide extends Spine.Controller
       @controllers[0].release()
     @controllers =[]
     @html ''
-

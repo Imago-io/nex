@@ -1,4 +1,15 @@
-class Image extends Spine.Controller
+
+
+
+
+
+
+
+
+
+Nex  = @Nex or require('nex')
+
+class Nex.Widgets.Image extends Spine.Controller
   className: 'imagoimage'
 
   defaults:
@@ -160,4 +171,4 @@ class Image extends Spine.Controller
     @window.off @id
     super
 
-module.exports = Image
+module.exports = Nex.Widgets.Image

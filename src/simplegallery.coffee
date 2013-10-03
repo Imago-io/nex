@@ -1,6 +1,6 @@
 Nex  = @Nex or require('nex')
 
-Nex.SimpleGallery =
+Nex.Widgets.SimpleGallery =
 
   cur: 0
 
@@ -15,4 +15,4 @@ Nex.SimpleGallery =
     @manager.controllers[@cur].active()
 
 
-module.exports = Nex.SimpleGallery
+module.exports = Nex.Widgets.SimpleGallery

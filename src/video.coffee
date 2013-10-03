@@ -1,4 +1,6 @@
-class Video extends Spine.Controller
+Nex  = @Nex or require('nex')
+
+class Nex.Widgets.Video extends Spine.Controller
   className: 'imagovideo'
 
   defaults:
@@ -179,7 +181,7 @@ class Video extends Spine.Controller
   togglePlay: =>
     @videoEl.togglePlay()
 
-module.exports = Video
+module.exports = Nex.Widgets.Video
 
 
 class VideoElement extends Spine.Controller
@@ -376,7 +378,6 @@ class VideoElement extends Spine.Controller
   onvolumechange: (e) ->
     # @log 'onvolumechange'
     @trigger 'timeupdate', e
-
 
 class Controls extends Spine.Controller
   className: 'controls active'
