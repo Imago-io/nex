@@ -101,10 +101,9 @@ Nex.Pusher =
           @parse_data(data)
         )
 
-  _delete: (message) =>
-    # console.log 'delete message', message
-    asset = @globalFind(message.id)
-    asset.destroy(ajax: false)
+  _delete: (message) ->
+    asset = @globalExists(message.id)
+    asset?.destroy(ajax: false)
 
   _swith_ids: (message) ->
     # VideoModel      = @get_model('Video')
