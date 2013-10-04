@@ -57,8 +57,7 @@ Nex.Pusher =
           if kind is 'Collection'
               attrs.assets = []
               attrs.hidden = []
-
-          elem = @get_model(i).create(attrs, {ajax:false})
+          elem = @get_model(id).create(attrs, {ajax:false})
           newObjs.push(elem)
 
         result.items = result.items.concat(newObjs)
@@ -130,7 +129,7 @@ Nex.Pusher =
         if col and message.from_id in col.assets
           col.assets.splice(message.from_id, 1, asset.id)
           col.hidden.splice(message.from_id, 1, asset.id)
-          col.save(ajax:false)
+          col.save()
     asset.save(ajax: false)
 
 module.exports = Nex.Pusher
