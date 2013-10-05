@@ -118,7 +118,8 @@ class Slide extends Spine.Controller
           className: 'slidecontent'
     else
       for asset, i in assets
-        @add @["asset#{i}"] = new Nex.Widgets[if asset in ['Image', 'Video'] then asset.kind else 'Image']
+        kind = if asset.kind in ['Image', 'Video'] then asset.kind else 'Image'
+        @add @["asset#{i}"] = new Nex.Widgets[kind]
           src:          asset.serving_url
           align:        asset.meta.crop?.value or 'center center'
           resolution:   asset.resolution
