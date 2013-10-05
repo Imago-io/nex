@@ -22,6 +22,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     autoplay:   true
     enablekeys: true
     sizemode:   'fit'
+    subslides:  false
 
   constructor: ->
     # set default values before init
@@ -56,6 +57,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       @add new Slide
         asset:     asset
         sizemode:  @sizemode
+        subslides: @subslides
     @manager.controllers[@current].active()
 
   clear: ->
@@ -108,7 +110,7 @@ class Slide extends Spine.Controller
     assets = result?.items or [@asset]
     return unless assets?.length > 0
 
-    if assets.length > 1
+    if assets.length > 1 and @subslides
       for asset,i in assets
         @add new Slide
           asset: asset

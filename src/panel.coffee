@@ -1,13 +1,18 @@
 Nex  = @Nex or require('nex')
 
 Nex.Panel =
-  getData: (path) ->
-    return @log "Panel: path is empty, aborting #{path}" unless path
+  getData: (query) ->
+    return @log "Panel: query is empty, aborting #{query}" unless query
     # return if path is @path
 
-    @path = path
+    if typeof query is 'string'
+      query =
+        path: query
+
+    @query = query
+
     # @log '(Nex.Panel) path: ', path if Nex.debug
-    Nex.Models.Asset.get(path: path, false)
+    Nex.Models.Asset.get(query, false)
       .done(=>
         # @log '(Nex.Panel) result: ', arguments... if Nex.debug
         @trigger 'ready', arguments...

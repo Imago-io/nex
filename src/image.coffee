@@ -19,6 +19,7 @@ class Nex.Widgets.Image extends Spine.Controller
     scale     : 1
     lazy      : true
     maxSize   : 2000
+    noResize  : false
 
   events:
     'resize' : 'render'
@@ -72,6 +73,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @preload()
 
   resize: =>
+    return if @noResize
     # use pvrovided dimentions or current size of @el
     @image.css('backgroundSize', @calcMediaSize())
 
