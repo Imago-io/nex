@@ -41,6 +41,7 @@ class Nex.Widgets.Slider extends Spine.Controller
 
     @html '<div class="prev"></div><div class="next"></div>'
 
+    # fetch data or on active to fetch data
     if @path then @getData @path else @active @getData
 
   onKeyup: (e) =>
@@ -52,7 +53,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       # when 40 then @log 'down'
 
   render: (result) =>
-    @activate()
+    @activate() unless @isActive()
     for asset,i in result.items
       @add new Slide
         asset:     asset
@@ -97,20 +98,21 @@ class Slide extends Spine.Controller
     super
 
     @controllers = []
-    assets = @asset.items or [@asset]
+    # assets = @asset.items or [@asset]
 
-    @bind 'ready', @render
-
-    if @asset.assets
+    # we have a collection fetch data for col path if subslides enabled
+    if @asset.assets and @subslides
+      @bind 'ready', @render
       @getData @asset.path
     else
-      @render()
+      @render(@asset)
 
   render: (result) ->
-    assets = result?.items or [@asset]
-    return unless assets?.length > 0
+    assets = result?.items or result
 
-    if assets.length > 1 and @subslides
+    # @log 'slide render', result, assets, assets.length
+
+    if assets.length and @subslides
       for asset,i in assets
         @add new Slide
           asset: asset
@@ -128,7 +130,6 @@ class Slide extends Spine.Controller
         lazy:         false
       html = result.getMeta('html', '')
       @append html if html
-
 
   add: (controller) ->
     @controllers.push controller
