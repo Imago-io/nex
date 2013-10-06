@@ -35,6 +35,10 @@ class Nex.Widgets.Image extends Spine.Controller
     super
     @logPrefix = '(App) Image: '
 
+    # check requirements
+    return throw new Error 'image widget rquires src' unless @src
+    return throw new Error 'image widget rquires resolution' unless @resolution
+
     @id = Nex.Utils.uuid()
 
     @html '<div class="image"></div><div class="spin"></div><div class="spin2"></div>'
@@ -63,9 +67,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @render()
 
   render: =>
-    return unless @src
     # wait till @el is added to dom
-
     unless @el.width()
       @delay @render, 250
       return
