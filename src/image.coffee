@@ -113,10 +113,10 @@ class Nex.Widgets.Image extends Spine.Controller
     # sizemode fit
     else
       if assetRatio > wrapperRatio
-        @log 'full height'
+        # @log 'full height'
         servingSize = Math.round(Math.max(width, width / assetRatio))
       else
-        @log 'full width'
+        # @log 'full width'
         servingSize = Math.round(Math.max(height, height * assetRatio))
 
     servingSize = Math.min(servingSize * dpr, @maxSize)
