@@ -117,18 +117,17 @@ class Slide extends Spine.Controller
           sizemode: @sizemode
           className: 'slidecontent'
     else
-      for asset, i in assets
-        kind = if asset.kind in ['Image', 'Video'] then asset.kind else 'Image'
-        @add @["asset#{i}"] = new Nex.Widgets[kind]
-          src:          asset.serving_url
-          align:        asset.meta.crop?.value or 'center center'
-          resolution:   asset.resolution
-          uuid:         asset.id
-          formats:      asset.formats
-          sizemode:     @sizemode
-          lazy:         false
-        html = asset.getMeta('html', '')
-        @append html if html
+      kind = if result.kind in ['Image', 'Video'] then result.kind else 'Image'
+      @add @["asset"] = new Nex.Widgets[kind]
+        src:          result.serving_url
+        align:        result.meta.crop?.value or 'center center'
+        resolution:   result.resolution
+        uuid:         result.id
+        formats:      result.formats
+        sizemode:     @sizemode
+        lazy:         false
+      html = result.getMeta('html', '')
+      @append html if html
 
 
   add: (controller) ->
