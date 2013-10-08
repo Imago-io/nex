@@ -79,7 +79,8 @@ class Video extends Asset
 
 class Generic extends Asset
   @configure 'Generic', 'kind', 'name', 'meta', 'serving_url', 'path',
-                        'date_created', 'date_modified', 'normname', 'canonical'
+                        'date_created', 'date_modified', 'resolution',
+                        'normname', 'canonical'
 
 class Proxy extends Asset
   @configure 'Proxy', 'kind', 'name', 'meta', 'path', 'serving_url',
