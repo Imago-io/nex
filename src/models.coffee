@@ -124,7 +124,7 @@ class CartItem extends Spine.Model
 
   @extend Spine.Model.Ajax
 
-
+Spine.Ajax.defaults.headers['NexClient'] = Nex.client
 
 Nex.Models =
   Collection: Collection
