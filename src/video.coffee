@@ -68,6 +68,8 @@ class Nex.Widgets.Video extends Spine.Controller
 
   resize: =>
     assetRatio   = @resolution.width / @resolution.height
+
+
     # sizemode crop
     if @sizemode is 'crop'
       width  = @width  or @el.width()
@@ -130,7 +132,7 @@ class Nex.Widgets.Video extends Spine.Controller
         # full width
         @videoEl.el.css
           width: '100%'
-          height: 'auto'
+          height: if Nex.Utils.isiOS() then '100%' else 'auto'
         @el.css
           backgroundSize: '100% auto'
           backgroundPosition: @align
@@ -139,7 +141,7 @@ class Nex.Widgets.Video extends Spine.Controller
       else
         # full height
         @videoEl.el.css
-          width: 'auto'
+          width: if Nex.Utils.isiOS() then '100%' else 'auto'
           height: '100%'
         @el.css
           backgroundSize: 'auto 100%'
