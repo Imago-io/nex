@@ -18,10 +18,10 @@ class Nex.Contact extends Spine.Controller
     processData: false
     headers  : {'X-Requested-With': 'XMLHttpRequest'}
 
+  logPrefix: '(App) Contact: '
+
   constructor: ->
     super
-    @logPrefix = '(App) Contact: '
-    @html require('views/contact')
 
   onkeyup: (e) ->
     @validate(e.target)
