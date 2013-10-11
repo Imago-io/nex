@@ -11,7 +11,7 @@ class Nex.Page extends Spine.Controller
 
   constructor: ->
     super
-    @tmpl404 = require('views/page404')
+    @tmpl404 = '<h1>Page not Found</h1>'
 
     @controllers = []
 
