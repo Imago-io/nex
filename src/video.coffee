@@ -162,6 +162,7 @@ class Nex.Widgets.Video extends Spine.Controller
     css =
       backgroundImage    : "url(#{@serving_url})"
       backgroundPosition : @align
+      backgroundRepeat   : 'no-repeat'
 
     css.backgroundSize  = "auto 100%"
     css.width           = "#{width}px"  if Number(@width)
