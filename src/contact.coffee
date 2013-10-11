@@ -1,3 +1,5 @@
+Nex  = @Nex or require('nex')
+
 isBlank = Spine.isBlank
 
 class Nex.Contact extends Spine.Controller
