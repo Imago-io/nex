@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 Nex  = @Nex or require('nex')
 
 class Nex.Widgets.Image extends Spine.Controller
