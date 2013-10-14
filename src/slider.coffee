@@ -23,6 +23,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     enablekeys: true
     sizemode:   'fit'
     subslides:  false
+    loop:       true
 
   constructor: ->
     # set default values before init
@@ -42,12 +43,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     @html '<div class="prev"></div><div class="next"></div>'
 
     # fetch data or on active to fetch data
-    if @path
-      @log 'fetch right away'
-      @getData @path
-    else
-      @log 'no path setup fetch on active'
-      @active @getData
+    if @path then @getData @path else @active @getData
 
     @el.addClass(@name) if @name
 
@@ -60,13 +56,13 @@ class Nex.Widgets.Slider extends Spine.Controller
       # when 40 then @log 'down'
 
   render: (result) =>
-    @log 'render', result
     @activate() unless @isActive()
     for asset,i in result.items
       @add new Slide
         asset:     asset
         sizemode:  @sizemode
         subslides: @subslides
+    @current = unless ~@current then result.items.length - 1 else @current
     @manager.controllers[@current].active()
 
   clear: ->
@@ -82,7 +78,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       @current++
     else
       @trigger 'end'
-      @current = 0
+      @current = 0 if @loop
     @manager.controllers[@current].active()
 
   prev: =>
@@ -90,7 +86,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       @current--
     else
       @trigger 'start'
-      @current = @manager.controllers.length - 1
+      @current = @manager.controllers.length - 1 if @loop
     @manager.controllers[@current].active()
 
 module.exports = Nex.Widgets.Slider
@@ -119,8 +115,6 @@ class Slide extends Spine.Controller
 
   render: (result) ->
     assets = result?.items or result
-
-    # @log 'slide render', result, assets, assets.length
 
     if assets.length and @subslides
       for asset,i in assets

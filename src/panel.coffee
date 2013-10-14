@@ -11,10 +11,10 @@ Nex.Panel =
 
     @query = query
 
-    @log '(Nex.Panel) @query: ', @query if Nex.debug
+    # @log '(Nex.Panel) @query: ', @query if Nex.debug
     Nex.Models.Asset.get(query, false)
       .done(=>
-        @log '(Nex.Panel) result: ', arguments..., @ if Nex.debug
+        # @log '(Nex.Panel) result: ', arguments... if Nex.debug
         @trigger 'ready', arguments...
       )
       .fail(=> @log "Panel: Could not get data for panel #{@query}")
