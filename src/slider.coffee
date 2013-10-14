@@ -62,7 +62,7 @@ class Nex.Widgets.Slider extends Spine.Controller
         asset:     asset
         sizemode:  @sizemode
         subslides: @subslides
-    @current = unless ~@current then result.items.length - 1 else @current
+    @current = result.items.length - 1 if @current is 'last'
     @manager.controllers[@current].active()
 
   clear: ->
