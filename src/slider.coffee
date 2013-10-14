@@ -44,6 +44,8 @@ class Nex.Widgets.Slider extends Spine.Controller
     # fetch data or on active to fetch data
     if @path then @getData @path else @active @getData
 
+    @el.addClass(@name) if @name
+
   onKeyup: (e) =>
     return unless @enablekeys and @isActive()
     switch e.keyCode
