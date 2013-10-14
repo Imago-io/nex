@@ -79,7 +79,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     else
       @trigger 'end'
       @current = 0 if @loop
-    @manager.controllers[@current].active()
+    @manager.controllers[@current]?.active()
 
   prev: =>
     if @current > 0
@@ -87,7 +87,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     else
       @trigger 'start'
       @current = @manager.controllers.length - 1 if @loop
-    @manager.controllers[@current].active()
+    @manager.controllers[@current]?.active()
 
 module.exports = Nex.Widgets.Slider
 
