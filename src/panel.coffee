@@ -11,13 +11,13 @@ Nex.Panel =
 
     @query = query
 
-    # @log '(Nex.Panel) path: ', path if Nex.debug
+    @log '(Nex.Panel) @query: ', @query if Nex.debug
     Nex.Models.Asset.get(query, false)
       .done(=>
-        # @log '(Nex.Panel) result: ', arguments... if Nex.debug
+        @log '(Nex.Panel) result: ', arguments..., @ if Nex.debug
         @trigger 'ready', arguments...
       )
-      .fail(=> @log "Panel: Could not get data for panel #{path}")
+      .fail(=> @log "Panel: Could not get data for panel #{@query}")
 
   setTitle: (result) ->
     title = Nex.Models.Setting.findByAttribute('name', 'title')

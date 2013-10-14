@@ -42,7 +42,12 @@ class Nex.Widgets.Slider extends Spine.Controller
     @html '<div class="prev"></div><div class="next"></div>'
 
     # fetch data or on active to fetch data
-    if @path then @getData @path else @active @getData
+    if @path
+      @log 'fetch right away'
+      @getData @path
+    else
+      @log 'no path setup fetch on active'
+      @active @getData
 
     @el.addClass(@name) if @name
 
@@ -55,6 +60,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       # when 40 then @log 'down'
 
   render: (result) =>
+    @log 'render', result
     @activate() unless @isActive()
     for asset,i in result.items
       @add new Slide
@@ -75,6 +81,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     if @current < (@manager.controllers.length - 1)
       @current++
     else
+      @trigger 'end'
       @current = 0
     @manager.controllers[@current].active()
 
@@ -82,6 +89,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     if @current > 0
       @current--
     else
+      @trigger 'start'
       @current = @manager.controllers.length - 1
     @manager.controllers[@current].active()
 
