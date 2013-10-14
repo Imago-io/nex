@@ -36,7 +36,7 @@ class Asset extends Spine.Model
 
   getMeta: (field, fallback='') ->
     return fallback unless field
-    if @meta[field]?.value.hasOwnProperty('value')
+    if @meta[field]?.value?.hasOwnProperty('value')
       return @meta[field].value?.value or fallback
     @meta[field]?.value or fallback
 
