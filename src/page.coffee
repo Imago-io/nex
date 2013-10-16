@@ -25,7 +25,12 @@ class Nex.Page extends Spine.Controller
     @controllers.push(controller)
     @append(controller)
 
+  activate: ->
+    $('body').on 'keyup.page', @onKeyup
+    super
+
   deactivate: ->
+    $('body').off '.page'
     @clear()
     super
 
@@ -33,5 +38,12 @@ class Nex.Page extends Spine.Controller
     for cont in @controllers
       cont.release()
     @controllers = []
+
+  onKeyup: (e) =>
+    @log 'onKeyup', e.keyCode
+    e.preventDefault()
+    return unless @isActive()
+    switch e.keyCode
+      when 27 then @onEsc() if @onEsc
 
 module.exports = Nex.Page
