@@ -408,6 +408,8 @@ class Controls extends Spine.Controller
 
     @player.videoEl.on 'timeupdate', @ontimeupdate
 
+    document.addEventListener(screenfull.raw.fullscreenchange, @onfullscreenchange)
+
     @activate()
 
   play: (e) ->
@@ -463,7 +465,11 @@ class Controls extends Spine.Controller
     # @log 'onEnterFullScreen', screenfull.enabled
     return unless screenfull.enabled
     screenfull.request @player.video
+    @player.videoEl.video.setAttribute('controls','controls')
     # @player.videoEl.video.webkitEnterFullScreen()
+
+  onfullscreenchange: (e) =>
+    @player.videoEl.video.removeAttribute('controls') unless screenfull.isFullscreen
 
   doDelayed: (func, sec) =>
     clearTimeout(@idleTimer) if @idleTimer
