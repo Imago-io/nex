@@ -145,5 +145,14 @@ Nex.Utils =
   isNumber: (n) ->
     return n is parseFloat(n)
 
+  toFloat: (value, decimal=2) ->
+    value   = String(value).replace(/\D/g, '')
+    floats  = value.slice(value.length - decimal)
+
+    # add trailing zeros
+    floats = '0' + floats while floats.length < decimal
+    ints   = value.slice(0, value.length - decimal) or '0'
+
+    return "#{ints}.#{floats}"
 
 module.exports = Nex.Utils
