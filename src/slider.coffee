@@ -62,6 +62,8 @@ class Nex.Widgets.Slider extends Spine.Controller
         asset:     asset
         sizemode:  @sizemode
         subslides: @subslides
+        height:    @height
+        width:     @width
     @current = result.items.length - 1 if @current is 'last'
     @manager.controllers[@current].active()
 
@@ -119,9 +121,11 @@ class Slide extends Spine.Controller
     if assets.length and @subslides
       for asset,i in assets
         @add new Slide
-          asset: asset
-          sizemode: @sizemode
+          asset:     asset
+          sizemode:  @sizemode
           className: 'slidecontent'
+          height:    @height
+          width:     @width
     else
       kind = if result.kind in ['Image', 'Video'] then result.kind else 'Image'
       @add @["asset"] = new Nex.Widgets[kind]
@@ -132,6 +136,8 @@ class Slide extends Spine.Controller
         formats:      result.formats
         sizemode:     @sizemode
         lazy:         false
+        height:       @height
+        width:        @width
       html = result.getMeta('html', '')
       @append html if html
 
