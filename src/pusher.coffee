@@ -116,7 +116,7 @@ Nex.Pusher =
       asset    = @globalFind(message.to_id)
       cols     = CollectionModel.select((col) -> p_holder.id in col.assets)
       for col in cols
-        col.assets.splice(p_holder.id, 1, asset.id)
+        col.assets.splice(col.assets.indexOf(p_holder.id), 1, asset.id)
         if col.serving_url?.indexOf('http://') < 0
           col.serving_url = asset.serving_url
         col.save()
@@ -128,8 +128,8 @@ Nex.Pusher =
       cols     = CollectionModel.select((col) -> message.from_id in col.assets)
       for col in cols
         if col and message.from_id in col.assets
-          col.assets.splice(message.from_id, 1, asset.id)
-          col.hidden.splice(message.from_id, 1, asset.id)
+          col.assets.splice(col.assets.indexOf(message.from_id), 1, asset.id)
+          col.hidden.splice(col.assets.indexOf(message.from_id), 1, asset.id)
           col.save()
     asset.save(ajax: false)
 
