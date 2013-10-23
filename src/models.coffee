@@ -40,52 +40,40 @@ class Asset extends Spine.Model
       return @meta[field].value?.value or fallback
     @meta[field]?.value or fallback
 
-  # canonicalPath: ->
-  #   try
-  #     asset = Asset.get_model('Collection').find(@canonical)
-  #     asset.path()
-  #   catch e
-  #     return
+  options: ->
+    # the options available for this asset
+    opts = {}
+    for variant in @variants
+      for key, value of variant.meta
+        key = Nex.Utils.pluralize(key)
+        opts[key] or= []
+        opts[key].push(value)
+    opts
+
 
 class Collection extends Asset
-  @configure 'Collection', 'kind', 'name', 'meta', 'path', 'serving_url',
+  @configure 'Collection', 'kind', 'name', 'meta', 'path', 'serving_url', 'variants',
                            'date_created', 'date_modified', 'resolution', 'sort_by',
                            'sort_order', 'assets', 'hidden', 'normname', 'canonical'
 
-  # assetsVisible: ->
-  #   # TODO: @pepe needs a better solution or cached
-  #   (a for a in @assets when a not in @hidden)
-
-  # assetsFetched: =>
-  #   # do after fetch
-  #   assets   = []
-  #   for asset in @assetsVisible()
-  #     try
-  #       asset = Asset.get_model(asset).find(asset)
-  #     catch error
-  #       console.log "Could not find #{asset} in assets list for", @name , @
-  #       continue
-
-  #     assets.push(asset)
-  #   assets
 
 class Image extends Asset
-  @configure 'Image', 'kind', 'name', 'meta', 'path', 'serving_url',
+  @configure 'Image', 'kind', 'name', 'meta', 'path', 'serving_url', 'variants',
                       'date_created', 'date_modified', 'resolution', 'filesize',
                       'normname', 'canonical'
 
 class Video extends Asset
-  @configure 'Video', 'kind', 'name', 'meta', 'path', 'serving_url',
+  @configure 'Video', 'kind', 'name', 'meta', 'path', 'serving_url', 'variants',
                       'date_created', 'date_modified', 'resolution', 'filesize',
                       'normname', 'canonical', 'formats'
 
 class Generic extends Asset
   @configure 'Generic', 'kind', 'name', 'meta', 'serving_url', 'path',
                         'date_created', 'date_modified', 'resolution',
-                        'normname', 'canonical'
+                        'normname', 'canonical', 'variants'
 
 class Proxy extends Asset
-  @configure 'Proxy', 'kind', 'name', 'meta', 'path', 'serving_url',
+  @configure 'Proxy', 'kind', 'name', 'meta', 'path', 'serving_url', 'variants',
                       'date_created', 'date_modified', 'resolution', 'filesize',
                       'normname', 'proxypath', 'thumb'
 
@@ -108,13 +96,13 @@ class CartItem extends Spine.Model
 
 
   @addToCart: (itemid, quantity, options={'size':'', 'color':''}) ->
+    console.log 'optoins are', options
     existing = @select((item) -> item.itemid is itemid)
     if existing.length
       item = existing[0]
-      if item?.size == options?.size and item?.color == options?.color
-        item.quantity = item.quantity + quantity
-        item.save()
-        return
+      item.quantity = item.quantity + quantity
+      item.save()
+      return
 
     item =
       itemid   : itemid

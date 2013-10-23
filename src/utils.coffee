@@ -59,6 +59,12 @@ Nex.Utils =
 
     query
 
+  pluralize: (str) ->
+    str + 's'
+
+  singularize: (str) ->
+    str.replace(/s$/, '')
+
   normalize: (s) ->
     mapping =
       'ä': 'ae'
