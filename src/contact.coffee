@@ -44,6 +44,15 @@ class Nex.Contact extends Spine.Controller
       @el.addClass('error')
     )
 
+  formToJson: (form) ->
+    array = $(form).serializeArray()
+    obj   = {}
+
+    for elem in array
+      obj[elem.name] = elem.value or= ''
+
+    return JSON.stringify(obj)
+
   send: (e) =>
     e.preventDefault()
 
@@ -52,10 +61,9 @@ class Nex.Contact extends Spine.Controller
 
     return unless @form[0].checkValidity()
 
-    data = @form.serialize()
     settings =
       beforeSend: @getxsrf
-      data: JSON.stringify(data)
+      data: @formToJson(@form)
       url: if Nex.debug then "http://#{Nex.tenant}.imagoapp.com/api/v2/contact" else "/api/v2/contact"
       method: 'POST'
 
