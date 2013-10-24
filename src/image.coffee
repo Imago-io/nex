@@ -46,7 +46,7 @@ class Nex.Widgets.Image extends Spine.Controller
       @window.on "resizestop.#{@id}", @preload
     # bind css background size calculation
     @window.on "resize.#{@id}", @resize
-    @window.one "scrollstop.#{@id}", @preload if @lazy
+    @window.on "scrollstop.#{@id}", @preload if @lazy
 
     # convert resolution string to object
     if typeof @resolution is 'string'
@@ -71,6 +71,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @image.css('backgroundSize', @calcMediaSize())
 
   preload: =>
+    # @log $.inviewport(@el, threshold: 0)
     return if @status is 'preloading'
     return if not ($.inviewport @el, threshold: 0) and @lazy
 
@@ -79,8 +80,8 @@ class Nex.Widgets.Image extends Spine.Controller
     # use pvrovided dimentions or current size of @el
     # fallback if element is not in dom rendered it has no dimensions yet
 
-    width  =  (@width  * @scale) or @el.width()  or 500
-    height =  (@height * @scale) or @el.height() or 500
+    width  =  @width  or @el.width()  or 500
+    height =  @height or @el.height() or 500
 
     # limit size to steps
     # width  = Math.round(width  / 50) * 50 if width
@@ -122,7 +123,8 @@ class Nex.Widgets.Image extends Spine.Controller
       return
 
     @servingSize = servingSize
-    @servingUrl = "#{ @src }=s#{ @servingSize }"
+    @log @servingSize * @scale
+    @servingUrl = "#{ @src }=s#{ @servingSize * @scale }"
 
     # create image and bind load event
     img = $('<img>').bind 'load', @imgLoaded
