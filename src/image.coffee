@@ -111,7 +111,6 @@ class Nex.Widgets.Image extends Spine.Controller
         # @log 'full width', width, height
         servingSize = Math.round(Math.max(width, width / assetRatio))
 
-    @log 'servingSize ', servingSize
     servingSize = Math.min(servingSize * dpr, @maxSize)
 
 
