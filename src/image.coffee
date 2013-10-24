@@ -95,20 +95,21 @@ class Nex.Widgets.Image extends Spine.Controller
     wrapperRatio = width / height
     if @sizemode is 'crop'
       if assetRatio < wrapperRatio
-        # full width
-        servingSize = Math.round(width / assetRatio)
+        # @log 'full width'
+        servingSize = Math.round(Math.max(width, width / assetRatio))
       else
-        # full height
-        servingSize = Math.round(height * assetRatio)
+        # @log 'full height'
+        servingSize = Math.round(Math.max(height, height * assetRatio))
 
     # sizemode fit
     else
-      if assetRatio > wrapperRatio
-        # @log 'full height'
-        servingSize = Math.round(Math.max(width, width / assetRatio))
-      else
-        # @log 'full width'
+      @log 'ratios', assetRatio, wrapperRatio
+      if assetRatio < wrapperRatio
+        # @log 'full height', width, height
         servingSize = Math.round(Math.max(height, height * assetRatio))
+      else
+        # @log 'full width', width, height
+        servingSize = Math.round(Math.max(width, width / assetRatio))
 
     servingSize = Math.min(servingSize * dpr, @maxSize)
 
