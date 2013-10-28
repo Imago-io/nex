@@ -37,6 +37,7 @@ class Nex.Widgets.Video extends Spine.Controller
     @video = @videoEl.video
 
     @el.addClass "#{@class or ''} #{@size} #{@align} #{@sizemode}"
+    @el.attr('style', @style) if @style
 
     # play button
     @append @playbig = $('<div class="spin"></div><div class="spin2"></div><a class="playbig icon-play" />')

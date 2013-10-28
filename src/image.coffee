@@ -39,6 +39,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @el.height(@height) if @height
 
     @el.addClass(@class)
+    @el.attr('style', @style) if @style
 
     @window = $(window)
     # bind to window resize if no dimentions are provided
@@ -66,6 +67,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @preload()
 
   resize: =>
+    @log 'resize'
     return if @noResize
     # use pvrovided dimentions or current size of @el
     @image.css('backgroundSize', @calcMediaSize())
