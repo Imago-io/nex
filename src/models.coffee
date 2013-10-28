@@ -42,12 +42,14 @@ class Asset extends Spine.Model
 
   options: ->
     # the options available for this asset
+    console.log '@', @
     opts = {}
     for variant in @variants
-      for key, value of variant.meta
+      for key, obj of variant.meta
         key = Nex.Utils.pluralize(key)
         opts[key] or= []
-        opts[key].push(value)
+        opts[key].push(obj.value) if obj.value not in opts[key]
+    console.log 'opts', opts
     opts
 
 
