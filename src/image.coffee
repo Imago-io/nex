@@ -67,7 +67,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @preload()
 
   resize: =>
-    @log 'resize'
+    # @log 'resize'
     return if @noResize
     # use pvrovided dimentions or current size of @el
     @image.css('backgroundSize', @calcMediaSize())
@@ -106,7 +106,7 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # sizemode fit
     else
-      @log 'ratios', assetRatio, wrapperRatio
+      # @log 'ratios', assetRatio, wrapperRatio
       if assetRatio < wrapperRatio
         # @log 'full height', width, height
         servingSize = Math.round(Math.max(height, height * assetRatio))
