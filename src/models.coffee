@@ -42,7 +42,6 @@ class Asset extends Spine.Model
 
   options: ->
     # the options available for this asset
-    console.log '@', @
     opts = {}
     for variant in @variants
       for key, obj of variant.meta
@@ -107,10 +106,11 @@ class CartItem extends Spine.Model
       return
 
     item =
-      itemid   : itemid
-      quantity : quantity
-      color    : options?.color
-      size     : options?.size
+      itemid      : itemid
+      quantity    : quantity
+      color       : options?.color
+      size        : options?.size
+      serving_url : options?.serving_url
     @create(item)
 
 
