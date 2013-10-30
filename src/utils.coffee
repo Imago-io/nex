@@ -161,4 +161,19 @@ Nex.Utils =
 
     return "#{ints}.#{floats}"
 
+  getAssetKind: (id) ->
+    if id.indexOf('Collection-') is 0
+      kind = 'Collection'
+    else if id.indexOf('Proxy-') is 0
+      kind = 'Proxy'
+    else if id.indexOf('Order-') is 0
+      kind = 'Order'
+    else if id.indexOf('Generic') is 0
+      kind = 'Generic'
+    else if id.match /[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}/
+      kind = 'Image'
+    else if id.match /[0-9a-z]{56}/
+      kind = 'Video'
+    return kind
+
 module.exports = Nex.Utils
