@@ -48,7 +48,6 @@ class Asset extends Spine.Model
         key = Nex.Utils.pluralize(key)
         opts[key] or= []
         opts[key].push(obj.value) if obj.value not in opts[key]
-    console.log 'opts', opts
     opts
 
 
@@ -97,7 +96,7 @@ class CartItem extends Spine.Model
 
 
   @addToCart: (itemid, quantity, options={'size':'', 'color':''}) ->
-    console.log 'optoins are', options
+    # console.log 'optoins are', options
     existing = @select((item) -> item.itemid is itemid)
     if existing.length
       item = existing[0]
@@ -111,6 +110,7 @@ class CartItem extends Spine.Model
       color       : options?.color
       size        : options?.size
       serving_url : options?.serving_url
+      price       : options?.price
     @create(item)
 
 
