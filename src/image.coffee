@@ -9,7 +9,7 @@ class Nex.Widgets.Image extends Spine.Controller
     hires     : true
     scale     : 1
     lazy      : true
-    maxSize   : 2000
+    maxSize   : 2560
     noResize  : false
     mediasize : false
 
