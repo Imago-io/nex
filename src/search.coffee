@@ -164,7 +164,7 @@ Nex.Search =
 
   getSearchUrl: ->
     if Nex.client is 'public'
-      if Nex.debug then "http://#{Nex.tenant}.imagoapp.com/api/v2/search" else "/api/v2/search"
+      if Nex.data is 'online' then "http://#{Nex.tenant}.imagoapp.com/api/v2/search" else "/api/v2/search"
     else
       "/api/v2/search"
 
