@@ -125,7 +125,7 @@ class Nex.Widgets.Image extends Spine.Controller
       return
 
     @servingSize = servingSize
-    @log @servingSize * @scale
+    # @log @servingSize * @scale
     @servingUrl = "#{ @src }=s#{ @servingSize * @scale }"
 
     # create image and bind load event
