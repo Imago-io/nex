@@ -11,6 +11,7 @@ class Nex.Widgets.Image extends Spine.Controller
     lazy      : true
     maxSize   : 2000
     noResize  : false
+    mediasize : false
 
   events:
     'resize' : 'render'
@@ -82,8 +83,8 @@ class Nex.Widgets.Image extends Spine.Controller
     # use pvrovided dimentions or current size of @el
     # fallback if element is not in dom rendered it has no dimensions yet
 
-    width  =  @width  or @el.width()  or 500
-    height =  @height or @el.height() or 500
+    width  = @width  or @el.width()  or 500
+    height = @height or @el.height() or 500
 
     # limit size to steps
     # width  = Math.round(width  / 50) * 50 if width
@@ -94,7 +95,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # servingSize = Math.min(Math[if @sizemode is 'fit' then 'min' else 'max'](width, height) * dpr, @maxSize)
 
     # sizemode crop
-    assetRatio = @resolution.width / @resolution.height
+    assetRatio   = @resolution.width / @resolution.height
     wrapperRatio = width / height
     if @sizemode is 'crop'
       if assetRatio < wrapperRatio
