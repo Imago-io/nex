@@ -1,5 +1,29 @@
 Nex  = @Nex or require('nex')
 
+KEYS =
+  '16'  : 'onShift'
+  '18'  : 'onAlt'
+  '17'  : 'onCommand'
+  '91'  : 'onCommand'
+  '93'  : 'onCommand'
+  '224' : 'onCommand'
+  '13'  : 'onEnter'
+  '37'  : 'onLeft'
+  '38'  : 'onUp'
+  '39'  : 'onRight'
+  '40'  : 'onDown'
+  '46'  : 'onDelete'
+  '8'   : 'onBackspace'
+  '9'   : 'onTab'
+  '188' : 'onComma'
+  '190' : 'onPeriod'
+  '27'  : 'onEsc'
+  '186' : 'onColon'
+  '65'  : 'onA'
+  '67'  : 'onC'
+  '86'  : 'onV'
+  "88"  : 'onX'
+
 Nex.Utils =
 
   requestAnimationFrame: do ->
@@ -58,12 +82,6 @@ Nex.Utils =
       query.push(facet)
 
     query
-
-  pluralize: (str) ->
-    str + 's'
-
-  singularize: (str) ->
-    str.replace(/s$/, '')
 
   normalize: (s) ->
     mapping =
@@ -151,29 +169,8 @@ Nex.Utils =
   isNumber: (n) ->
     return n is parseFloat(n)
 
-  toFloat: (value, decimal=2) ->
-    value   = String(value).replace(/\D/g, '')
-    floats  = value.slice(value.length - decimal)
+  getKeyName: (e) ->
+    KEYS[e.which]
 
-    # add trailing zeros
-    floats = '0' + floats while floats.length < decimal
-    ints   = value.slice(0, value.length - decimal) or '0'
-
-    return "#{ints}.#{floats}"
-
-  getAssetKind: (id) ->
-    if id.indexOf('Collection-') is 0
-      kind = 'Collection'
-    else if id.indexOf('Proxy-') is 0
-      kind = 'Proxy'
-    else if id.indexOf('Order-') is 0
-      kind = 'Order'
-    else if id.indexOf('Generic') is 0
-      kind = 'Generic'
-    else if id.match /[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}/
-      kind = 'Image'
-    else if id.match /[0-9a-z]{56}/
-      kind = 'Video'
-    return kind
 
 module.exports = Nex.Utils
