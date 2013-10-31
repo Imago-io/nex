@@ -83,6 +83,12 @@ Nex.Utils =
 
     query
 
+  pluralize: (str) ->
+    str + 's'
+
+  singularize: (str) ->
+    str.replace(/s$/, '')
+
   normalize: (s) ->
     mapping =
       'ä': 'ae'
@@ -169,8 +175,32 @@ Nex.Utils =
   isNumber: (n) ->
     return n is parseFloat(n)
 
+  toFloat: (value, decimal=2) ->
+    value   = String(value).replace(/\D/g, '')
+    floats  = value.slice(value.length - decimal)
+
+    # add trailing zeros
+    floats = '0' + floats while floats.length < decimal
+    ints   = value.slice(0, value.length - decimal) or '0'
+
+    return "#{ints}.#{floats}"
+
+  getAssetKind: (id) ->
+    if id.indexOf('Collection-') is 0
+      kind = 'Collection'
+    else if id.indexOf('Proxy-') is 0
+      kind = 'Proxy'
+    else if id.indexOf('Order-') is 0
+      kind = 'Order'
+    else if id.indexOf('Generic') is 0
+      kind = 'Generic'
+    else if id.match /[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}/
+      kind = 'Image'
+    else if id.match /[0-9a-z]{56}/
+      kind = 'Video'
+    return kind
+
   getKeyName: (e) ->
     KEYS[e.which]
-
 
 module.exports = Nex.Utils
