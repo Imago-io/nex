@@ -75,6 +75,9 @@ class Nex.Contact extends Spine.Controller
       )
       .error( (e) -> console.log("error with form", e) )
 
-
+  onKeyup: (e) =>
+    return unless @isActive()
+    key = Nex.Utils.getKeyName(e)
+    @[key]() if typeof @[key] is 'function'
 
 module.exports = Nex.Contact
