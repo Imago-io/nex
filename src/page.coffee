@@ -1,5 +1,7 @@
 Nex  = @Nex or require('nex')
 
+Nex.Utils or= require('./uitls')
+
 class Nex.Page extends Spine.Controller
   @include Nex.Panel
 
@@ -40,10 +42,8 @@ class Nex.Page extends Spine.Controller
     @controllers = []
 
   onKeyup: (e) =>
-    @log 'onKeyup', e.keyCode
-    e.preventDefault()
     return unless @isActive()
-    switch e.keyCode
-      when 27 then @onEsc() if @onEsc
+    key = Nex.Utils.getKeyName(e)
+    @[key]() if typeof @[key] is 'function'
 
 module.exports = Nex.Page
