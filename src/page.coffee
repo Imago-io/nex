@@ -1,6 +1,6 @@
 Nex  = @Nex or require('nex')
 
-Nex.Utils or= require('./uitls')
+Nex.Utils or= require('./utils')
 
 class Nex.Page extends Spine.Controller
   @include Nex.Panel
