@@ -37,7 +37,7 @@ class Nex.Contact extends Spine.Controller
     $.ajax(
       type: 'GET'
       async: false
-      url: if Nex.debug then "http://#{Nex.tenant}.imagoapp.com/api/v2/getxsrf" else "/api/v2/getxsrf"
+      url: if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.imagoapp.com/api/v2/getxsrf" else "/api/v2/getxsrf"
     ).success( (data) ->
       xhr.setRequestHeader("Nex-Xsrf", data)
     ).error( =>
@@ -64,7 +64,7 @@ class Nex.Contact extends Spine.Controller
     settings =
       beforeSend: @getxsrf
       data: @formToJson(@form)
-      url: if Nex.debug then "http://#{Nex.tenant}.imagoapp.com/api/v2/contact" else "/api/v2/contact"
+      url: if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.imagoapp.com/api/v2/contact" else "/api/v2/contact"
       method: 'POST'
 
     settings = $.extend({}, @defaults, settings)
