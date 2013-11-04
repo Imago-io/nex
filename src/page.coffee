@@ -31,10 +31,12 @@ class Nex.Page extends Spine.Controller
 
   activate: ->
     $('body').on 'keyup.page', @onKeyup
+    $('body').addClass @className
     super
 
   deactivate: ->
     $('body').off '.page'
+    $('body').removeClass @className
     @clear()
     super
 
