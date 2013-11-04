@@ -90,6 +90,60 @@ class Setting extends Spine.Model
   @extend Spine.Model.Ajax
 
 
+class Member extends Spine.Model
+  @configure 'Member', 'email', 'first_name', 'last_name'
+
+  @getMember: ->
+    deferred = $.Deferred()
+    promise  = deferred.promise()
+
+    successResponse = (data, status, xhr, options) =>
+      # update the local records with the newly
+      # fetched assets via fetch_asse
+      member = if data.email then @create(data) else undefined
+      deferred.resolve(member)
+
+    # fetch variants via ajax
+    $.ajax(
+      contentType: 'application/json'
+      dataType: 'json'
+      processData: false
+      headers: Spine.Ajax.defaults
+      type: 'GET'
+      url:  '/api/v2/member'
+    ).success(successResponse)
+     .error(-> deferred.resolve())
+
+    promise
+
+  @login: ->
+    @_axaxCall('POST', {action : 'loginurl'})
+
+  @logout: ->
+    @_axaxCall('POST', {action : 'logouturl'})
+
+  @_axaxCall: (type, data) ->
+    deferred = $.Deferred()
+    promise  = deferred.promise()
+
+    $.ajax(
+      contentType: 'application/json'
+      dataType: 'json'
+      processData: false
+      headers: Spine.Ajax.defaults
+      type: type
+      data: JSON.stringify(data)
+      url:  '/api/v2/member'
+    ).success((data, status, xhr, options) ->
+      if data.url
+        window.location = data.url
+      else
+        deferred.resolve(data)
+    ).error(-> console.log 'error')
+
+    promise
+
+
 class CartItem extends Spine.Model
   @configure 'CartItem', 'meta', 'serving_url', 'quantity', 'price',
                                  'color', 'size', 'itemid'
@@ -126,6 +180,7 @@ Nex.Models =
   Proxy     : Proxy
   Setting   : Setting
   Generic   : Generic
+  Member    : Member
   CartItem  : CartItem
 
 module.exports = Nex.Models
