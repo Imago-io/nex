@@ -122,6 +122,9 @@ class Member extends Spine.Model
   @logout: ->
     @_axaxCall('POST', {action : 'logouturl'})
 
+  @checkout: ->
+    @_axaxCall('POST', {action : 'checkout'})
+
   @_axaxCall: (type, data) ->
     deferred = $.Deferred()
     promise  = deferred.promise()
