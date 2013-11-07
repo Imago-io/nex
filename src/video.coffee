@@ -378,7 +378,8 @@ class VideoElement extends Spine.Controller
     # @log @state, @
 
   onended: =>
-    # @log 'onended'
+    # @log 'onended', @player
+    @player.trigger 'end'
     @state = 'stopped'
 
   onvolumechange: (e) ->
