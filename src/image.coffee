@@ -76,9 +76,7 @@ class Nex.Widgets.Image extends Spine.Controller
   preload: =>
     # @log $.inviewport(@el, threshold: 0)
     return if @status is 'preloading'
-    return if not ($.inviewport @el, threshold: 0) and @lazy
 
-    @status = 'preloading'
 
     # use pvrovided dimentions or current size of @el
     # fallback if element is not in dom rendered it has no dimensions yet
@@ -96,9 +94,27 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # sizemode crop
     assetRatio   = @resolution.width / @resolution.height
-    wrapperRatio = width / height
+
+    # only one side of asset is given
+    if @width is 'auto'
+      wrapperRatio = assetRatio
+      @width = width   = height * assetRatio
+      @el.width width
+      # @log 'width="auto" width: ', width, @width
+    else if @height is 'auto'
+      wrapperRatio = assetRatio
+      @height = height = width / assetRatio
+      @el.height height
+      # @log 'height="auto" height: ', height, @height
+    else
+      wrapperRatio = width / height
+
+    return if not ($.inviewport @el, threshold: 100) and @lazy
+
+    @status = 'preloading'
+
     if @sizemode is 'crop'
-      if assetRatio < wrapperRatio
+      if assetRatio <= wrapperRatio
         # @log 'full width'
         servingSize = Math.round(Math.max(width, width / assetRatio))
       else
@@ -108,7 +124,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # sizemode fit
     else
       # @log 'ratios', assetRatio, wrapperRatio
-      if assetRatio < wrapperRatio
+      if assetRatio <= wrapperRatio
         # @log 'full height', width, height
         servingSize = Math.round(Math.max(height, height * assetRatio))
       else
@@ -139,7 +155,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @status = 'loaded'
 
     @align = 'center center' unless @align
-    # @log 'align', @align
+    # @log 'imgLoaded', @width, @height
 
     css =
       backgroundImage    : "url(#{@servingUrl})"
