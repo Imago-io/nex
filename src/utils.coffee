@@ -8,6 +8,7 @@ KEYS =
   '93'  : 'onCommand'
   '224' : 'onCommand'
   '13'  : 'onEnter'
+  '32'  : 'onSpace'
   '37'  : 'onLeft'
   '38'  : 'onUp'
   '39'  : 'onRight'
@@ -22,7 +23,10 @@ KEYS =
   '65'  : 'onA'
   '67'  : 'onC'
   '86'  : 'onV'
-  "88"  : 'onX'
+  '88'  : 'onX'
+  '68'  : 'onD'
+  '187' : 'onEqual'
+  '189' : 'onMinus'
 
 Nex.Utils =
 
