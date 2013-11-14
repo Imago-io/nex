@@ -1,3 +1,5 @@
+require("./panel")
+
 Nex  = @Nex or require('nex')
 
 class Nex.Widgets.Slider extends Spine.Controller
