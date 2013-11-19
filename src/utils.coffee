@@ -207,9 +207,4 @@ Nex.Utils =
   getKeyName: (e) ->
     KEYS[e.which]
 
-  isTouchDevice: ->
-    el = document.createElement('div')
-    el.setAttribute('ongesturestart', 'return;')
-    return typeof el.ongesturestart is "function"
-
 module.exports = Nex.Utils
