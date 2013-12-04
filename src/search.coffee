@@ -2,7 +2,7 @@ Nex  = @Nex or require('nex')
 
 Nex.Search =
 
-  get: (params, abortable) ->
+  get: (params, abortable, fetchAssets=true) ->
     if abortable is undefined and Nex.client is 'public'
       abortable = true
 
@@ -30,6 +30,7 @@ Nex.Search =
     getCollectionDone = (collection) =>
       return deferred.resolve(result) unless collection
       result = collection
+      return deferred.resolve(result) unless fetchAssets
 
       #get assets
       @getAssets(collection, params)
