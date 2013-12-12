@@ -141,7 +141,7 @@ Nex.Search =
     if typeof data is 'string'
       data = JSON.parse(data)
     for obj in data
-      asset = @create_or_update(obj, {ajax:false})
+      asset = @create_or_update(obj, {ajax:false, skipAc: true})
       objs.push asset
     objs
 
