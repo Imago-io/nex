@@ -211,4 +211,10 @@ Nex.Utils =
   getKeyName: (e) ->
     KEYS[e.which]
 
+  getURLParameter: (name) ->
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
+    regex = new RegExp("[\\?&]" + name + "=([^&#]*)")
+    results = regex.exec(location.search)
+    (if not results? then "" else decodeURIComponent(results[1].replace(/\+/g, " ")))
+
 module.exports = Nex.Utils
