@@ -28,8 +28,8 @@ class Nex.Widgets.Image extends Spine.Controller
     @logPrefix = '(App) Image: '
 
     # check requirements
-    return throw new Error 'image widget rquires src' unless @src
-    return throw new Error 'image widget rquires resolution' unless @resolution
+    return @log 'Error: image widget rquires src' unless @src
+    return @log 'Error: image widget rquires resolution' unless @resolution
 
     @id = Nex.Utils.uuid()
 
