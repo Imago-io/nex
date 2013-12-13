@@ -2,7 +2,7 @@ Nex  = @Nex or require('nex')
 
 Nex.Search =
 
-  get: (params, abortable) ->
+  get: (params, abortable, fetchAssets=true) ->
     if abortable is undefined and Nex.client is 'public'
       abortable = true
 
@@ -30,6 +30,7 @@ Nex.Search =
     getCollectionDone = (collection) =>
       return deferred.resolve(result) unless collection
       result = collection
+      return deferred.resolve(result) unless fetchAssets
 
       #get assets
       @getAssets(collection, params)
@@ -140,7 +141,7 @@ Nex.Search =
     if typeof data is 'string'
       data = JSON.parse(data)
     for obj in data
-      asset = @create_or_update(obj, {ajax:false})
+      asset = @create_or_update(obj, {ajax:false, skipAc: true})
       objs.push asset
     objs
 

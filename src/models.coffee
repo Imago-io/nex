@@ -149,10 +149,10 @@ class Member extends Spine.Model
 
 class CartItem extends Spine.Model
   @configure 'CartItem', 'meta', 'serving_url', 'quantity', 'price',
-                                 'color', 'size', 'itemid'
+                                 'color', 'size', 'itemid', 'headline', 'description'
 
 
-  @addToCart: (itemid, quantity, options={'size':'', 'color':''}) ->
+  @addToCart: (itemid, quantity, options={'size':'', 'color':'', headline:'', description:''}) ->
     # console.log 'optoins are', options
     existing = @select((item) -> item.itemid is itemid)
     if existing.length
@@ -168,6 +168,8 @@ class CartItem extends Spine.Model
       size        : options?.size
       serving_url : options?.serving_url
       price       : options?.price
+      headline    : options?.headline
+      description : options?.description
     @create(item)
 
 
