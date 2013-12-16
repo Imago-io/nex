@@ -217,4 +217,7 @@ Nex.Utils =
     results = regex.exec(location.search)
     (if not results? then "" else decodeURIComponent(results[1].replace(/\+/g, " ")))
 
+  inUsa: (value) ->
+    value?.toLowerCase() in ['usa', 'united states', 'united states of america']
+
 module.exports = Nex.Utils
