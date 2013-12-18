@@ -190,7 +190,6 @@ Nex.Utils =
     return "#{ints}.#{floats}"
 
   toPrice: (value) ->
-    console.log @, @toFloat
     @toFloat(value).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
 
   isEmail: (value) ->
