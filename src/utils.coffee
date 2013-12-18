@@ -189,6 +189,10 @@ Nex.Utils =
 
     return "#{ints}.#{floats}"
 
+  toPrice: (value) ->
+    console.log @, @toFloat
+    @toFloat(value).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+
   isEmail: (value) ->
     pattern = ///^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$///
     return !!value.match(pattern)
