@@ -47,8 +47,8 @@ class Nex.Widgets.Video extends Spine.Controller
 
 
     # set size of wrapper if provided
-    @el.width(@width)   if @width
-    @el.height(@height) if @height
+    @el.width(@width)   if @width  and typeof @width  is 'Number'
+    @el.height(@height) if @height and typeof @height is 'Number'
 
     w = $(window).on "resize.#{@id}", @resize
 
@@ -157,6 +157,9 @@ class Nex.Widgets.Video extends Spine.Controller
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
     width  = @width  or @el.width()
     height = @height or @el.height()
+
+    width  = 0 unless typeof width  is 'number'
+    height = 0 unless typeof height is 'number'
 
     @serving_url = @src
     @serving_url += "=s#{ Math.ceil(Math.min(Math.max(width, height) * dpr, 1600)) }"
