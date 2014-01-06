@@ -84,6 +84,8 @@ Nex.Search =
     promise  = deferred.promise()
 
     path = params.path[0]
+    path = path.replace(/\/$/, "") unless path is '/'
+
     Collection = @get_model('Collection')
     collection = Collection.findByAttribute('path', path)
 
