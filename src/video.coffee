@@ -23,6 +23,9 @@ class Nex.Widgets.Video extends Spine.Controller
     # 'click .playbig'  : 'togglePlay'
     'tap .playbig'    : 'togglePlay'
 
+  elements:
+    '.wrapper' : 'wrapper'
+
   constructor: ->
     # set default values before init
     for key, value of @defaults
@@ -33,22 +36,27 @@ class Nex.Widgets.Video extends Spine.Controller
 
     @id = Nex.Utils.uuid()
 
-    @append @videoEl = new VideoElement(player: @)
+    # play button
+    @html '<div class="wrapper"><div class="spin"></div><div class="spin2"></div><a class="playbig icon-play" /></div>'
+
+    @videoEl = new VideoElement(player: @)
+    @wrapper.append @videoEl.el
+
     @video = @videoEl.video
 
     @el.addClass "#{@class or ''} #{@size} #{@align} #{@sizemode}"
-    @el.attr('style', @style) if @style
-
-    # play button
-    @append @playbig = $('<div class="spin"></div><div class="spin2"></div><a class="playbig icon-play" />')
+    # @el.attr('style', @style) if @style
 
     # create controlbar if video read and if enabled
-    @on 'videoready', -> @append @controlBar = new Controls(player: @) if @controls
+    if @controls
+      @on 'videoready', ->
+        @controlBar = new Controls(player: @)
+        @wrapper.append @controlBar.el
 
 
     # set size of wrapper if provided
-    @el.width(@width)   if @width  and typeof @width  is 'Number'
-    @el.height(@height) if @height and typeof @height is 'Number'
+    @wrapper.width(@width)   if @width  and typeof @width  is 'Number'
+    @wrapper.height(@height) if @height and typeof @height is 'Number'
 
     w = $(window).on "resize.#{@id}", @resize
 
@@ -73,8 +81,8 @@ class Nex.Widgets.Video extends Spine.Controller
 
     # sizemode crop
     if @sizemode is 'crop'
-      width  = @width  or @el.width()
-      height = @height or @el.height()
+      width  = @width  or @wrapper.width()
+      height = @height or @wrapper.height()
       wrapperRatio = width / height
       if assetRatio < wrapperRatio
         # full width
@@ -96,7 +104,7 @@ class Nex.Widgets.Video extends Spine.Controller
             s.marginLeft = "0px"
 
         @videoEl.el.css s
-        @el.css
+        @wrapper.css
           backgroundSize: '100% auto'
           backgroundPosition: @align
 
@@ -120,21 +128,21 @@ class Nex.Widgets.Video extends Spine.Controller
             s.marginLeft = "-#{ (height * assetRatio / 2) }px"
 
         @videoEl.el.css s
-        @el.css
+        @wrapper.css
           backgroundSize: 'auto 100%'
           backgroundPosition: @align
 
     # sizemode fit
     else
-      width  = @width  or @el.parent().width()
-      height = @height or @el.parent().height()
+      width  = @width  or @wrapper.parent().width()
+      height = @height or @wrapper.parent().height()
       wrapperRatio = width / height
       if assetRatio > wrapperRatio
         # full width
         @videoEl.el.css
           width: '100%'
           height: if Nex.Utils.isiOS() then '100%' else 'auto'
-        @el.css
+        @wrapper.css
           backgroundSize: '100% auto'
           backgroundPosition: @align
           width:  "#{ width }px"
@@ -144,7 +152,7 @@ class Nex.Widgets.Video extends Spine.Controller
         @videoEl.el.css
           width: if Nex.Utils.isiOS() then '100%' else 'auto'
           height: '100%'
-        @el.css
+        @wrapper.css
           backgroundSize: 'auto 100%'
           backgroundPosition: @align
           width:  "#{ height * assetRatio }px"
@@ -173,7 +181,7 @@ class Nex.Widgets.Video extends Spine.Controller
     css.width           = "#{width}px"  if Number(@width)
     css.height          = "#{height}px" if Number(@height)
 
-    @el.css css
+    @wrapper.css css
 
   activateControls: =>
     return unless @controlBar
