@@ -24,7 +24,7 @@ class Nex.Widgets.Video extends Spine.Controller
     'tap .playbig'    : 'togglePlay'
 
   elements:
-    '.wrapper' : 'wrapper'
+    '.imagowrapper' : 'wrapper'
 
   constructor: ->
     # set default values before init
@@ -37,7 +37,7 @@ class Nex.Widgets.Video extends Spine.Controller
     @id = Nex.Utils.uuid()
 
     # play button
-    @html '<div class="wrapper"><div class="spin"></div><div class="spin2"></div><a class="playbig icon-play" /></div>'
+    @html '<div class="imagowrapper"><div class="spin"></div><div class="spin2"></div><a class="playbig icon-play" /></div>'
 
     @videoEl = new VideoElement(player: @)
     @wrapper.append @videoEl.el
