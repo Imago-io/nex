@@ -43,11 +43,14 @@ class Nex.Widgets.Image extends Spine.Controller
     @el.attr('style', @style) if @style
 
     @window = $(window)
-    # bind to window resize if no dimentions are provided
-    if not @width and not @height
-      @window.on "resizestop.#{@id}", @preload
-    # bind css background size calculation
-    @window.on "resize.#{@id}", @resize
+
+    # bind to window resize STOP if no dimentions are provided
+    @window.on "resizestop.#{@id}", @preload if not @width and not @height
+
+    # bind css background size calculation to window resize START.
+    @window.on "resizestart.#{@id}", @resizeStart unless @noResize
+
+    # load image if enters the viewport
     @window.on "scrollstop.#{@id}", @preload if @lazy
 
     # convert resolution string to object
@@ -67,20 +70,31 @@ class Nex.Widgets.Image extends Spine.Controller
 
     @preload()
 
-  resize: =>
+  # public
+  resize: (width, height) ->
+    # return unless width and height and typeof width is 'number' and typeof height is 'number'
+
+    @width  = width
+    @height = height
+
+    @el.width  @width
+    @el.height @height
+
+    @resizeStart()
+    # @preload()
+
+  resizeStart: =>
     # @log 'resize'
-    return if @noResize
     # use pvrovided dimentions or current size of @el
     @image.css('backgroundSize', @calcMediaSize())
 
   preload: =>
-    # @log $.inviewport(@el, threshold: 0)
-    return if @status is 'preloading'
-
+    # @log 'preload', arguments
+    return if not $.inviewport(@el, threshold: 0) if @lazy
+    return @log 'tried to preload during preloading!!' if @status is 'preloading'
 
     # use pvrovided dimentions or current size of @el
     # fallback if element is not in dom rendered it has no dimensions yet
-
     width  = @width  or @el.width()  or 500
     height = @height or @el.height() or 500
 
@@ -110,6 +124,10 @@ class Nex.Widgets.Image extends Spine.Controller
       wrapperRatio = width / height
 
     return if not ($.inviewport @el, threshold: 100) and @lazy
+
+    # unbind scrollstop listener for lazy loading
+    @window.off "scrollstop.#{@id}" if @lazy
+
 
     @status = 'preloading'
 
@@ -149,22 +167,32 @@ class Nex.Widgets.Image extends Spine.Controller
     img = $('<img>').bind 'load', @imgLoaded
     img.attr('src', @servingUrl)
 
+    css =
+      # backgroundImage    : "url(#{@servingUrl})"
+      backgroundPosition : "center center" or @align
+      display            : "inline-block"
+
+    css.backgroundSize  = @calcMediaSize()
+    css.width           = "#{parseInt @width,  10}px"  if Number(@width)
+    css.height          = "#{parseInt @height, 10}px" if Number(@height)
+
+    @image.css(css)
 
   imgLoaded: =>
     @trigger 'loaded'
     @status = 'loaded'
 
-    @align = 'center center' unless @align
+    # @align = 'center center' unless @align
     # @log 'imgLoaded', @width, @height
 
     css =
       backgroundImage    : "url(#{@servingUrl})"
-      backgroundPosition : @align
-      display            : "inline-block"
+    #   backgroundPosition : "center center" or @align
+    #   display            : "inline-block"
 
-    css.backgroundSize  = @calcMediaSize()
-    css.width           = "#{@width}px"  if Number(@width)
-    css.height          = "#{@height}px" if Number(@height)
+    # css.backgroundSize  = @calcMediaSize()
+    # css.width           = "#{parseInt @width,  10}px"  if Number(@width)
+    # css.height          = "#{parseInt @height, 10}px" if Number(@height)
 
     @el.removeClass('loaded')
     @image.css(css)
@@ -172,6 +200,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @delay @loadedClass, 1
 
   calcMediaSize: =>
+    # @log 'calcMediaSize'
     width  =  @width  or @el.width()
     height =  @height or @el.height()
     assetRatio = @resolution.width / @resolution.height
@@ -184,7 +213,11 @@ class Nex.Widgets.Image extends Spine.Controller
   loadedClass: ->
     @el.addClass('loaded')
 
+  activate: ->
+    @preload()
+
   release: ->
+    # @log 'release'
     @window.off @id
     super
 

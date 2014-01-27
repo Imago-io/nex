@@ -28,6 +28,10 @@ class Nex.Widgets.Slider extends Spine.Controller
     sizemode:   'fit'
     subslides:  false
     loop:       true
+    noResize:   false
+    current:    0
+    lazy:       false
+
 
   constructor: ->
     # set default values before init
@@ -60,6 +64,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       # when 40 then @log 'down'
 
   render: (result) =>
+    return unless result?.assets.length
     @activate() unless @isActive()
     for asset,i in result.items
       @add new Slide
@@ -68,8 +73,9 @@ class Nex.Widgets.Slider extends Spine.Controller
         subslides: @subslides
         height:    @height
         width:     @width
-    @current = result.items.length - 1 if @current is 'last'
-    @manager.controllers[@current].active()
+        noResize:  @noResize
+        lazy:      @lazy
+    @goto @current
 
   clear: ->
     for cont in @controllers
@@ -80,20 +86,31 @@ class Nex.Widgets.Slider extends Spine.Controller
     @append controller
 
   next: =>
-    if @current < (@manager.controllers.length - 1)
-      @current++
-    else
-      @trigger 'end'
-      @current = 0 if @loop
-    @manager.controllers[@current]?.active()
+    @goto(@current + 1)
 
   prev: =>
-    if @current > 0
-      @current--
-    else
-      @trigger 'start'
-      @current = @manager.controllers.length - 1 if @loop
+    @goto(@current - 1)
+
+  goto: (slide) ->
+    switch slide
+      when 'first' then next = 0
+      when 'last'  then next = @manager.controllers.length - 1
+      else next = slide
+
+    @current = next
     @manager.controllers[@current]?.active()
+    @el.removeClass 'first last'
+
+    if @current is 0
+      @trigger 'first'
+      @el.addClass 'first'
+
+    if @current is @manager.controllers.length - 1
+      @trigger 'last'
+      @el.addClass 'last'
+
+
+
 
 module.exports = Nex.Widgets.Slider
 
@@ -130,6 +147,8 @@ class Slide extends Spine.Controller
           className: 'slidecontent'
           height:    @height
           width:     @width
+          noResize:  @noResize
+          lazy:      @lazy
     else
       kind = if result.kind in ['Image', 'Video'] then result.kind else 'Image'
       @add @["asset"] = new Nex.Widgets[kind]
@@ -139,11 +158,17 @@ class Slide extends Spine.Controller
         uuid:         result.id
         formats:      result.formats
         sizemode:     @sizemode
-        lazy:         false
         height:       @height
         width:        @width
+        noResize:     @noResize
+        lazy:         @lazy
       html = result.getMeta('html', '')
       @append html if html
+
+  # activate: ->
+  #   super
+  #   for cont in @controllers
+  #     cont.preload()
 
   add: (controller) ->
     @controllers.push controller
