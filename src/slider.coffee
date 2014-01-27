@@ -1,4 +1,5 @@
 require("./panel")
+# require("./utils")
 
 Nex  = @Nex or require('nex')
 
@@ -19,18 +20,19 @@ class Nex.Widgets.Slider extends Spine.Controller
     'keyup'    : 'onKeyup'
 
   defaults:
-    animation:  'fade'
-    easing:     'swing'
-    sizemode:   'fit'
-    current:    0
-    autoplay:   true
-    enablekeys: true
-    sizemode:   'fit'
-    subslides:  false
-    loop:       true
-    noResize:   false
-    current:    0
-    lazy:       false
+    animation:    'fade'
+    easing:       'swing'
+    sizemode:     'fit'
+    current:      0
+    autoplay:     true
+    enablekeys:   true
+    enablearrows: true
+    sizemode:     'fit'
+    subslides:    false
+    loop:         true
+    noResize:     false
+    current:      0
+    lazy:         false
 
 
   constructor: ->
@@ -44,11 +46,13 @@ class Nex.Widgets.Slider extends Spine.Controller
 
     @bind 'ready', @render
 
-    document.addEventListener 'keydown', @onKeyup if @enablekeys
+    @id = Nex.Utils.uuid()
+
+    $(document).on "keydown.#{@id}", @onKeyup if @enablekeys
 
     @el.addClass @class if @class
 
-    @html '<div class="prev"></div><div class="next"></div>'
+    @html '<div class="prev"></div><div class="next"></div>' if @enablearrows
 
     # fetch data or on active to fetch data
     if @path then @getData @path else @active @getData
@@ -86,15 +90,23 @@ class Nex.Widgets.Slider extends Spine.Controller
     @append controller
 
   next: =>
-    @goto(@current + 1)
+    if @current is @manager.controllers.length - 1
+      if @loop
+        return @goto('first')
+    else
+      @goto(@current + 1)
 
   prev: =>
-    @goto(@current - 1)
+    if @current is 0
+      if @loop
+        @goto('last')
+    else
+      @goto(@current - 1)
 
   goto: (slide) ->
     switch slide
-      when 'first' then next = 0
-      when 'last'  then next = @manager.controllers.length - 1
+      when 'first'        then next = 0
+      when 'last'         then next = @manager.controllers.length - 1
       else next = slide
 
     @current = next
@@ -108,6 +120,12 @@ class Nex.Widgets.Slider extends Spine.Controller
     if @current is @manager.controllers.length - 1
       @trigger 'last'
       @el.addClass 'last'
+
+  release: ->
+    $(document).off "keydown.#{@id}" if @enablekeys
+    for cont in @manager.controllers
+      @manager.controllers[0].release()
+    super
 
 
 
