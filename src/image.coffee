@@ -215,6 +215,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @el.addClass('loaded')
 
   activate: ->
+    super
     @preload()
 
   release: ->
