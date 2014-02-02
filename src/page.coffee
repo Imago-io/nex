@@ -29,6 +29,11 @@ class Nex.Page extends Spine.Controller
     @controllers.push(controller)
     @append(controller)
 
+  replaceWithWidget: (wrapper, controller) ->
+    @log 'wrapper, controller', wrapper, controller.el or controller
+    @controllers.push(controller)
+    wrapper.replaceWith(controller.el or controller)
+
   activate: ->
     $('body').on 'keyup.page', @onKeyup
     $('body').addClass @className
@@ -44,6 +49,7 @@ class Nex.Page extends Spine.Controller
     for cont in @controllers
       cont.release()
     @controllers = []
+    @html ''
 
   onKeyup: (e) =>
     return unless @isActive()

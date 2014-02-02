@@ -84,7 +84,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # @preload()
 
   resizeStart: =>
-    # @log 'resize'
+    # return unless @isActive()
     # use pvrovided dimentions or current size of @el
     @image.css('backgroundSize', @calcMediaSize())
 
@@ -206,6 +206,7 @@ class Nex.Widgets.Image extends Spine.Controller
     assetRatio = @resolution.width / @resolution.height
     wrapperRatio = width / height
     if @sizemode is 'crop'
+      # @log '@sizemode crop', assetRatio, wrapperRatio
       if assetRatio < wrapperRatio then "100% auto" else "auto 100%"
     else
       if assetRatio > wrapperRatio then "100% auto" else "auto 100%"
