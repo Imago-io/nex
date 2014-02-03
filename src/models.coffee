@@ -50,6 +50,8 @@ class Asset extends Spine.Model
         opts[key].push(obj.value) if obj.value not in opts[key]
     opts
 
+  discounted: ->
+    (@variants[0].meta.discounted) and (@variants[0].meta.discounted.value > 0)
 
 class Collection extends Asset
   @configure 'Collection', 'kind', 'name', 'meta', 'path', 'serving_url', 'variants',
