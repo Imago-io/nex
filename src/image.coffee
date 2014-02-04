@@ -64,8 +64,9 @@ class Nex.Widgets.Image extends Spine.Controller
 
   render: =>
     # wait till @el is added to dom
+    return if @released
     unless @el.width()
-      @log 'el not ready delay render for 250ms'
+      # @log 'el not ready delay render for 250ms', @released
       @delay @render, 250
       return
 
@@ -220,8 +221,8 @@ class Nex.Widgets.Image extends Spine.Controller
     @preload()
 
   release: ->
-    # @log 'release'
     @window.off @id
+    @released = true
     super
 
 module.exports = Nex.Widgets.Image
