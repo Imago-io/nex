@@ -55,8 +55,8 @@ class Nex.Widgets.Video extends Spine.Controller
 
 
     # set size of wrapper if provided
-    @wrapper.width(@width)   if @width  and typeof @width  is 'Number'
-    @wrapper.height(@height) if @height and typeof @height is 'Number'
+    @el.width(@width)   if @width  and typeof @width  is 'Number'
+    @el.height(@height) if @height and typeof @height is 'Number'
 
     @window = $(window)
 
@@ -74,7 +74,7 @@ class Nex.Widgets.Video extends Spine.Controller
         height: r[1]
 
     @delay ->
-      @resize()
+      # @resize()
       @setupPosterFrame()
       @resize()
     , 330
@@ -83,15 +83,15 @@ class Nex.Widgets.Video extends Spine.Controller
 
   resize: =>
     assetRatio   = @resolution.width / @resolution.height
-
+    @log 'resize assetRatio', @resolution, assetRatio
 
     # sizemode crop
     if @sizemode is 'crop'
-      width  = @width  or @wrapper.width()
-      height = @height or @wrapper.height()
+      width  = @el.width()
+      height = @el.height()
       wrapperRatio = width / height
       if assetRatio < wrapperRatio
-        # full width
+        @log 'full width'
         if Nex.Utils.isiOS()
           s =
             width:  '100%'
@@ -115,7 +115,7 @@ class Nex.Widgets.Video extends Spine.Controller
           backgroundPosition: @align
 
       else
-        # full height
+        @log 'full height'
         if Nex.Utils.isiOS()
           s =
             width:  '100%'
@@ -140,11 +140,13 @@ class Nex.Widgets.Video extends Spine.Controller
 
     # sizemode fit
     else
-      width  = @width  or @wrapper.parent().width()
-      height = @height or @wrapper.parent().height()
+      # @log @el, @el.width(), @el.height()
+      width  = @el.width()
+      height = @el.height()
       wrapperRatio = width / height
       if assetRatio > wrapperRatio
         # full width
+        @log 'full width', width, parseInt(width / assetRatio, 10)
         @videoEl.el.css
           width: '100%'
           height: if Nex.Utils.isiOS() then '100%' else 'auto'
@@ -152,16 +154,17 @@ class Nex.Widgets.Video extends Spine.Controller
           backgroundSize: '100% auto'
           backgroundPosition: @align
           width:  "#{ width }px"
-          height: "#{ width / assetRatio }px"
+          height: "#{ parseInt(width / assetRatio, 10) }px"
       else
         # full height
+        @log 'full height', parseInt(height * assetRatio, 10), height
         @videoEl.el.css
           width: if Nex.Utils.isiOS() then '100%' else 'auto'
           height: '100%'
         @wrapper.css
           backgroundSize: 'auto 100%'
           backgroundPosition: @align
-          width:  "#{ height * assetRatio }px"
+          width:  "#{ parseInt(height * assetRatio, 10) }px"
           height: "#{ height }px"
 
   setupPosterFrame: =>
@@ -169,11 +172,11 @@ class Nex.Widgets.Video extends Spine.Controller
     return unless !!@src
     # use pvrovided dimentions or current size of @el
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
-    width  = @width  or @el.width()
-    height = @height or @el.height()
+    width  = @el.width()
+    height = @el.height()
 
-    width  = 0 unless typeof width  is 'number'
-    height = 0 unless typeof height is 'number'
+    # width  = 0 unless typeof width  is 'number'
+    # height = 0 unless typeof height is 'number'
 
     @serving_url = @src
     @serving_url += "=s#{ Math.ceil(Math.min(Math.max(width, height) * dpr, 1600)) }"
@@ -184,8 +187,8 @@ class Nex.Widgets.Video extends Spine.Controller
       backgroundRepeat   : 'no-repeat'
 
     css.backgroundSize  = "auto 100%"
-    css.width           = "#{width}px"  if Number(@width)
-    css.height          = "#{height}px" if Number(@height)
+    # css.width           = "#{width}px"  if Number(@width)
+    # css.height          = "#{height}px" if Number(@height)
 
     @wrapper.css css
 
