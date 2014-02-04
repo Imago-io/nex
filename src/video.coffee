@@ -58,7 +58,13 @@ class Nex.Widgets.Video extends Spine.Controller
     @wrapper.width(@width)   if @width  and typeof @width  is 'Number'
     @wrapper.height(@height) if @height and typeof @height is 'Number'
 
-    w = $(window).on "resize.#{@id}", @resize
+    @window = $(window)
+
+    # resize video
+    @window.on "resize.#{@id}", @resize
+
+    # load poster if enters the viewport
+    @window.on "scrollstop.#{@id}", @setupPosterFrame if @lazy
 
     # convert resolution string to object
     if typeof @resolution is 'string'
@@ -158,7 +164,7 @@ class Nex.Widgets.Video extends Spine.Controller
           width:  "#{ height * assetRatio }px"
           height: "#{ height }px"
 
-  setupPosterFrame: ->
+  setupPosterFrame: =>
     return if not ($.inviewport @el, threshold: 0) and @lazy
     return unless !!@src
     # use pvrovided dimentions or current size of @el
