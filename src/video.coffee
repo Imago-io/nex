@@ -83,7 +83,7 @@ class Nex.Widgets.Video extends Spine.Controller
 
   resize: =>
     assetRatio   = @resolution.width / @resolution.height
-    @log 'resize assetRatio', @resolution, assetRatio
+    # @log 'resize assetRatio', @resolution, assetRatio
 
     # sizemode crop
     if @sizemode is 'crop'
@@ -91,7 +91,7 @@ class Nex.Widgets.Video extends Spine.Controller
       height = @el.height()
       wrapperRatio = width / height
       if assetRatio < wrapperRatio
-        @log 'full width'
+        # @log 'full width'
         if Nex.Utils.isiOS()
           s =
             width:  '100%'
@@ -115,7 +115,7 @@ class Nex.Widgets.Video extends Spine.Controller
           backgroundPosition: @align
 
       else
-        @log 'full height'
+        # @log 'full height'
         if Nex.Utils.isiOS()
           s =
             width:  '100%'
@@ -146,7 +146,7 @@ class Nex.Widgets.Video extends Spine.Controller
       wrapperRatio = width / height
       if assetRatio > wrapperRatio
         # full width
-        @log 'full width', width, parseInt(width / assetRatio, 10)
+        # @log 'full width', width, parseInt(width / assetRatio, 10)
         @videoEl.el.css
           width: '100%'
           height: if Nex.Utils.isiOS() then '100%' else 'auto'
@@ -157,7 +157,7 @@ class Nex.Widgets.Video extends Spine.Controller
           height: "#{ parseInt(width / assetRatio, 10) }px"
       else
         # full height
-        @log 'full height', parseInt(height * assetRatio, 10), height
+        # @log 'full height', parseInt(height * assetRatio, 10), height
         @videoEl.el.css
           width: if Nex.Utils.isiOS() then '100%' else 'auto'
           height: '100%'
