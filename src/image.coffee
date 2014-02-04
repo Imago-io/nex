@@ -65,6 +65,7 @@ class Nex.Widgets.Image extends Spine.Controller
   render: =>
     # wait till @el is added to dom
     unless @el.width()
+      @log 'el not ready delay render for 250ms'
       @delay @render, 250
       return
 
@@ -90,7 +91,7 @@ class Nex.Widgets.Image extends Spine.Controller
 
   preload: =>
     # @log 'preload', arguments
-    return if not $.inviewport(@el, threshold: 200) if @lazy
+    return if not $.inviewport(@el, threshold: 0) if @lazy
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
 
     # use pvrovided dimentions or current size of @el
