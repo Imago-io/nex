@@ -405,7 +405,7 @@ class VideoElement extends Spine.Controller
 
   onvolumechange: (e) ->
     # @log 'onvolumechange'
-    @trigger 'timeupdate', e
+    @trigger 'volumechange', e
 
 class Controls extends Spine.Controller
   className: 'controls active'
@@ -416,12 +416,14 @@ class Controls extends Spine.Controller
     '.volume input' : 'volume'
 
   events:
-    'click .play'           : 'play'
-    'click .pause'          : 'pause'
-    'change .seek'          : 'onSeek'
-    'click .size'           : 'toggleSize'
-    'change .volume input'  : 'onVolumeChnage'
-    'click .fullscreen'     : 'onEnterFullScreen'
+    'click  .play'             : 'play'
+    'click  .pause'            : 'pause'
+    'click  .size'             : 'toggleSize'
+    'click  .fullscreen'       : 'onEnterFullScreen'
+    'change .seek'             : 'onSeek'
+    'change .volume input'     : 'onVolumeChnage'
+    'click  .icon-volume-down' : 'muteVolume'
+    'click  .icon-volume-up'   : 'fullVolume'
 
   constructor: ->
     super
@@ -429,7 +431,8 @@ class Controls extends Spine.Controller
 
     @html '<a class="play icon-play"></a><a class="pause icon-pause"></a><span class="time">00:00</span><span class="seekbar"><input type="range" value="0" class="seek"/></span><a class="size">hd</a><span class="volume"><span class="icon-volume-up"></span><input type="range" value="100"/><span class="icon-volume-down"></span></span><a class="fullscreen icon-resize-full"></a><a class="screen icon-resize-small"></a>'
 
-    @player.videoEl.on 'timeupdate', @ontimeupdate
+    @player.videoEl.on 'timeupdate'  , @ontimeupdate
+    @player.videoEl.on 'volumechange', @onvolumeupdate
 
     document.addEventListener(screenfull.raw.fullscreenchange, @onfullscreenchange)
 
@@ -447,6 +450,10 @@ class Controls extends Spine.Controller
   ontimeupdate: (e) =>
     @time.html @formatTime @player.videoEl.getCurrentTime()
     @seek.val @player.videoEl.getCurrentTime() / @player.videoEl.getEndTime() * 100
+
+  onvolumeupdate: (e) =>
+    volume = @player.videoEl.getVolume() * 100
+    @volume.val(volume) unless Number(@volume.val()) is volume
 
   pad: (num) ->
     return "0" + num  if num < 10
@@ -493,6 +500,12 @@ class Controls extends Spine.Controller
 
   onfullscreenchange: (e) =>
     @player.videoEl.video.removeAttribute('controls') unless screenfull.isFullscreen
+
+  muteVolume: ->
+    @player.videoEl.setVolume(0)
+
+  fullVolume: ->
+    @player.videoEl.setVolume(1)
 
   doDelayed: (func, sec) =>
     clearTimeout(@idleTimer) if @idleTimer
