@@ -99,55 +99,53 @@ class Nex.Widgets.Image extends Spine.Controller
     return if not $.inviewport(@el, threshold: 0) if @lazy
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
 
+    @status = 'preloading'
+    # unbind scrollstop listener for lazy loading
+    @window.off "scrollstop.#{@id}" if @lazy
+
     # sizemode crop
-    assetRatio   = @resolution.width / @resolution.height
+    assetRatio = @resolution.width / @resolution.height
 
     # use pvrovided dimentions or current size of @el
 
-    width  = if typeof @width  is 'number' then @width  else @el.width()
+    width = if typeof @width  is 'number' then @width  else @el.width()
 
     if typeof @height is 'number'
       height = @height
     else
-      if @sizemode is 'crop'
-        height = @el.height()
-      else
-        height = width * assetRatio
+      height = @el.height()
 
-        # this should only be done if imageimage is not pos absolute
-        @el.height parseInt(height, 10) unless @el.css('position') is 'absolute'
+      # this should only be done if imageimage is not pos absolute
+      # @el.height height if @el.css('position') in ['static', 'relative']
 
     wrapperRatio = width / height
-
-    @log 'width, height', width, height
+    @log 'width, height, wrapperRatio', width, height, wrapperRatio
+    # debugger
 
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
     # servingSize = Math.min(Math[if @sizemode is 'fit' then 'min' else 'max'](width, height) * dpr, @maxSize)
 
-    # unbind scrollstop listener for lazy loading
-    @window.off "scrollstop.#{@id}" if @lazy
-
-    @status = 'preloading'
-
+    # @log 'width, height', width, height
     if @sizemode is 'crop'
       if assetRatio <= wrapperRatio
-        # @log 'full width'
+        @log 'crop full width'
         servingSize = Math.round(Math.max(width, width / assetRatio))
       else
-        # @log 'full height'
+        @log 'crop full height'
         servingSize = Math.round(Math.max(height, height * assetRatio))
 
     # sizemode fit
     else
       # @log 'ratios', assetRatio, wrapperRatio
       if assetRatio <= wrapperRatio
-        # @log 'full height', width, height
+        @log 'fit full height', width, height, assetRatio, height * assetRatio
         servingSize = Math.round(Math.max(height, height * assetRatio))
       else
-        # @log 'full width', width, height
+        @log 'fit full width', width, height, assetRatio, height / assetRatio
         servingSize = Math.round(Math.max(width, width / assetRatio))
 
     servingSize = Math.min(servingSize * dpr, @maxSize)
+    @log 'servingSize', servingSize, width, height
 
 
 
