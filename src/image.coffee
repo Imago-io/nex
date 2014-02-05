@@ -85,7 +85,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # @el.width  @width
     # @el.height @height
 
-    @resizeStart()
+    @onResize()
     # @preload()
 
   onResize: =>
