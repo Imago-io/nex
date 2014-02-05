@@ -12,6 +12,8 @@ class Nex.Widgets.Image extends Spine.Controller
     maxSize   : 2560
     noResize  : false
     mediasize : false
+    width     : 'auto'
+    height    : 'auto'
 
   events:
     'resize' : 'render'
@@ -27,6 +29,8 @@ class Nex.Widgets.Image extends Spine.Controller
     super
     @logPrefix = '(App) Image: '
 
+    @log '@align', @align
+
     # check requirements
     return @log 'Error: image widget rquires src' unless @src
     return @log 'Error: image widget rquires resolution' unless @resolution
@@ -36,8 +40,8 @@ class Nex.Widgets.Image extends Spine.Controller
     @html '<div class="image"></div><div class="spin"></div><div class="spin2"></div>'
 
     # set size of wrapper if provided
-    @el.width(@width)   if @width
-    @el.height(@height) if @height
+    @el.width(@width)   if typeof @width  is 'number'
+    @el.height(@height) if typeof @height is 'number'
 
     @el.addClass(@class)
     @el.attr('style', @style) if @style
@@ -72,15 +76,15 @@ class Nex.Widgets.Image extends Spine.Controller
 
     @preload()
 
-  # public
+  # public function
   resize: (width, height) ->
     # return unless width and height and typeof width is 'number' and typeof height is 'number'
 
     @width  = width
     @height = height
 
-    @el.width  @width
-    @el.height @height
+    # @el.width  @width
+    # @el.height @height
 
     @resizeStart()
     # @preload()
@@ -95,41 +99,33 @@ class Nex.Widgets.Image extends Spine.Controller
     return if not $.inviewport(@el, threshold: 0) if @lazy
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
 
+    # sizemode crop
+    assetRatio   = @resolution.width / @resolution.height
+
     # use pvrovided dimentions or current size of @el
-    # fallback if element is not in dom rendered it has no dimensions yet
-    width  = @width  or @el.width()  or 500
-    height = @height or @el.height() or 500
 
-    # limit size to steps
-    # width  = Math.round(width  / 50) * 50 if width
-    # height = Math.round(height / 50) * 50 if height
+    width  = if typeof @width  is 'number' then @width  else @el.width()
 
+    if typeof @height is 'number'
+      height = @height
+    else
+      if @sizemode is 'crop'
+        height = @el.height()
+      else
+        height = width * assetRatio
+
+        # this should only be done if imageimage is not pos absolute
+        @el.height parseInt(height, 10) unless @el.css('position') is 'absolute'
+
+    wrapperRatio = width / height
+
+    @log 'width, height', width, height
 
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
     # servingSize = Math.min(Math[if @sizemode is 'fit' then 'min' else 'max'](width, height) * dpr, @maxSize)
 
-    # sizemode crop
-    assetRatio   = @resolution.width / @resolution.height
-
-    # only one side of asset is given
-    if @width is 'auto'
-      wrapperRatio = assetRatio
-      @width = width   = height * assetRatio
-      @el.width width
-      # @log 'width="auto" width: ', width, @width
-    else if @height is 'auto'
-      wrapperRatio = assetRatio
-      @height = height = width / assetRatio
-      @el.height height
-      # @log 'height="auto" height: ', height, @height
-    else
-      wrapperRatio = width / height
-
-    return if not ($.inviewport @el, threshold: 100) and @lazy
-
     # unbind scrollstop listener for lazy loading
     @window.off "scrollstop.#{@id}" if @lazy
-
 
     @status = 'preloading'
 
@@ -171,7 +167,7 @@ class Nex.Widgets.Image extends Spine.Controller
 
     css =
       # backgroundImage    : "url(#{@servingUrl})"
-      backgroundPosition : "center center" or @align
+      backgroundPosition : @align
       display            : "inline-block"
 
     css.backgroundSize  = @calcMediaSize()
@@ -203,8 +199,8 @@ class Nex.Widgets.Image extends Spine.Controller
 
   calcMediaSize: =>
     # @log 'calcMediaSize'
-    width  =  @width  or @el.width()
-    height =  @height or @el.height()
+    width  =  +@width  or @el.width()
+    height =  +@height or @el.height()
     assetRatio = @resolution.width / @resolution.height
     wrapperRatio = width / height
     if @sizemode is 'crop'
