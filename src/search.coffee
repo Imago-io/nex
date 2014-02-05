@@ -166,9 +166,7 @@ Nex.Search =
     querydict
 
   getSearchUrl: ->
-    if Nex.client is 'public'
-      if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.imagoapp.com/api/v2/search" else "/api/v2/search"
-    else
-      "/api/v2/search"
+    if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.imagoapp.com/api/v2/search" else "/api/v2/search"
+
 
 module.exports = Nex.Search
