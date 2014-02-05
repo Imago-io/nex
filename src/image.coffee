@@ -1,4 +1,5 @@
-Nex  = @Nex or require('nex')
+Nex = @Nex or require('nex')
+_ = require('underscore')
 
 class Nex.Widgets.Image extends Spine.Controller
   className: 'imagoimage'
@@ -29,8 +30,6 @@ class Nex.Widgets.Image extends Spine.Controller
     super
     @logPrefix = '(App) Image: '
 
-    @log '@align', @align
-
     # check requirements
     return @log 'Error: image widget rquires src' unless @src
     return @log 'Error: image widget rquires resolution' unless @resolution
@@ -52,7 +51,8 @@ class Nex.Widgets.Image extends Spine.Controller
     @window.on "resizestop.#{@id}", @preload if not @width and not @height
 
     # bind css background size calculation to window resize START.
-    @window.on "resizestart.#{@id}", @resizeStart unless @noResize
+    # @window.on "resize.#{@id}", @resizeLimited unless @noResize
+    @window.on "resize.#{@id}", _.throttle(@onResize, 1000)
 
     # load image if enters the viewport
     @window.on "scrollstop.#{@id}", @preload if @lazy
@@ -89,7 +89,8 @@ class Nex.Widgets.Image extends Spine.Controller
     @resizeStart()
     # @preload()
 
-  resizeStart: =>
+  onResize: =>
+    @log 'onResize'
     # return unless @isActive()
     # use pvrovided dimentions or current size of @el
     @image.css('backgroundSize', @calcMediaSize())
@@ -119,7 +120,7 @@ class Nex.Widgets.Image extends Spine.Controller
       # @el.height height if @el.css('position') in ['static', 'relative']
 
     wrapperRatio = width / height
-    @log 'width, height, wrapperRatio', width, height, wrapperRatio
+    # @log 'width, height, wrapperRatio', width, height, wrapperRatio
     # debugger
 
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
@@ -128,24 +129,24 @@ class Nex.Widgets.Image extends Spine.Controller
     # @log 'width, height', width, height
     if @sizemode is 'crop'
       if assetRatio <= wrapperRatio
-        @log 'crop full width'
+        # @log 'crop full width'
         servingSize = Math.round(Math.max(width, width / assetRatio))
       else
-        @log 'crop full height'
+        # @log 'crop full height'
         servingSize = Math.round(Math.max(height, height * assetRatio))
 
     # sizemode fit
     else
       # @log 'ratios', assetRatio, wrapperRatio
       if assetRatio <= wrapperRatio
-        @log 'fit full height', width, height, assetRatio, height * assetRatio
+        # @log 'fit full height', width, height, assetRatio, height * assetRatio
         servingSize = Math.round(Math.max(height, height * assetRatio))
       else
-        @log 'fit full width', width, height, assetRatio, height / assetRatio
+        # @log 'fit full width', width, height, assetRatio, height / assetRatio
         servingSize = Math.round(Math.max(width, width / assetRatio))
 
     servingSize = Math.min(servingSize * dpr, @maxSize)
-    @log 'servingSize', servingSize, width, height
+    # @log 'servingSize', servingSize, width, height
 
 
 
