@@ -51,8 +51,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @window.on "resizestop.#{@id}", @preload if not @width and not @height
 
     # bind css background size calculation to window resize START.
-    # @window.on "resize.#{@id}", @resizeLimited unless @noResize
-    @window.on "resize.#{@id}", _.throttle(@onResize, 1000)
+    @window.on "resize.#{@id}", _.throttle(@onResize, 1000) unless @noResize
 
     # load image if enters the viewport
     @window.on "scrollstop.#{@id}", @preload if @lazy
