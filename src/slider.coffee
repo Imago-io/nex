@@ -68,7 +68,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       # when 40 then @log 'down'
 
   render: (result) =>
-    return unless result?.assets.length
+    return unless result?.items.length
     @activate() unless @isActive()
     for asset,i in result.items
       @add new Slide
@@ -90,14 +90,20 @@ class Nex.Widgets.Slider extends Spine.Controller
     @append controller
 
   next: =>
+    # @log 'next', @current, @manager.controllers.length
     if @current is @manager.controllers.length - 1
+      @trigger 'end'
+      # @log 'trigger end'
       if @loop
         return @goto('first')
     else
       @goto(@current + 1)
 
   prev: =>
+    # @log 'next', @current, @manager.controllers.length
     if @current is 0
+      @trigger 'start'
+      # @log 'trigger start'
       if @loop
         @goto('last')
     else
