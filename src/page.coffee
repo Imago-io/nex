@@ -49,7 +49,6 @@ class Nex.Page extends Spine.Controller
     for cont in @controllers
       cont.release()
     @controllers = []
-    @html ''
 
   onKeyup: (e) =>
     return unless @isActive()
