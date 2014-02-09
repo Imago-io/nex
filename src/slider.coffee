@@ -98,6 +98,7 @@ class Nex.Widgets.Slider extends Spine.Controller
         return @goto('first')
     else
       @goto(@current + 1)
+      @trigger('next')
 
   prev: =>
     # @log 'next', @current, @manager.controllers.length
@@ -108,6 +109,7 @@ class Nex.Widgets.Slider extends Spine.Controller
         @goto('last')
     else
       @goto(@current - 1)
+      @trigger('prev')
 
   goto: (slide) ->
     switch slide
