@@ -30,7 +30,6 @@ class Nex.Page extends Spine.Controller
     @append(controller)
 
   replaceWithWidget: (wrapper, controller) ->
-    @log 'wrapper, controller', wrapper, controller.el or controller
     @controllers.push(controller)
     wrapper.replaceWith(controller.el or controller)
 
