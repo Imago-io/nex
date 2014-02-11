@@ -188,7 +188,7 @@ class Slide extends Spine.Controller
         width:        @width
         noResize:     @noResize
         lazy:         @lazy
-      html = result.getMeta('html', '')
+      html = result.getMeta('text', result.getMeta('html', ''))
       @append html if html
 
   # activate: ->
