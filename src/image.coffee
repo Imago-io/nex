@@ -69,7 +69,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # wait till @el is added to dom
     return if @released
     unless @el.width() or @el.height()
-      @log 'el not ready delay render for 250ms', @el.width(), @el.height()
+      @log 'el not ready delay render for 250ms', @el.width(), @el.height() unless @lazy
       @delay @render, 250
       return
 
