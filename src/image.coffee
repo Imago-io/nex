@@ -68,8 +68,8 @@ class Nex.Widgets.Image extends Spine.Controller
   render: =>
     # wait till @el is added to dom
     return if @released
-    unless @el.width()
-      # @log 'el not ready delay render for 250ms', @released
+    unless @el.width() or @el.height()
+      @log 'el not ready delay render for 250ms', @el.width(), @el.height()
       @delay @render, 250
       return
 
@@ -95,7 +95,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @image.css('backgroundSize', @calcMediaSize())
 
   preload: =>
-    # @log 'preload', arguments
+    # @log 'inviewport: ',$.inviewport(@el, threshold: 0)
     return if not $.inviewport(@el, threshold: 0) if @lazy
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
 
@@ -108,12 +108,43 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # use pvrovided dimentions or current size of @el
 
-    width = if typeof @width  is 'number' then @width  else @el.width()
-
-    if typeof @height is 'number'
+    # fixed size asset, we have with and height
+    if typeof @width is 'number' and typeof @height is 'number'
+      width = @width
       height = @height
+
+    # fit width
+    else if @height is 'auto' and typeof @width is 'number'
+      width = @width
+      height = @width * assetRatio
+      @el.height(height)
+
+    # fit height
+    else if @width is 'auto' and typeof @height is 'number'
+      height = @height
+      width = @height * assetRatio
+      @el.width(width)
+
+    # width and height dynamic, needs to be defined via css
+    # either width height or position
     else
-      height = @el.height()
+      width  = @el.innerWidth()
+      height = @el.innerHeight()
+
+    # if typeof @width is 'number'
+    #   width = @width
+    # else if @width is 'auto' and typeof @height is 'number'
+    #   width = @height * assetRatio
+    # else
+    #   @log 'Image width: ', width
+    #   width = @el.width()
+
+    # if typeof @height is 'number'
+    #   height = @height
+    # else if @height is 'auto' and typeof @width is 'number'
+    #   height = @width * assetRatio
+    # else
+    #   height = @el.height()
 
       # this should only be done if imageimage is not pos absolute
       # @el.height height if @el.css('position') in ['static', 'relative']
@@ -168,9 +199,12 @@ class Nex.Widgets.Image extends Spine.Controller
       backgroundPosition : @align
       display            : "inline-block"
 
+    # @log 'width, height', width, height
     css.backgroundSize  = @calcMediaSize()
-    css.width           = "#{parseInt @width,  10}px"  if Number(@width)
-    css.height          = "#{parseInt @height, 10}px" if Number(@height)
+    css.width           = "#{parseInt width,  10}px"
+    css.height          = "#{parseInt height, 10}px"
+
+    # @log 'css', css
 
     @image.css(css)
 

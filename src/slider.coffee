@@ -139,7 +139,6 @@ class Nex.Widgets.Slider extends Spine.Controller
 
 
 
-
 module.exports = Nex.Widgets.Slider
 
 class Slide extends Spine.Controller
@@ -194,10 +193,10 @@ class Slide extends Spine.Controller
       html = result.getMeta('text', result.getMeta('html', ''))
       @append html if html
 
-  # activate: ->
-  #   super
-  #   for cont in @controllers
-  #     cont.preload()
+  activate: ->
+    super
+    for cont in @controllers
+      cont?.preload()
 
   add: (controller) ->
     @controllers.push controller
