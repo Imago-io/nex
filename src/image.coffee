@@ -131,21 +131,6 @@ class Nex.Widgets.Image extends Spine.Controller
       width  = @el.innerWidth()
       height = @el.innerHeight()
 
-    # if typeof @width is 'number'
-    #   width = @width
-    # else if @width is 'auto' and typeof @height is 'number'
-    #   width = @height * assetRatio
-    # else
-    #   @log 'Image width: ', width
-    #   width = @el.width()
-
-    # if typeof @height is 'number'
-    #   height = @height
-    # else if @height is 'auto' and typeof @width is 'number'
-    #   height = @width * assetRatio
-    # else
-    #   height = @el.height()
-
       # this should only be done if imageimage is not pos absolute
       # @el.height height if @el.css('position') in ['static', 'relative']
 
