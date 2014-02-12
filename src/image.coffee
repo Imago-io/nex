@@ -48,7 +48,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @window = $(window)
 
     # bind to window resize STOP if no dimentions are provided
-    @window.on "resizestop.#{@id}", @preload if not @width and not @height
+    @window.on "resizestop.#{@id}", @preload if @lazy
 
     # bind css background size calculation to window resize START.
     @window.on "resize.#{@id}", _.throttle(@onResize, 1000) unless @noResize
@@ -89,7 +89,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # @preload()
 
   onResize: =>
-    @log 'onResize'
+    # @log 'onResize'
     # return unless @isActive()
     # use pvrovided dimentions or current size of @el
     @image.css('backgroundSize', @calcMediaSize())

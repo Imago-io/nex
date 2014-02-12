@@ -13,11 +13,11 @@ class Nex.Widgets.Slider extends Spine.Controller
     'nexslider'
 
   events:
-    'tap .next': 'next'
-    'tap .prev': 'prev'
-    'swipeLeft': 'next'
+    'tap .next' : 'next'
+    'tap .prev' : 'prev'
+    'swipeLeft' : 'next'
     'swipeRight': 'prev'
-    'keyup'    : 'onKeyup'
+    'keyup'     : 'onKeyup'
 
   defaults:
     animation:    'fade'
@@ -33,6 +33,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     noResize:     false
     current:      0
     lazy:         false
+    align:         'center center'
 
 
   constructor: ->
@@ -79,6 +80,7 @@ class Nex.Widgets.Slider extends Spine.Controller
         width:     @width
         noResize:  @noResize
         lazy:      @lazy
+        align:     @align
     @goto @current
 
   clear: ->
@@ -95,7 +97,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       @trigger 'end'
       # @log 'trigger end'
       if @loop
-        return @goto('first')
+        @goto('first')
     else
       @goto(@current + 1)
       @trigger('next')
@@ -175,11 +177,12 @@ class Slide extends Spine.Controller
           width:     @width
           noResize:  @noResize
           lazy:      @lazy
+          align:     @align
     else
       kind = if result.kind in ['Image', 'Video'] then result.kind else 'Image'
       @add @["asset"] = new Nex.Widgets[kind]
         src:          result.serving_url
-        align:        result.meta.crop?.value or 'center center'
+        align:        result.meta.crop?.value or @align
         resolution:   result.resolution
         uuid:         result.id
         formats:      result.formats
