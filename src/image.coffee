@@ -69,7 +69,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # wait till @el is added to dom
     return if @released
     unless @el.width() or @el.height()
-      @log 'el not ready delay render for 250ms', @el.width(), @el.height() unless @lazy
+      # @log 'el not ready delay render for 250ms', @width, @height
       @delay @render, 250
       return
 
@@ -94,7 +94,6 @@ class Nex.Widgets.Image extends Spine.Controller
 
   preload: =>
     # @log 'inviewport: ',$.inviewport(@el, threshold: 0)
-    return if not $.inviewport(@el, threshold: 0) if @lazy
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
 
     @status = 'preloading'
@@ -108,17 +107,20 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # fixed size asset, we have with and height
     if typeof @width is 'number' and typeof @height is 'number'
+      # @log 'fixed size', @width, @height
       width = @width
       height = @height
 
     # fit width
     else if @height is 'auto' and typeof @width is 'number'
+      # @log 'fit width', @width, @height
       width = @width
       height = @width * assetRatio
       @el.height(height)
 
     # fit height
     else if @width is 'auto' and typeof @height is 'number'
+      # @log 'fit height', @width, @height
       height = @height
       width = @height * assetRatio
       @el.width(width)
@@ -126,11 +128,14 @@ class Nex.Widgets.Image extends Spine.Controller
     # width and height dynamic, needs to be defined via css
     # either width height or position
     else
+      # @log 'dynamic height and width', @width, @height
       width  = parseInt @el.css('width')
       height = parseInt @el.css('height')
 
-      # this should only be done if imageimage is not pos absolute
-      # @el.height height if @el.css('position') in ['static', 'relative']
+    # this should only be done if imageimage is not pos absolute
+    # @el.height height if @el.css('position') in ['static', 'relative']
+
+    return if not $.inviewport(@el, threshold: 0) if @lazy
 
     wrapperRatio = width / height
     # @log 'width, height, wrapperRatio', width, height, wrapperRatio
