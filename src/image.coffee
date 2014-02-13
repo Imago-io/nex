@@ -93,12 +93,8 @@ class Nex.Widgets.Image extends Spine.Controller
     @image.css('backgroundSize', @calcMediaSize())
 
   preload: =>
-    # @log 'inviewport: ',$.inviewport(@el, threshold: 0)
+    @log 'preload'
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
-
-    @status = 'preloading'
-    # unbind scrollstop listener for lazy loading
-    @window.off "scrollstop.#{@id}" if @lazy
 
     # sizemode crop
     assetRatio = @resolution.width / @resolution.height
@@ -135,7 +131,16 @@ class Nex.Widgets.Image extends Spine.Controller
     # this should only be done if imageimage is not pos absolute
     # @el.height height if @el.css('position') in ['static', 'relative']
 
-    return if not $.inviewport(@el, threshold: 0) if @lazy
+    # abort if not in viewport
+    # @log 'inviewport: ',$.inviewport(@el, threshold: 0)
+    if not $.inviewport(@el, threshold: 0) and @lazy
+      @log 'in viewport: ': $.inviewport(@el, threshold: 0)
+      return
+
+    @status = 'preloading'
+
+    # unbind scrollstop listener for lazy loading
+    @window.off "scrollstop.#{@id}" if @lazy
 
     wrapperRatio = width / height
     # @log 'width, height, wrapperRatio', width, height, wrapperRatio
