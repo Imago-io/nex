@@ -79,8 +79,8 @@ class Nex.Widgets.Image extends Spine.Controller
   resize: (width, height) ->
     # return unless width and height and typeof width is 'number' and typeof height is 'number'
 
-    @width  = width
-    @height = height
+    @width  = width  if width
+    @height = height if height
 
     # @el.width  @width
     # @el.height @height
@@ -93,7 +93,6 @@ class Nex.Widgets.Image extends Spine.Controller
     @image.css('backgroundSize', @calcMediaSize())
 
   preload: =>
-    @log 'preload'
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
 
     # sizemode crop
@@ -134,7 +133,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # abort if not in viewport
     # @log 'inviewport: ',$.inviewport(@el, threshold: 0)
     if not $.inviewport(@el, threshold: 0) and @lazy
-      @log 'in viewport: ': $.inviewport(@el, threshold: 0)
+      # @log 'in viewport: ', $.inviewport(@el, threshold: 0)
       return
 
     @status = 'preloading'
