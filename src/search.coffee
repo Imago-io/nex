@@ -17,6 +17,7 @@ Nex.Search =
       count: 0
 
     getAssetsDone = (assets) =>
+      # console.log 'getAssetsDone', assets
       if result.kind is 'Collection'
         result.items = @sortassets(result.assets, assets)
         result.count = assets.length
@@ -28,6 +29,7 @@ Nex.Search =
 
 
     getCollectionDone = (collection) =>
+      # console.log 'getCollectionDone', collection
       return deferred.resolve(result) unless collection
       result = collection
       return deferred.resolve(result) unless fetchAssets
@@ -114,11 +116,18 @@ Nex.Search =
       unless !!Object.keys(params).length
         toFetch = (id for id in collection.assets when not @globalExists(id))
         assets  = (@globalFind(id) for id in collection.assets when @globalExists(id))
+      if Object.keys(params).length == 1 and params.hasOwnProperty('kind')
+        # filter the ids by kind
+        ids     = (id for id in collection.assets when @id_to_kind(id) in params.kind)
+        toFetch = (id for id in ids when not @globalExists(id))
+        assets  = (@globalFind(id) for id in ids when @globalExists(id))
+
       return deferred.resolve(assets) unless !!toFetch.length
 
       # fetch assets
       params.ids = toFetch
       params.ancestor = collection.id
+
       @getSearch(params).done( (data, status, xhr) =>
         assets = assets.concat(@parseData(data))
         deferred.resolve(assets)
