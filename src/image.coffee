@@ -86,7 +86,6 @@ class Nex.Widgets.Image extends Spine.Controller
     # @el.height @height
 
     @onResize()
-    # @preload()
 
   onResize: =>
     # return unless @isActive()
@@ -126,6 +125,8 @@ class Nex.Widgets.Image extends Spine.Controller
       # @log 'dynamic height and width', @width, @height
       width  = parseInt @el.css('width')
       height = parseInt @el.css('height')
+
+    # @log 'width, height', width, height
 
     # this should only be done if imageimage is not pos absolute
     # @el.height height if @el.css('position') in ['static', 'relative']
