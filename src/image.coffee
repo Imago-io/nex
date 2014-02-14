@@ -203,9 +203,6 @@ class Nex.Widgets.Image extends Spine.Controller
     @image.css(css)
 
   imgLoaded: =>
-    @trigger 'loaded'
-    @status = 'loaded'
-
     # @align = 'center center' unless @align
     # @log 'imgLoaded', @width, @height
 
@@ -222,6 +219,9 @@ class Nex.Widgets.Image extends Spine.Controller
     @image.css(css)
 
     @delay @loadedClass, 1
+
+    @trigger 'loaded'
+    @status = 'loaded'
 
   calcMediaSize: =>
     # @log 'calcMediaSize'
