@@ -101,7 +101,7 @@ class Nex.Widgets.Image extends Spine.Controller
     assetRatio = @resolution.width / @resolution.height
 
     # use pvrovided dimentions or current size of @el
-    if width is @width and height is @height
+    if width is @width or 'auto' and height is @height or 'auto'
       # fixed size asset, we have with and height
 
       if typeof @width is 'number' and typeof @height is 'number'
