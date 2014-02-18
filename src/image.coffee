@@ -93,12 +93,17 @@ class Nex.Widgets.Image extends Spine.Controller
   preload: (width = @width, height = @height) =>
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
 
+    if not $.inviewport(@el, threshold: 0) and @lazy
+      # @log 'in viewport: ', $.inviewport(@el, threshold: 0)
+      return
+
     # sizemode crop
     assetRatio = @resolution.width / @resolution.height
 
     # use pvrovided dimentions or current size of @el
     if width is @width and height is @height
       # fixed size asset, we have with and height
+
       if typeof @width is 'number' and typeof @height is 'number'
         # @log 'fixed size', @width, @height
         width = @width
@@ -132,9 +137,9 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # abort if not in viewport
     # @log 'inviewport: ',$.inviewport(@el, threshold: 0)
-    if not $.inviewport(@el, threshold: 0) and @lazy
-      # @log 'in viewport: ', $.inviewport(@el, threshold: 0)
-      return
+    # if not $.inviewport(@el, threshold: 0) and @lazy
+    #   # @log 'in viewport: ', $.inviewport(@el, threshold: 0)
+    #   return
 
     @status = 'preloading'
 
