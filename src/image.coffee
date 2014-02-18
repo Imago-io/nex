@@ -78,7 +78,6 @@ class Nex.Widgets.Image extends Spine.Controller
   # public function
   resize: (width, height) ->
     # return unless width and height and typeof width is 'number' and typeof height is 'number'
-
     @width  = width  if width
     @height = height if height
 
@@ -91,40 +90,40 @@ class Nex.Widgets.Image extends Spine.Controller
     # return unless @isActive()
     @image.css('backgroundSize', @calcMediaSize())
 
-  preload: =>
+  preload: (width = @width, height = @height) =>
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
 
     # sizemode crop
     assetRatio = @resolution.width / @resolution.height
 
     # use pvrovided dimentions or current size of @el
+    if width is @width and height is @height
+      # fixed size asset, we have with and height
+      if typeof @width is 'number' and typeof @height is 'number'
+        # @log 'fixed size', @width, @height
+        width = @width
+        height = @height
 
-    # fixed size asset, we have with and height
-    if typeof @width is 'number' and typeof @height is 'number'
-      # @log 'fixed size', @width, @height
-      width = @width
-      height = @height
+      # fit width
+      else if @height is 'auto' and typeof @width is 'number'
+        # @log 'fit width', @width, @height
+        width = @width
+        height = @width * assetRatio
+        @el.height(height)
 
-    # fit width
-    else if @height is 'auto' and typeof @width is 'number'
-      # @log 'fit width', @width, @height
-      width = @width
-      height = @width * assetRatio
-      @el.height(height)
+      # fit height
+      else if @width is 'auto' and typeof @height is 'number'
+        # @log 'fit height', @width, @height
+        height = @height
+        width = @height * assetRatio
+        @el.width(width)
 
-    # fit height
-    else if @width is 'auto' and typeof @height is 'number'
-      # @log 'fit height', @width, @height
-      height = @height
-      width = @height * assetRatio
-      @el.width(width)
-
-    # width and height dynamic, needs to be defined via css
-    # either width height or position
-    else
-      # @log 'dynamic height and width', @width, @height
-      width  = parseInt @el.css('width')
-      height = parseInt @el.css('height')
+      # width and height dynamic, needs to be defined via css
+      # either width height or position
+      else
+        # @log 'dynamic height and width', @width, @height
+        width  = parseInt @el.css('width')
+        height = parseInt @el.css('height')
 
     # @log 'width, height', width, height
 
@@ -203,22 +202,12 @@ class Nex.Widgets.Image extends Spine.Controller
     @image.css(css)
 
   imgLoaded: =>
-    # @align = 'center center' unless @align
-    # @log 'imgLoaded', @width, @height
-
-    css =
-      backgroundImage    : "url(#{@servingUrl})"
-    #   backgroundPosition : "center center" or @align
-    #   display            : "inline-block"
-
-    # css.backgroundSize  = @calcMediaSize()
-    # css.width           = "#{parseInt @width,  10}px"  if Number(@width)
-    # css.height          = "#{parseInt @height, 10}px" if Number(@height)
-
     @el.removeClass('loaded')
-    @image.css(css)
 
-    @delay @loadedClass, 1
+    @image.css
+      backgroundImage : "url(#{@servingUrl})"
+
+    @delay @loadedClass, 10
 
     @trigger 'loaded'
     @status = 'loaded'
@@ -227,6 +216,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # @log 'calcMediaSize'
     width  =  +@width  or @el.width()
     height =  +@height or @el.height()
+    # @log 'calcMediaSize: width, height', width, height
     assetRatio = @resolution.width / @resolution.height
     wrapperRatio = width / height
     if @sizemode is 'crop'
