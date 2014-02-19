@@ -92,6 +92,7 @@ class Nex.Widgets.Image extends Spine.Controller
 
   preload: (width = @width, height = @height) =>
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
+    @log 'preloading :', width, @width, height, @height
 
     if not $.inviewport(@el, threshold: 0) and @lazy
       # @log 'in viewport: ', $.inviewport(@el, threshold: 0)
@@ -101,9 +102,9 @@ class Nex.Widgets.Image extends Spine.Controller
     assetRatio = @resolution.width / @resolution.height
 
     # use pvrovided dimentions or current size of @el
-    if width is @width or 'auto' and height is @height or 'auto'
+    if width is @width or width is 'auto' and height is @height or height is 'auto'
       # fixed size asset, we have with and height
-
+      @log 'IfElse Block: ', width, @width, height, @height
       if typeof @width is 'number' and typeof @height is 'number'
         # @log 'fixed size', @width, @height
         width = @width
@@ -186,6 +187,8 @@ class Nex.Widgets.Image extends Spine.Controller
     @servingSize = servingSize
     # @log @servingSize * @scale
     @servingUrl = "#{ @src }=s#{ @servingSize * @scale }"
+
+    @log 'servingURl', @servingUrl
 
     # create image and bind load event
     img = $('<img>').bind 'load', @imgLoaded
