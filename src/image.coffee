@@ -90,13 +90,17 @@ class Nex.Widgets.Image extends Spine.Controller
     # return unless @isActive()
     @image.css('backgroundSize', @calcMediaSize())
 
-  preload: (width = @width, height = @height) =>
+  preload: (width = @width, height = @height, sizemode = @sizemode) =>
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
-    @log 'preloading :', width, @width, height, @height
+    # @log 'preloading :', width, @width, height, @height
 
+    # Abort if not in viewport
     if not $.inviewport(@el, threshold: 0) and @lazy
       # @log 'in viewport: ', $.inviewport(@el, threshold: 0)
       return
+
+    #use new sizemode if it is passed as an argument
+    @sizemode = sizemode unless sizemode is @sizemode
 
     # sizemode crop
     assetRatio = @resolution.width / @resolution.height
@@ -135,12 +139,6 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # this should only be done if imageimage is not pos absolute
     # @el.height height if @el.css('position') in ['static', 'relative']
-
-    # abort if not in viewport
-    # @log 'inviewport: ',$.inviewport(@el, threshold: 0)
-    # if not $.inviewport(@el, threshold: 0) and @lazy
-    #   # @log 'in viewport: ', $.inviewport(@el, threshold: 0)
-    #   return
 
     @status = 'preloading'
 
@@ -188,7 +186,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # @log @servingSize * @scale
     @servingUrl = "#{ @src }=s#{ @servingSize * @scale }"
 
-    @log 'servingURl', @servingUrl
+    # @log 'servingURl', @servingUrl
 
     # create image and bind load event
     img = $('<img>').bind 'load', @imgLoaded
