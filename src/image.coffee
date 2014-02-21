@@ -108,7 +108,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # use pvrovided dimentions or current size of @el
     if width is @width or width is 'auto' and height is @height or height is 'auto'
       # fixed size asset, we have with and height
-      @log 'IfElse Block: ', width, @width, height, @height
+      # @log 'IfElse Block: ', width, @width, height, @height
       if typeof @width is 'number' and typeof @height is 'number'
         # @log 'fixed size', @width, @height
         width = @width
@@ -198,7 +198,6 @@ class Nex.Widgets.Image extends Spine.Controller
       display            : "inline-block"
 
     # @log 'width, height', width, height
-    css.backgroundSize  = @calcMediaSize()
     #Only apply witdh and height if a fixed size is requested
     css.width           = "#{parseInt width,  10}px" if typeof @width  is 'number'
     css.height          = "#{parseInt height, 10}px" if typeof @height is 'number'
@@ -212,6 +211,8 @@ class Nex.Widgets.Image extends Spine.Controller
 
     @image.css
       backgroundImage : "url(#{@servingUrl})"
+      backgroundSize  : @calcMediaSize()
+
 
     @delay @loadedClass, 10
 
