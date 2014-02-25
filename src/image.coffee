@@ -144,7 +144,7 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # check viewport here
     if not $.inviewport(@el, threshold: 0) and @lazy
-      @log 'in viewport: ', $.inviewport(@el, threshold: 0)
+      # @log 'in viewport: ', $.inviewport(@el, threshold: 0)
       return
 
     # @log 'width, height', width, height
@@ -219,7 +219,6 @@ class Nex.Widgets.Image extends Spine.Controller
     @image.css(css)
 
   imgLoaded: =>
-    @log 'imgLoaded function called'
     # @el.removeClass('loaded')
 
     @image.css
