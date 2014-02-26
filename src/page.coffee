@@ -23,7 +23,7 @@ class Nex.Page extends Spine.Controller
     "<h1 class='#{Nex.language}'>Page not Found</h1>"
 
   render: (result) ->
-    return @html @tmpl404() unless result.items?.length
+    return @html @tmpl404() unless result.length
 
   add: (controller) ->
     @controllers.push(controller)

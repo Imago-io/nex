@@ -7,17 +7,27 @@ Nex.Panel =
 
     if typeof query is 'string'
       query =
-        path: query
+        [path: query]
 
     @query = query
 
+    @promises = []
+    @data = []
+
     # @log '(Nex.Panel) @query: ', @query if Nex.debug
-    Nex.Models.Asset.get(query, false)
-      .done(=>
-        # @log '(Nex.Panel) result: ', arguments... if Nex.debug
-        @trigger 'ready', arguments...
+    for q in query
+      @promises.push(Nex.Models.Asset.get(q, false)
+        .done(=>
+          @log '(Nex.Panel) result: ', arguments...
+          @data.push arguments...
+        )
+        .fail(=> @log "Panel: Could not get data for panel #{@query}")
       )
-      .fail(=> @log "Panel: Could not get data for panel #{@query}")
+
+    $.when.apply($, @promises).done(=>
+      # @log 'done @promises: ', @promises, @data
+      @trigger 'ready', @data
+    )
 
   setTitle: (result) ->
     title = Nex.Models.Setting.findByAttribute('name', 'title')

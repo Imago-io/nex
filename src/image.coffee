@@ -104,6 +104,8 @@ class Nex.Widgets.Image extends Spine.Controller
     #   # @log 'in viewport: ', $.inviewport(@el, threshold: 0)
     #   return
 
+    # @el.removeClass('loaded')
+
     #use new sizemode if it is passed as an argument
     @sizemode = sizemode unless sizemode is @sizemode
 

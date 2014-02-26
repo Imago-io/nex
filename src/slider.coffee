@@ -69,18 +69,21 @@ class Nex.Widgets.Slider extends Spine.Controller
       # when 40 then @log 'down'
 
   render: (result) =>
-    return unless result?.items.length
+    # @log 'render result: ', result[0].items
+    return unless result.length
     @activate() unless @isActive()
-    for asset,i in result.items
-      @add new Slide
-        asset:     asset
-        sizemode:  @sizemode
-        subslides: @subslides
-        height:    @height
-        width:     @width
-        noResize:  @noResize
-        lazy:      @lazy
-        align:     @align
+
+    for col in result
+      for asset,i in col.items
+        @add new Slide
+          asset:     asset
+          sizemode:  @sizemode
+          subslides: @subslides
+          height:    @height
+          width:     @width
+          noResize:  @noResize
+          lazy:      @lazy
+          align:     @align
     @goto @current
 
   clear: ->
