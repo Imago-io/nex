@@ -28,6 +28,12 @@ KEYS =
   '187' : 'onEqual'
   '189' : 'onMinus'
 
+SYMBOLS =
+  EUR     : '&#128;'
+  USD     : '&#36;'
+  SEK     : 'kr'
+  GENERIC : '&#164;'
+
 Nex.Utils =
 
   toType : (obj) ->
@@ -192,8 +198,11 @@ Nex.Utils =
 
     return "#{ints}.#{floats}"
 
-  toPrice: (value) ->
-    @toFloat(value).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+  toPrice: (value, currency) ->
+    price  = @toFloat(value).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+    symbol = @getCurrencySymbol(currency)
+    "#{symbol} #{price}"
+
 
   isEmail: (value) ->
     pattern = ///^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$///
@@ -225,5 +234,8 @@ Nex.Utils =
 
   inUsa: (value) ->
     value?.toLowerCase() in ['usa', 'united states', 'united states of america']
+
+  getCurrencySymbol: (currency) ->
+    SYMBOLS[currency] or SYMBOLS.GENERIC
 
 module.exports = Nex.Utils
