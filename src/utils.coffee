@@ -30,6 +30,9 @@ KEYS =
 
 Nex.Utils =
 
+  toType : (obj) ->
+   ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+
   requestAnimationFrame: do ->
     request =
       window.requestAnimationFrame or
