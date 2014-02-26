@@ -31,7 +31,7 @@ KEYS =
 SYMBOLS =
   EUR     : '&#128;'
   USD     : '&#36;'
-  SEK     : 'kr'
+  SEK     : 'SEK'
   GENERIC : '&#164;'
 
 Nex.Utils =
