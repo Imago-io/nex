@@ -72,7 +72,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     # @log 'render result: ', result[0].items
     return unless result.length
     @activate() unless @isActive()
-    @log 'result: ', result
+    # @log 'result: ', result
     for col in result
       # @log 'col in result: ', col
       for asset,i in col.items
