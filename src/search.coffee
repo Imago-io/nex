@@ -19,8 +19,13 @@ Nex.Search =
     getAssetsDone = (assets) =>
       # console.log 'getAssetsDone', assets
       if result.kind is 'Collection'
+        console.log 'getAssetsDone', result
         result.items = @sortassets(result.assets, assets)
         result.count = assets.length
+        console.log 'offset', @offset, 'assets', result.assets.length, 'page', @page
+        result.next  = if result.items.length + @offset < result.assets.length then true else false
+        result.prev  = if @page > 1 then true else false
+        console.log 'result', result
       deferred.resolve(result)
 
     getAssetsFail = () ->
@@ -34,7 +39,7 @@ Nex.Search =
       result = collection
       return deferred.resolve(result) unless fetchAssets
 
-      #get assets
+      # get assets
       @getAssets(collection, params)
         .done(getAssetsDone)
         .fail(getAssetsFail)
@@ -47,7 +52,6 @@ Nex.Search =
       assets = @parseData(data)
       result.items = assets
       result.count = assets.length
-
       deferred.resolve(result)
 
     getSearchFail = (xhr, statusText, error) ->
@@ -95,7 +99,10 @@ Nex.Search =
       return deferred.resolve(collection)
     else
       # fetch collection
-      colparams = {'path' : params.path}
+      colparams          = {'path' : params.path}
+      colparams.page     = params.page if params.page
+      colparams.pagesize = params.pagesize if params.pagesize
+
       @getSearch(colparams).done( (data, status, xhr) =>
         delete params.path
         collection = @parseData(data)[0]
@@ -113,12 +120,21 @@ Nex.Search =
     if collection.kind is 'Collection'
       toFetch = collection.assets
       assets  = []
+
       unless !!Object.keys(params).length
         toFetch = (id for id in collection.assets when not @globalExists(id))
         assets  = (@globalFind(id) for id in collection.assets when @globalExists(id))
       if Object.keys(params).length == 1 and params.hasOwnProperty('kind')
         # filter the ids by kind
         ids     = (id for id in collection.assets when @id_to_kind(id) in params.kind)
+        toFetch = (id for id in ids when not @globalExists(id))
+        assets  = (@globalFind(id) for id in ids when @globalExists(id))
+
+      if Object.keys(params).length == 2 and params.hasOwnProperty('page') and params.hasOwnProperty('pagesize')
+        @page   = params.page
+        @offset = (params.page - 1) * params.pagesize
+        @limit  = params.pagesize * params.page
+        ids     = collection.assets[@offset...@limit]
         toFetch = (id for id in ids when not @globalExists(id))
         assets  = (@globalFind(id) for id in ids when @globalExists(id))
 
