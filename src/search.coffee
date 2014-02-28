@@ -8,7 +8,7 @@ Nex.Search =
 
     @jqXHR.abort('abort') if abortable and @jqXHR
 
-    params   = @objListToDict(params)
+    params      = @objListToDict(params)
     deferred = $.Deferred()
     promise  = deferred.promise()
 
@@ -19,10 +19,10 @@ Nex.Search =
     getAssetsDone = (assets) =>
       # console.log 'getAssetsDone', assets
       if result.kind is 'Collection'
-        console.log 'getAssetsDone', result
+        # console.log 'getAssetsDone', result
         result.items = @sortassets(result.assets, assets)
         result.count = assets.length
-        console.log 'offset', @offset, 'assets', result.assets.length, 'page', @page
+        # console.log 'offset', @offset, 'assets', result.assets.length, 'page', @page, 'pagesize', @pagesize
         result.next  = if result.items.length + @offset < result.assets.length then true else false
         result.prev  = if @page > 1 then true else false
         console.log 'result', result
@@ -188,6 +188,9 @@ Nex.Search =
     if querydict.collection?
       querydict['path'] = querydict.collection
       delete querydict.collection
+    for key in ['page', 'pagesize']
+      if querydict.hasOwnProperty(key)
+        querydict[key] = querydict[key][0]
     querydict
 
   getSearchUrl: ->
