@@ -69,10 +69,10 @@ class Nex.Widgets.Slider extends Spine.Controller
       # when 40 then @log 'down'
 
   render: (result) =>
-    # @log 'render result: ', result[0].items
+    # @log 'render result: ', result
     return unless result.length
     @activate() unless @isActive()
-    @log 'result: ', result
+    # @log 'result: ', result
     for col in result
       # @log 'col in result: ', col
       for asset,i in col.items

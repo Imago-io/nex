@@ -19,24 +19,23 @@ Nex.Panel =
     else
       return @log 'Panel: no valid query'
 
-    @log '@query: ', @query
+    # @log '@query: ', @query
 
     @promises = []
     @data = []
 
     # @log '(Nex.Panel) @query: ', @query if Nex.debug
     for q in @query
-      @log 'q in @query: ', q
       @promises.push(Nex.Models.Asset.get(q, false)
         .done(=>
-          @log '(Nex.Panel) result: ', arguments...
+          # @log '(Nex.Panel) result: ', arguments...
           @data.push arguments...
         )
         .fail(=> @log "Panel: Could not get data for panel #{@query}")
       )
 
     $.when.apply($, @promises).done(=>
-      @log 'done @promises, @data: ', @promises, @data
+      # @log 'done @promises, @data: ', @promises, @data
       @trigger 'ready', @data
     )
 
