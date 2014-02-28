@@ -13,7 +13,7 @@ Nex.Panel =
       @query = query
 
     else if Nex.Utils.toType(query) is 'object'
-      @log 'I am an Object'
+      # @log 'I am an Object'
       @query = [query]
 
     else
@@ -35,7 +35,6 @@ Nex.Panel =
       )
 
     $.when.apply($, @promises).done(=>
-      # @log 'done @promises, @data: ', @promises, @data
       @trigger 'ready', @data
     )
 
