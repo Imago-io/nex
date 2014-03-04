@@ -51,7 +51,9 @@ class Asset extends Spine.Model
     opts
 
   discounted: ->
-    (@variants[0].meta.discounted) and (@variants[0].meta.discounted.value > 0)
+    (@variants[0].meta.discounted) and \
+    ((@variants[0].meta.discounted.value > 0) or \
+    (@variants[0].meta.discounted.value[Nex.currency] > 0))
 
 class Collection extends Asset
   @configure 'Collection', 'kind', 'name', 'meta', 'path', 'serving_url', 'variants',
