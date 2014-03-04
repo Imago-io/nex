@@ -13,10 +13,10 @@ class Nex.Widgets.Slider extends Spine.Controller
     'nexslider'
 
   events:
-    'tap .next' : 'next'
-    'tap .prev' : 'prev'
-    'swipeLeft' : 'next'
-    'swipeRight': 'prev'
+    'tap .next' : 'goNext'
+    'tap .prev' : 'goPrev'
+    'swipeLeft' : 'goNext'
+    'swipeRight': 'goPrev'
     'keyup'     : 'onKeyup'
 
   defaults:
@@ -44,6 +44,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     super
     @el.addClass @animation
     @manager = new Spine.Manager
+    @slides  = @manager.controllers
 
     @bind 'ready', @render
 
@@ -69,12 +70,14 @@ class Nex.Widgets.Slider extends Spine.Controller
       # when 40 then @log 'down'
 
   render: (result) =>
-    # @log 'render result: ', result[0].items
+    # @log 'render result: ', result
     return unless result.length
     @activate() unless @isActive()
-
+    # @log 'result: ', result
     for col in result
+      # @log 'col in result: ', col
       for asset,i in col.items
+        # @log 'asset in col.items', asset
         @add new Slide
           asset:     asset
           sizemode:  @sizemode
@@ -94,55 +97,76 @@ class Nex.Widgets.Slider extends Spine.Controller
     @manager.add controller
     @append controller
 
-  next: =>
-    # @log 'next', @current, @manager.controllers.length
-    if @current is @manager.controllers.length - 1
-      @trigger 'end'
-      # @log 'trigger end'
-      if @loop
-        @goto('first')
-    else
-      @goto(@current + 1)
-      @trigger('next')
+  goNext: =>
+    @goto 'next'
 
-  prev: =>
-    # @log 'next', @current, @manager.controllers.length
-    if @current is 0
-      @trigger 'start'
-      # @log 'trigger start'
-      if @loop
-        @goto('last')
-    else
-      @goto(@current - 1)
-      @trigger('prev')
+  goPrev: =>
+    @goto 'prev'
 
   goto: (slide) ->
     switch slide
       when 'first'        then next = 0
-      when 'last'         then next = @manager.controllers.length - 1
+      when 'last'         then next = @getLast()
+      when 'next'         then next = @getNext(@current)
+      when 'prev'         then next = @getPrev(@current)
       else next = slide
 
-    @current = next
-    @manager.controllers[@current]?.active()
-    @el.removeClass 'first last'
+    # loop
+    if not @loop
+      if @current is @slides.length - 1 and next is @getNext(@current)
+        @trigger 'end'
+        return
+      if @current is 0 and next is @getPrev(@current)
+        @trigger 'start'
+        return
 
+    # clean up
+    @slides[@prev]?.el.removeClass 'prevslide'
+    @slides[@next]?.el.removeClass 'nextslide'
+
+    # new slides
+    @current = next
+    @prev    = @getPrev(@current)
+    @next    = @getNext(@current)
+
+
+    @slides[@prev].el.addClass 'prevslide'
+    @slides[@next].el.addClass 'nextslide'
+
+    @slides[@current]?.active()
+
+    #make sure next slides are loaded
+    @slides[@prev].onDeck()
+    @slides[@next].onDeck()
+
+    # trigger class and fire events
     if @current is 0
       @trigger 'first'
       @el.addClass 'first'
-
-    if @current is @manager.controllers.length - 1
+    else if @current is @slides.length - 1
       @trigger 'last'
       @el.addClass 'last'
+    else
+      @el.removeClass('first last')
+
+  getPrev: (i) ->
+    if i is 0 then @slides.length - 1 else i - 1
+
+  getNext: (i) ->
+    if i is @slides.length - 1 then  0 else i + 1
+
+  getLast: () ->
+    @slides.length - 1
 
   release: ->
     $(document).off "keydown.#{@id}" if @enablekeys
-    for cont in @manager.controllers
-      @manager.controllers[0].release()
+    for cont in @slides
+      @slides[0].release()
     super
 
 
-
 module.exports = Nex.Widgets.Slider
+
 
 class Slide extends Spine.Controller
   @include Nex.Panel
@@ -198,6 +222,14 @@ class Slide extends Spine.Controller
 
   activate: ->
     super
+    for cont in @controllers
+      cont?.preload()
+
+  deactivate: ->
+    super
+    @el.removeClass('prev next')
+
+  onDeck: ->
     for cont in @controllers
       cont?.preload()
 
