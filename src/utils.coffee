@@ -367,6 +367,7 @@ Nex.Utils =
     return n is parseFloat(n)
 
   toFloat: (value, decimal=2) ->
+    return value unless decimal
     value   = String(value).replace(/\D/g, '')
     floats  = value.slice(value.length - decimal)
 
