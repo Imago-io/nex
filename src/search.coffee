@@ -25,7 +25,7 @@ Nex.Search =
         # console.log 'offset', @offset, 'assets', result.assets.length, 'page', @page, 'pagesize', @pagesize
         result.next  = if result.items.length + @offset < result.assets.length then true else false
         result.prev  = if @page > 1 then true else false
-        console.log 'result', result
+        # console.log 'result', result
       deferred.resolve(result)
 
     getAssetsFail = () ->
