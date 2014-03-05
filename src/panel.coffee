@@ -1,21 +1,31 @@
 Nex  = @Nex or require('nex')
+_ = require('underscore')
 
 Nex.Panel =
   getData: (query) ->
     return @log "Panel: query is empty, aborting #{query}" unless query
     # return if path is @path
-
-    if typeof query is 'string'
-      query =
+    if Nex.Utils.toType(query) is 'string'
+      @query =
         [path: query]
 
-    @query = query
+    else if Nex.Utils.toType(query) is 'array'
+      @query = query
+
+    else if Nex.Utils.toType(query) is 'object'
+      # @log 'I am an Object'
+      @query = [query]
+
+    else
+      return @log 'Panel: no valid query'
+
+    # @log '@query: ', @query
 
     @promises = []
     @data = []
 
     # @log '(Nex.Panel) @query: ', @query if Nex.debug
-    for q in query
+    for q in @query
       @promises.push(Nex.Models.Asset.get(q, false)
         .done(=>
           # @log '(Nex.Panel) result: ', arguments...
@@ -25,7 +35,6 @@ Nex.Panel =
       )
 
     $.when.apply($, @promises).done(=>
-      # @log 'done @promises: ', @promises, @data
       @trigger 'ready', @data
     )
 
