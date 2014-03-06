@@ -48,13 +48,13 @@ class Nex.Widgets.Image extends Spine.Controller
     @window = $(window)
 
     # bind to window resize STOP if no dimentions are provided
-    @window.on "resizestop.#{@id}", @preload if @lazy or !@noResize
+    @window.on "resizestop.#{@id}", @preload if @lazy #or !@noResize
 
     # bind css background size calculation to window resize START.
     @window.on "resize.#{@id}", _.throttle(@onResize, 250) unless @noResize
 
     # load image if enters the viewport
-    @window.on "scrollstop.#{@id}", @preload if @lazy or !@noResize
+    @window.on "scrollstop.#{@id}", @preload if @lazy #or !@noResize
 
     # convert resolution string to object
     if typeof @resolution is 'string'
