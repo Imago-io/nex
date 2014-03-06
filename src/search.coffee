@@ -130,7 +130,9 @@ Nex.Search =
         toFetch = (id for id in ids when not @globalExists(id))
         assets  = (@globalFind(id) for id in ids when @globalExists(id))
 
-      if Object.keys(params).length == 2 and params.hasOwnProperty('page') and params.hasOwnProperty('pagesize')
+      if Object.keys(params).length == 1 and params.hasOwnProperty('page')
+        params.pagesize = collection.meta.pagesize?.value or 50
+
         @page   = params.page
         @offset = (params.page - 1) * params.pagesize
         @limit  = params.pagesize * params.page
