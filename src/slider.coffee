@@ -64,9 +64,9 @@ class Nex.Widgets.Slider extends Spine.Controller
   onKeyup: (e) =>
     return unless @enablekeys and @isActive()
     switch e.keyCode
-      when 37 then @prev()
+      when 37 then @goPrev()
       # when 38 then @log 'up'
-      when 39 then @next()
+      when 39 then @goNext()
       # when 40 then @log 'down'
 
   render: (result) =>
