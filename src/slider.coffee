@@ -191,7 +191,9 @@ class Slide extends Spine.Controller
       @render(@asset)
 
   render: (result) ->
+    result = result[0] if result.length is 1
     assets = result?.items or result
+    # @log 'assets: ', assets
 
     if assets.length and @subslides
       for asset,i in assets
@@ -223,7 +225,10 @@ class Slide extends Spine.Controller
   activate: ->
     super
     for cont in @controllers
-      cont?.preload()
+      if @controllers.length > 1
+        return
+      else
+        cont?.preload()
 
   deactivate: ->
     super
@@ -231,7 +236,10 @@ class Slide extends Spine.Controller
 
   onDeck: ->
     for cont in @controllers
-      cont?.preload()
+      if @controllers.length > 1
+        return
+      else
+        cont?.preload()
 
   add: (controller) ->
     @controllers.push controller
