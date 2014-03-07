@@ -225,10 +225,7 @@ class Slide extends Spine.Controller
   activate: ->
     super
     for cont in @controllers
-      if @controllers.length > 1
-        return
-      else
-        cont?.preload()
+      cont.preload?()
 
   deactivate: ->
     super
@@ -236,10 +233,7 @@ class Slide extends Spine.Controller
 
   onDeck: ->
     for cont in @controllers
-      if @controllers.length > 1
-        return
-      else
-        cont?.preload()
+      cont.preload?()
 
   add: (controller) ->
     @controllers.push controller
