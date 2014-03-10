@@ -24,8 +24,8 @@ Nex.Search =
         result.count = assets.length
         # console.log 'offset', @offset, 'assets', result.assets.length, 'page', @page, 'pagesize', @pagesize
         if @page
-          result.next  = if result.items.length + @offset < result.assets.length then true else false
-          result.prev  = if @page > 1 then true else false
+          result.next  = if result.items.length + @offset < result.assets.length then @page+1 else null
+          result.prev  = if @page > 1 then @page-1 else null
         # console.log 'result', result
       deferred.resolve(result)
 
@@ -134,7 +134,7 @@ Nex.Search =
       if Object.keys(params).length == 1 and params.hasOwnProperty('page')
         params.pagesize = collection.meta.pagesize?.value or 50
 
-        @page   = params.page
+        @page   = parseInt(params.page)
         @offset = (params.page - 1) * params.pagesize
         @limit  = params.pagesize * params.page
         ids     = collection.assets[@offset...@limit]
