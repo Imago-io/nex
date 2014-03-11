@@ -24,8 +24,8 @@ Nex.Search =
         result.count = assets.length
         # console.log 'offset', @offset, 'assets', result.assets.length, 'page', @page, 'pagesize', @pagesize
         if @page
-          result.next  = if result.items.length is @pagesize then @page+1 else null
-          result.prev  = if @page > 1 then @page-1 else null
+          result.next  = if result.items.length is @pagesize then @page + 1
+          result.prev  = if @page > 1 then @page - 1
         # console.log 'result', result
       deferred.resolve(result)
 
@@ -132,25 +132,22 @@ Nex.Search =
       @page     = if parseInt(params.page) then params.page else null
       @pagesize = collection.meta.pagesize?.value or 5000
 
-      unless !!Object.keys(params).length
-        toFetch    = (id for id in collection.assets when not @globalExists(id))
-        assets     = (@globalFind(id) for id in collection.assets when @globalExists(id))
-        params.ids = toFetch
-      if Object.keys(params).length == 1 and params.hasOwnProperty('kind')
-        # filter the ids by kind
-        ids        = (id for id in collection.assets when @id_to_kind(id) in params.kind)
-        toFetch    = (id for id in ids when not @globalExists(id))
-        assets     = (@globalFind(id) for id in ids when @globalExists(id))
-        params.ids = toFetch
-      if Object.keys(params).length == 1 and params.hasOwnProperty('page')
+      # get contained assets
+      ids = collection.assets unless !!Object.keys(params).length
 
-        params.pagesize = @pagesize
-        @offset    = (params.page - 1) * params.pagesize
-        @limit     = params.pagesize * params.page
-        ids        = collection.assets[@offset...@limit]
-        toFetch    = (id for id in ids when not @globalExists(id))
-        assets     = (@globalFind(id) for id in ids when @globalExists(id))
-        params.ids = toFetch
+      # get contained filtered by kind
+      if Object.keys(params).length is 1 and params.hasOwnProperty('kind')
+        ids = (id for id in collection.assets when @id_to_kind(id) in params.kind)
+
+      # get contained assets paged and aventually filtered
+      if Object.keys(params).length is 1 and params.hasOwnProperty('page')
+        @offset = (@page - 1) * params.pagesize = @pagesize
+        ids     = collection.assets[@offset...@pagesize * @page]
+
+
+      if ids?.length
+        params.ids = toFetch = (id for id in ids when not @globalExists(id))
+        assets  = (@globalFind(id) for id in ids when @globalExists(id))
 
       return deferred.resolve(assets) unless !!toFetch.length
 
