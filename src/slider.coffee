@@ -117,16 +117,19 @@ class Nex.Widgets.Slider extends Spine.Controller
       @enablearrows = false
       @enablekeys   = false
       @slides[@current].active?()
+      @el.addClass('first last')
       return
 
     # loop
     if not @loop
       if @current is @slides.length - 1 and next is @getNext(@current)
-        @trigger 'end'
-        return
+        unless @slides.length is 2
+          @trigger 'end'
+          return
       if @current is 0 and next is @getPrev(@current)
-        @trigger 'start'
-        return
+        unless @slides.length is 2
+          @trigger 'start'
+          return
 
     # clean up
     @slides[@prev]?.el.removeClass 'prevslide'
@@ -150,9 +153,11 @@ class Nex.Widgets.Slider extends Spine.Controller
     if @current is 0
       @trigger 'first'
       @el.addClass 'first'
+      @el.removeClass 'last'
     else if @current is @slides.length - 1
       @trigger 'last'
       @el.addClass 'last'
+      @el.removeClass 'first'
     else
       @el.removeClass('first last')
 
