@@ -75,9 +75,10 @@ class Nex.Widgets.Slider extends Spine.Controller
     @activate() unless @isActive()
     # @log 'result: ', result
     for col in result
-      # @log 'col in result: ', col
+      # @log 'col in result: ', col, col.name
+      return unless col.items.length > 0
       for asset,i in col.items
-        # @log 'asset in col.items', asset
+        # @log 'asset in col.items', asset, asset.name
         @add new Slide
           asset:     asset
           sizemode:  @sizemode
