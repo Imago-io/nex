@@ -19,14 +19,11 @@ Nex.Search =
     getAssetsDone = (assets) =>
       # console.log 'getAssetsDone', assets
       if result.kind is 'Collection'
-        # console.log 'getAssetsDone', result
         result.items = @sortassets(result.assets, assets)
         result.count = assets.length
-        # console.log 'offset', @offset, 'assets', result.assets.length, 'page', @page, 'pagesize', @pagesize
         if @page
           result.next  = if result.items.length is @pagesize then @page + 1
           result.prev  = if @page > 1 then @page - 1
-        # console.log 'result', result
       deferred.resolve(result)
 
     getAssetsFail = () ->
