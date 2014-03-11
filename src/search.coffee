@@ -177,7 +177,6 @@ Nex.Search =
     orderedlist
 
   parseData: (data) ->
-    console.log 'parsedata', data
     objs = []
     if typeof data is 'string'
       data = JSON.parse(data)
