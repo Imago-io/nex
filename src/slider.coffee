@@ -112,6 +112,13 @@ class Nex.Widgets.Slider extends Spine.Controller
       when 'prev'         then next = @getPrev(@current)
       else next = slide
 
+    #If slider has one slide
+    if @slides.length is 1
+      @enablearrows = false
+      @enablekeys   = false
+      @slides[@current].active?()
+      return
+
     # loop
     if not @loop
       if @current is @slides.length - 1 and next is @getNext(@current)
@@ -194,7 +201,7 @@ class Slide extends Spine.Controller
   render: (result) ->
     result = result[0] if result.length is 1
     assets = result?.items or result
-    # @log 'assets: ', assets
+    @log 'assets: ', assets
 
     if assets.length and @subslides
       for asset,i in assets
@@ -222,6 +229,7 @@ class Slide extends Spine.Controller
         lazy:         @lazy
       html = result.getMeta('text', result.getMeta('html', ''))
       @append html if html
+      @log "@['asset']", @["asset"]
 
   activate: ->
     super
