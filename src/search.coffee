@@ -8,7 +8,7 @@ Nex.Search =
 
     @jqXHR.abort('abort') if abortable and @jqXHR
 
-    params      = @objListToDict(params)
+    params   = @objListToDict(params)
     deferred = $.Deferred()
     promise  = deferred.promise()
 
@@ -32,7 +32,6 @@ Nex.Search =
     getAssetsFail = () ->
       # console.log 'getAssets fail'
       deferred.reject()
-
 
     getCollectionDone = (collection) =>
       # console.log 'getCollectionDone', collection
@@ -71,7 +70,18 @@ Nex.Search =
     promise
 
 
+  containedInExcludes: (params) ->
+    # function that determines which collections have to be
+    # excluded from the search to avoid overwriting data
+    return params if not params.hasOwnProperty('contained_in')
+    objid    = params.contained_in[0]
+    colModel = @get_model('Collection')
+    excludes = colModel.select((item) -> objid in item.assets)
+    params.excludes = (obj.id for obj in excludes)
+    params
+
   getSearch: (params) ->
+
     @jqXHR = $.ajax(
       contentType: 'application/json'
       dataType: 'json'
@@ -80,7 +90,7 @@ Nex.Search =
         'X-Requested-With': 'XMLHttpRequest'
         'NexClient'       : Nex.client
       type: 'POST'
-      data: JSON.stringify(params)
+      data: JSON.stringify(@containedInExcludes(params))
       url:  @getSearchUrl()
     ).always( => @jqXHR = null)
 
@@ -167,6 +177,7 @@ Nex.Search =
     orderedlist
 
   parseData: (data) ->
+    console.log 'parsedata', data
     objs = []
     if typeof data is 'string'
       data = JSON.parse(data)
