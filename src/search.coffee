@@ -126,7 +126,7 @@ Nex.Search =
       toFetch = collection.assets
       assets  = []
 
-      @page     = if parseInt(params.page) then params.page else null
+      @page     = if params.page then parseInt(params.page)
       @pagesize = collection.meta.pagesize?.value or 5000
 
       # get contained assets
