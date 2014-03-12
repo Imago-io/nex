@@ -226,7 +226,7 @@ class Slide extends Spine.Controller
         resolution:   result.resolution
         uuid:         result.id
         formats:      result.formats
-        sizemode:     @sizemode
+        sizemode:     result.getMeta('sizemode', [@sizemode])[0]
         height:       @height
         width:        @width
         noResize:     @noResize
