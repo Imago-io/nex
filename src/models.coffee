@@ -55,6 +55,14 @@ class Asset extends Spine.Model
     ((@variants[0].meta.discounted.value > 0) or \
     (@variants[0].meta.discounted.value[Nex.currency] > 0))
 
+
+  related: (params) ->
+    params.uuid    = @id
+    params.limit or= 10
+    params.related = @getMeta(params.propname, [])
+    Asset.get(params)
+
+
 class Collection extends Asset
   @configure 'Collection', 'kind', 'name', 'meta', 'path', 'serving_url', 'variants',
                            'date_created', 'date_modified', 'resolution', 'sort_by',
