@@ -8,7 +8,7 @@ Nex.Search =
 
     @jqXHR.abort('abort') if abortable and @jqXHR
 
-    params      = @objListToDict(params)
+    params   = @objListToDict(params)
     deferred = $.Deferred()
     promise  = deferred.promise()
 
@@ -19,20 +19,16 @@ Nex.Search =
     getAssetsDone = (assets) =>
       # console.log 'getAssetsDone', assets
       if result.kind is 'Collection'
-        # console.log 'getAssetsDone', result
         result.items = @sortassets(result.assets, assets)
         result.count = assets.length
-        # console.log 'offset', @offset, 'assets', result.assets.length, 'page', @page, 'pagesize', @pagesize
         if @page
-          result.next  = if result.items.length + @offset < result.assets.length then @page+1 else null
-          result.prev  = if @page > 1 then @page-1 else null
-        # console.log 'result', result
+          result.next  = if result.items.length is @pagesize then @page + 1
+          result.prev  = if @page > 1 then @page - 1
       deferred.resolve(result)
 
     getAssetsFail = () ->
       # console.log 'getAssets fail'
       deferred.reject()
-
 
     getCollectionDone = (collection) =>
       # console.log 'getCollectionDone', collection
@@ -71,7 +67,18 @@ Nex.Search =
     promise
 
 
+  containedInExcludes: (params) ->
+    # function that determines which collections have to be
+    # excluded from the search to avoid overwriting data
+    return params if not params.hasOwnProperty('contained_in')
+    objid    = params.contained_in[0]
+    colModel = @get_model('Collection')
+    excludes = colModel.select((item) -> objid in item.assets)
+    params.excludes = (obj.id for obj in excludes)
+    params
+
   getSearch: (params) ->
+
     @jqXHR = $.ajax(
       contentType: 'application/json'
       dataType: 'json'
@@ -80,7 +87,7 @@ Nex.Search =
         'X-Requested-With': 'XMLHttpRequest'
         'NexClient'       : Nex.client
       type: 'POST'
-      data: JSON.stringify(params)
+      data: JSON.stringify(@containedInExcludes(params))
       url:  @getSearchUrl()
     ).always( => @jqXHR = null)
 
@@ -100,11 +107,7 @@ Nex.Search =
       return deferred.resolve(collection)
     else
       # fetch collection
-      colparams          = {'path' : params.path}
-      colparams.page     = params.page if params.page
-      colparams.pagesize = params.pagesize if params.pagesize
-
-      @getSearch(colparams).done( (data, status, xhr) =>
+      @getSearch({'path' : params.path}).done( (data, status, xhr) =>
         delete params.path
         collection = @parseData(data)[0]
         deferred.resolve(collection)
@@ -118,33 +121,34 @@ Nex.Search =
 
     delete params.path
 
+
     if collection.kind is 'Collection'
       toFetch = collection.assets
       assets  = []
 
-      unless !!Object.keys(params).length
-        toFetch = (id for id in collection.assets when not @globalExists(id))
-        assets  = (@globalFind(id) for id in collection.assets when @globalExists(id))
-      if Object.keys(params).length == 1 and params.hasOwnProperty('kind')
-        # filter the ids by kind
-        ids     = (id for id in collection.assets when @id_to_kind(id) in params.kind)
-        toFetch = (id for id in ids when not @globalExists(id))
-        assets  = (@globalFind(id) for id in ids when @globalExists(id))
+      @page     = if params.page then parseInt(params.page)
+      @pagesize = collection.meta.pagesize?.value or 5000
 
-      if Object.keys(params).length == 1 and params.hasOwnProperty('page')
-        params.pagesize = collection.meta.pagesize?.value or 50
+      # get contained assets
+      ids = collection.assets unless !!Object.keys(params).length
 
-        @page   = parseInt(params.page)
-        @offset = (params.page - 1) * params.pagesize
-        @limit  = params.pagesize * params.page
-        ids     = collection.assets[@offset...@limit]
-        toFetch = (id for id in ids when not @globalExists(id))
+      # get contained filtered by kind
+      if Object.keys(params).length is 1 and params.hasOwnProperty('kind')
+        ids = (id for id in collection.assets when @id_to_kind(id) in params.kind)
+
+      # get contained assets paged and aventually filtered
+      if Object.keys(params).length is 1 and params.hasOwnProperty('page')
+        @offset = (@page - 1) * params.pagesize = @pagesize
+        ids     = collection.assets[@offset...@pagesize * @page]
+
+
+      if ids?.length
+        params.ids = toFetch = (id for id in ids when not @globalExists(id))
         assets  = (@globalFind(id) for id in ids when @globalExists(id))
 
       return deferred.resolve(assets) unless !!toFetch.length
 
       # fetch assets
-      params.ids = toFetch
       params.ancestor = collection.id
 
       @getSearch(params).done( (data, status, xhr) =>
