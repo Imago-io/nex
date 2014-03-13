@@ -2,11 +2,11 @@ Nex  = @Nex or require('nex')
 
 Nex.Search =
 
-  get: (params, abortable, fetchAssets=true) ->
-    if abortable is undefined and Nex.client is 'public'
-      abortable = true
+  get: (params, @abortable, fetchAssets=true) ->
+    if @abortable is undefined and Nex.client is 'public'
+      @abortable = true
 
-    @jqXHR.abort('abort') if abortable and @jqXHR
+    @jqXHR?.abort('abort')
 
     params   = @objListToDict(params)
     deferred = $.Deferred()
@@ -78,8 +78,7 @@ Nex.Search =
     params
 
   getSearch: (params) ->
-
-    @jqXHR = $.ajax(
+    jqXHR = $.ajax(
       contentType: 'application/json'
       dataType: 'json'
       processData: false
@@ -89,9 +88,15 @@ Nex.Search =
       type: 'POST'
       data: JSON.stringify(@containedInExcludes(params))
       url:  @getSearchUrl()
-    ).always( => @jqXHR = null)
+    )
 
-    @jqXHR
+    jqXHR.always => @jqXHR = null
+
+    jqXHR.fail (jqXHR, textStatus, error) =>
+      console.log 'aborted!' if textStatus is 'abort'
+
+    @jqXHR = jqXHR if @abortable
+    jqXHR
 
   getCollection: (params) ->
     deferred = $.Deferred()
