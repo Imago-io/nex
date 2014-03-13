@@ -17,7 +17,7 @@ Nex.Panel =
 
     # @log '(Nex.Panel) @query: ', @query if Nex.debug
     for q in @query
-      @promises.push(Nex.Models.Asset.get(q, false)
+      @promises.push(Nex.Models.Asset.get(q, false if @query.length > 1)
         .done(=>
           # @log '(Nex.Panel) result: ', arguments...
           @data.push arguments...
