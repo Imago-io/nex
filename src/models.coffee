@@ -34,6 +34,16 @@ class Asset extends Spine.Model
     return model.create(attrs, options) unless model.exists(attrs.id)
     model.update(attrs.id, attrs, options)
 
+  @related: (params) ->
+    params.context = if params.context.id then params.context.id else params.context
+    params.limit or= 10
+    params.related = context.getMeta?(params.propname, [])
+    @get(params)
+
+  related: (params) ->
+    params.context = @
+    Asset.related(params)
+
   getMeta: (field, fallback='') ->
     return fallback unless field
     if @meta[field]?.value?.hasOwnProperty('value')
@@ -55,12 +65,6 @@ class Asset extends Spine.Model
     ((@variants[0].meta.discounted.value > 0) or \
     (@variants[0].meta.discounted.value[Nex.currency] > 0))
 
-
-  related: (params) ->
-    params.uuid    = @id
-    params.limit or= 10
-    params.related = @getMeta(params.propname, [])
-    Asset.get(params)
 
 
 class Collection extends Asset
