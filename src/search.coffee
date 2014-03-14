@@ -19,7 +19,7 @@ Nex.Search =
     getAssetsDone = (assets) =>
       # console.log 'getAssetsDone', assets
       if result.kind is 'Collection'
-        result.items = @sortassets(result.assets, assets)
+        result.items = if @sortopts then assets else @sortassets(result.assets, assets)
         result.count = assets.length
         if @page
           result.next  = if result.items.length is @pagesize then @page + 1
@@ -127,7 +127,9 @@ Nex.Search =
     delete params.path
 
 
-    if collection.kind is 'Collection'
+    if collection.kind is 'Collection' and not params.sortoptions
+      console.log 'no sortoptions...', params
+
       toFetch = collection.assets
       assets  = []
 
@@ -160,6 +162,15 @@ Nex.Search =
         assets = assets.concat(@parseData(data))
         deferred.resolve(assets)
       )
+
+    else if collection.kind is 'Collection' and params.sortoptions
+      @sortopts       = true
+      params.ancestor = collection.id
+
+      @getSearch(params).done( (data, status, xhr) =>
+        deferred.resolve(@parseData(data))
+      )
+
     else
       deferred.resolve([])
 
