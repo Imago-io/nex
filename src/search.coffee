@@ -47,7 +47,7 @@ Nex.Search =
 
     getSearchDone = (data, status, xhr) =>
       assets = @parseData(data)
-      result.items = assets
+      result.items = assets.concat(@existing or [])
       result.count = assets.length
       deferred.resolve(result)
 
@@ -73,8 +73,8 @@ Nex.Search =
     return params if not params.hasOwnProperty('contained_in')
     objid    = params.contained_in[0]
     colModel = @get_model('Collection')
-    excludes = colModel.select((item) -> objid in item.assets)
-    params.excludes = (obj.id for obj in excludes)
+    @existing = colModel.select((item) -> objid in item.assets)
+    params.excludes = (obj.id for obj in @existing)
     params
 
   getSearch: (params) ->
@@ -126,10 +126,7 @@ Nex.Search =
 
     delete params.path
 
-
     if collection.kind is 'Collection' and not params.sortoptions
-      console.log 'no sortoptions...', params
-
       toFetch = collection.assets
       assets  = []
 

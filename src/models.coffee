@@ -70,11 +70,12 @@ class Asset extends Spine.Model
     @meta.liked or= value: 0
     @meta.liked.value++
     @save()
-    console.log 'upvoting....after', @meta.liked.value
     successResponse = (data, status, xhr, options) =>
       # update the local records with the newly
       # fetched assets via fetch_asse
       console.log 'liked +1', @meta.liked.value
+
+    host = if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}" else ""
 
     # fetch variants via ajax
     $.ajax(
@@ -84,7 +85,7 @@ class Asset extends Spine.Model
       headers     : Spine.Ajax.defaults
       data        : JSON.stringify({'liked' : {'value' : @meta.liked.value}})
       type        : 'PUT'
-      url         : '/api/v2/metaupdate/' + @id
+      url         : host + '/api/v2/metaupdate/' + @id
     ).success(successResponse)
      .error(-> deferred.resolve())
 
