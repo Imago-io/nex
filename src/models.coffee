@@ -47,9 +47,19 @@ class Asset extends Spine.Model
 
   getMeta: (field, fallback='') ->
     return fallback unless field
+
     if @meta[field]?.value?.hasOwnProperty('value')
-      return @meta[field].value?.value or fallback
-    @meta[field]?.value or fallback
+      value = @meta[field]?.value.value
+    else
+      value = @meta[field]?.value
+
+    # cover proxy asset
+    if @meta[field]?.original_value?.hasOwnProperty('value')
+      original_value = @meta[field]?.original_value.value
+    else
+      original_value = @meta[field]?.original_value
+
+    return value or original_value or fallback
 
   options: ->
     # the options available for this asset
