@@ -27,6 +27,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     autoplay:     true
     enablekeys:   true
     enablearrows: true
+    enablehtml:   true
     sizemode:     'fit'
     subslides:    false
     loop:         true
@@ -42,6 +43,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       @[key] = value
 
     super
+
     @el.addClass @animation
     @manager = new Spine.Manager
     @slides  = @manager.controllers
@@ -80,14 +82,15 @@ class Nex.Widgets.Slider extends Spine.Controller
       for asset,i in col.items
         # @log 'asset in col.items', asset, asset.name
         @add new Slide
-          asset:     asset
-          sizemode:  @sizemode
-          subslides: @subslides
-          height:    @height
-          width:     @width
-          noResize:  @noResize
-          lazy:      @lazy
-          align:     @align
+          asset:       asset
+          sizemode:    @sizemode
+          subslides:   @subslides
+          height:      @height
+          width:       @width
+          noResize:    @noResize
+          lazy:        @lazy
+          align:       @align
+          enablehtml:  @enablehtml
     @goto @current
 
   clear: ->
@@ -231,7 +234,20 @@ class Slide extends Spine.Controller
         width:        @width
         noResize:     @noResize
         lazy:         @lazy
-      html = result.getMeta('text', result.getMeta('html', ''))
+
+      # render html
+      if typeof @enablehtml is 'boolean'
+        # @log 'boolean'
+        html = result.getMeta('text', result.getMeta('html', ''))
+
+      else if typeof @enablehtml is 'string'
+        # @log 'string'
+        html = result.getMeta('text', result.getMeta(@enablehtml, ''))
+
+      else if typeof @enablehtml is 'function'
+        # @log 'function'
+        html = @enablehtml(result)
+
       @append html if html
 
   activate: ->
