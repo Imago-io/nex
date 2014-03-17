@@ -82,6 +82,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       for asset,i in col.items
         # @log 'asset in col.items', asset, asset.name
         @add new Slide
+          slider:      @
           asset:       asset
           sizemode:    @sizemode
           subslides:   @subslides
@@ -192,6 +193,9 @@ class Slide extends Spine.Controller
   className:
     'slide'
 
+  events:
+    'tap': 'onClick'
+
   constructor: ->
     super
 
@@ -205,6 +209,9 @@ class Slide extends Spine.Controller
     else
       @render(@asset)
 
+  onClick: ->
+    @slider.trigger 'click', @
+
   render: (result) ->
     result = result[0] if result.length is 1
     assets = result?.items or result
@@ -213,6 +220,7 @@ class Slide extends Spine.Controller
     if assets.length and @subslides
       for asset,i in assets
         @add new Slide
+          slider:    @slider
           asset:     asset
           sizemode:  @sizemode
           className: 'slidecontent'
@@ -223,7 +231,7 @@ class Slide extends Spine.Controller
           align:     @align
     else
       kind = if result.kind in ['Image', 'Video'] then result.kind else 'Image'
-      @add @["asset"] = new Nex.Widgets[kind]
+      @add @["media"] = new Nex.Widgets[kind]
         src:          result.serving_url
         align:        result.meta.crop?.value or @align
         resolution:   result.resolution
