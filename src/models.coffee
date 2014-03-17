@@ -77,13 +77,13 @@ class Asset extends Spine.Model
     (@variants[0].meta.discounted.value[Nex.currency] > 0))
 
   upvote: ->
-    @meta.liked or= value: 0
-    @meta.liked.value++
+    @meta.likes or= value: 0
+    @meta.likes.value++
     @save()
     successResponse = (data, status, xhr, options) =>
       # update the local records with the newly
       # fetched assets via fetch_asse
-      console.log 'liked +1', @meta.liked.value
+      console.log 'liked +1', @meta.likes.value
 
     host = if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.imagoapp.com" else ""
 
