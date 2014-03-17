@@ -44,8 +44,9 @@ Nex.Panel =
     @relpromises = []
     @related     = []
     @relquery    = @toArray(query)
+    @log '@relquery', @relquery
     for q in @relquery
-      @relpromises.push(Nex.Models.Asset.get(q, false if @query.length > 1 or not options.abortable).done(=>
+      @relpromises.push(Nex.Models.Asset.get(q, false if @relquery.length > 1 or not options.abortable).done(=>
             @related.push arguments...
           )
           .fail(=> @log "Panel: Could not get related for panel #{@query}")
@@ -59,7 +60,6 @@ Nex.Panel =
     type = Nex.Utils.toType(elem)
     return @log 'Panel: no valid query' unless type in ['object', 'string', 'array']
     if Nex.Utils.toType(elem) is 'array' then elem else [elem]
-
 
   setTitle: (result) ->
     title = Nex.Models.Setting.findByAttribute('name', 'title')
