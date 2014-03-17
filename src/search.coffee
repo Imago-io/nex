@@ -2,7 +2,7 @@ Nex  = @Nex or require('nex')
 
 Nex.Search =
 
-  get: (params, @abortable, fetchAssets=true) ->
+  get: (params, @abortable, fetchAssets=true, ajax=true) ->
     if @abortable is undefined and Nex.client is 'public'
       @abortable = true
 
@@ -15,6 +15,7 @@ Nex.Search =
     result =
       items: []
       count: 0
+
 
     getAssetsDone = (assets) =>
       # console.log 'getAssetsDone', assets
@@ -55,7 +56,21 @@ Nex.Search =
       # console.log 'get search fail', arguments
       deferred.reject(arguments)
 
-    if params.path
+    getLocalSearchDone = (data) =>
+      result.items = data
+      result.count = data.length
+      deferred.resolve(result)
+
+    getLocalSearchFail = ->
+      # console.log 'get search fail', arguments
+      deferred.reject()
+
+
+    if ajax is false
+      @localSearch(params)
+        .done(getLocalSearchDone)
+        .fail(getLocalSearchFail)
+    else if params.path
       @getCollection(params)
         .done(getCollectionDone)
         .fail(getCollectionFail)
@@ -65,6 +80,28 @@ Nex.Search =
         .fail(getSearchFail)
 
     promise
+
+  # localsearch
+  localSearch: (params) ->
+    deferred = $.Deferred()
+    promise  = deferred.promise()
+
+    kind = params.kind
+
+    if params.hasOwnProperty('path')
+      path = params.path[0]
+      path = path.replace(/\/$/, "") unless path is '/'
+
+      Collection = @get_model('Collection')
+      collection = Collection.findByAttribute('path', path)
+
+      assets = (@globalFind(id) for id in collection.assets when @globalExists(id))
+      assets = (asset for asset in assets when asset.kind in params.kind) if params.kind
+
+      items = assets.filter((item) -> item.query(params.text[0]))
+      deferred.resolve(items)
+    promise
+
 
 
   containedInExcludes: (params) ->

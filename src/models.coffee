@@ -41,6 +41,16 @@ class Asset extends Spine.Model
     @get(params)
 
 
+  query: (params) ->
+    attributes = (key for key of @meta)
+    for key in attributes
+      value = @meta[key].value
+      if value && typeof value == "string"
+        value = value.toLowerCase()
+        return true if value.indexOf(params) != -1
+    return false
+
+
   related: (params) ->
     params.context = @
     Asset.related(params)

@@ -16,8 +16,11 @@ Nex.Panel =
     @data = []
 
     # @log '(Nex.Panel) @query: ', @query if Nex.debug
+    abortable   = false if @query.length > 1 or not options.abortable
+    fetchassets = if options.fetchAsses is undefined then true else options.fetchAsses
+    ajax        = if options.ajax is undefined then true else options.ajax
     for q in @query
-      @promises.push(Nex.Models.Asset.get(q, false if @query.length > 1 or not options.abortable)
+      @promises.push(Nex.Models.Asset.get(q, abortable, fetchassets, ajax)
         .done(=>
           # @log '(Nex.Panel) result: ', arguments...
           @data.push arguments...
