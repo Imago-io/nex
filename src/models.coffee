@@ -85,19 +85,18 @@ class Asset extends Spine.Model
       # fetched assets via fetch_asse
       console.log 'liked +1', @meta.liked.value
 
-    host = if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}" else ""
+    host = if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.imagoapp.com" else ""
 
     # fetch variants via ajax
     $.ajax(
       contentType : 'application/json'
       dataType    : 'json'
       processData : false
-      headers     : Spine.Ajax.defaults
       data        : JSON.stringify({'liked' : {'value' : @meta.liked.value}})
       type        : 'PUT'
       url         : host + '/api/v2/metaupdate/' + @id
     ).success(successResponse)
-     .error(-> deferred.resolve())
+     .error(-> console.log 'error while upvoting')
 
 
 
