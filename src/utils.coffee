@@ -295,7 +295,7 @@ Nex.Utils =
       'ç': 'c'
       'ø': 'o'
 
-    s = s.toLowerCase()
+    s = s?.toLowerCase() or ''
     r = new RegExp(Object.keys(mapping).join('|'), 'g')
     str = s.trim().replace(r, (s) -> mapping[s]).toLowerCase()
 
