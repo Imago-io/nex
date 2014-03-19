@@ -281,6 +281,7 @@ Nex.Utils =
     str.replace(/s$/, '')
 
   normalize: (s) ->
+    return typeof s is not 'string'
     mapping =
       'ä': 'ae'
       'ö': 'oe'
