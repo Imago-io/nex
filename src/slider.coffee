@@ -109,6 +109,8 @@ class Nex.Widgets.Slider extends Spine.Controller
     @goto 'prev'
 
   goto: (slide) ->
+    return @log 'no slides' unless @slides
+
     switch slide
       when 'first'        then next = 0
       when 'last'         then next = @getLast()
@@ -233,7 +235,7 @@ class Slide extends Spine.Controller
       kind = if result.kind in ['Image', 'Video'] then result.kind else 'Image'
       @add @["media"] = new Nex.Widgets[kind]
         src:          result.serving_url
-        align:        result.meta.crop?.value or @align
+        align:        @align or result.meta.crop?.value
         resolution:   result.resolution
         uuid:         result.id
         formats:      result.formats
