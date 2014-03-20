@@ -116,7 +116,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       when 'last'         then next = @getLast()
       when 'next'         then next = @getNext(@current)
       when 'prev'         then next = @getPrev(@current)
-      else next = slide
+      else next = Number(slide)
 
     #If slider has one slide
     if @slides.length is 1
