@@ -89,11 +89,12 @@ class Asset extends Spine.Model
   upvote: ->
     @meta.likes or= value: 0
     @meta.likes.value++
+    @meta.likes.liked = true
     @save()
     successResponse = (data, status, xhr, options) =>
       # update the local records with the newly
       # fetched assets via fetch_asse
-      console.log 'liked +1', @meta.likes.value
+      console.log 'likes +1', @meta.likes.value
 
     host = if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.imagoapp.com" else ""
 
@@ -102,7 +103,7 @@ class Asset extends Spine.Model
       contentType : 'application/json'
       dataType    : 'json'
       processData : false
-      data        : JSON.stringify({'liked' : {'value' : @meta.liked.value}})
+      data        : JSON.stringify({'likes' : {'value' : @meta.likes.value}})
       type        : 'PUT'
       url         : host + '/api/v2/metaupdate/' + @id
     ).success(successResponse)
