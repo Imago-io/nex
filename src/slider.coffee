@@ -27,6 +27,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     autoplay:     true
     enablekeys:   true
     enablearrows: true
+    enablehtml:   true
     sizemode:     'fit'
     subslides:    false
     loop:         true
@@ -42,6 +43,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       @[key] = value
 
     super
+
     @el.addClass @animation
     @manager = new Spine.Manager
     @slides  = @manager.controllers
@@ -80,14 +82,16 @@ class Nex.Widgets.Slider extends Spine.Controller
       for asset,i in col.items
         # @log 'asset in col.items', asset, asset.name
         @add new Slide
-          asset:     asset
-          sizemode:  @sizemode
-          subslides: @subslides
-          height:    @height
-          width:     @width
-          noResize:  @noResize
-          lazy:      @lazy
-          align:     @align
+          slider:      @
+          asset:       asset
+          sizemode:    @sizemode
+          subslides:   @subslides
+          height:      @height
+          width:       @width
+          noResize:    @noResize
+          lazy:        @lazy
+          align:       @align
+          enablehtml:  @enablehtml
     @goto @current
 
   clear: ->
@@ -105,12 +109,14 @@ class Nex.Widgets.Slider extends Spine.Controller
     @goto 'prev'
 
   goto: (slide) ->
+    return @log 'no slides' unless @slides
+
     switch slide
       when 'first'        then next = 0
       when 'last'         then next = @getLast()
       when 'next'         then next = @getNext(@current)
       when 'prev'         then next = @getPrev(@current)
-      else next = slide
+      else next = Number(slide)
 
     #If slider has one slide
     if @slides.length is 1
@@ -189,6 +195,9 @@ class Slide extends Spine.Controller
   className:
     'slide'
 
+  events:
+    'tap': 'onClick'
+
   constructor: ->
     super
 
@@ -202,6 +211,9 @@ class Slide extends Spine.Controller
     else
       @render(@asset)
 
+  onClick: ->
+    @slider.trigger 'click', @
+
   render: (result) ->
     result = result[0] if result.length is 1
     assets = result?.items or result
@@ -210,6 +222,7 @@ class Slide extends Spine.Controller
     if assets.length and @subslides
       for asset,i in assets
         @add new Slide
+          slider:    @slider
           asset:     asset
           sizemode:  @sizemode
           className: 'slidecontent'
@@ -220,9 +233,9 @@ class Slide extends Spine.Controller
           align:     @align
     else
       kind = if result.kind in ['Image', 'Video'] then result.kind else 'Image'
-      @add @["asset"] = new Nex.Widgets[kind]
+      @add @["media"] = new Nex.Widgets[kind]
         src:          result.serving_url
-        align:        result.meta.crop?.value or @align
+        align:        @align or result.meta.crop?.value
         resolution:   result.resolution
         uuid:         result.id
         formats:      result.formats
@@ -231,7 +244,20 @@ class Slide extends Spine.Controller
         width:        @width
         noResize:     @noResize
         lazy:         @lazy
-      html = result.getMeta('text', result.getMeta('html', ''))
+
+      # render html
+      if typeof @enablehtml is 'boolean'
+        # @log 'boolean'
+        html = result.getMeta('text', result.getMeta('html', ''))
+
+      else if typeof @enablehtml is 'string'
+        # @log 'string'
+        html = result.getMeta('text', result.getMeta(@enablehtml, ''))
+
+      else if typeof @enablehtml is 'function'
+        # @log 'function'
+        html = @enablehtml(result)
+
       @append html if html
 
   activate: ->

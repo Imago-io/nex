@@ -2,7 +2,7 @@ Nex  = @Nex or require('nex')
 _ = require('underscore')
 
 Nex.Panel =
-  getData: (query) ->
+  getData: (query, options={}) ->
     return @log "Panel: query is empty, aborting #{query}" unless query
     # return if path is @path
     @query = query
@@ -16,8 +16,11 @@ Nex.Panel =
     @data = []
 
     # @log '(Nex.Panel) @query: ', @query if Nex.debug
+    abortable   = false if @query.length > 1 or not options.abortable
+    fetchassets = if options.fetchAsses is undefined then true else options.fetchAsses
+    ajax        = if options.ajax is undefined then true else options.ajax
     for q in @query
-      @promises.push(Nex.Models.Asset.get(q, false if @query.length > 1)
+      @promises.push(Nex.Models.Asset.get(q, abortable, fetchassets, ajax)
         .done(=>
           # @log '(Nex.Panel) result: ', arguments...
           @data.push arguments...
@@ -29,7 +32,7 @@ Nex.Panel =
       @trigger 'ready', @data
     )
 
-  getRelated: (query) ->
+  getRelated: (query, options={}) ->
     """
       query =
         context : '/foo/bar'   # required -  path/uuid/asset
@@ -44,8 +47,9 @@ Nex.Panel =
     @relpromises = []
     @related     = []
     @relquery    = @toArray(query)
+    @log '@relquery', @relquery
     for q in @relquery
-      @relpromises.push(Nex.Models.Asset.get(q).done(=>
+      @relpromises.push(Nex.Models.Asset.get(q, false if @relquery.length > 1 or not options.abortable).done(=>
             @related.push arguments...
           )
           .fail(=> @log "Panel: Could not get related for panel #{@query}")
@@ -59,7 +63,6 @@ Nex.Panel =
     type = Nex.Utils.toType(elem)
     return @log 'Panel: no valid query' unless type in ['object', 'string', 'array']
     if Nex.Utils.toType(elem) is 'array' then elem else [elem]
-
 
   setTitle: (result) ->
     title = Nex.Models.Setting.findByAttribute('name', 'title')

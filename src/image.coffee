@@ -276,7 +276,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @preload()
 
   release: ->
-    @window.off @id
+    @window.off @id if @id
     @released = true
     super
 

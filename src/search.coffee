@@ -2,7 +2,7 @@ Nex  = @Nex or require('nex')
 
 Nex.Search =
 
-  get: (params, @abortable, fetchAssets=true) ->
+  get: (params, @abortable, fetchAssets=true, ajax=true) ->
     if @abortable is undefined and Nex.client is 'public'
       @abortable = true
 
@@ -16,10 +16,11 @@ Nex.Search =
       items: []
       count: 0
 
+
     getAssetsDone = (assets) =>
       # console.log 'getAssetsDone', assets
       if result.kind is 'Collection'
-        result.items = @sortassets(result.assets, assets)
+        result.items = if @sortopts then assets else @sortassets(result.assets, assets)
         result.count = assets.length
         if @page
           result.next  = if result.items.length is @pagesize then @page + 1
@@ -47,7 +48,7 @@ Nex.Search =
 
     getSearchDone = (data, status, xhr) =>
       assets = @parseData(data)
-      result.items = assets
+      result.items = assets.concat(@existing or [])
       result.count = assets.length
       deferred.resolve(result)
 
@@ -55,7 +56,21 @@ Nex.Search =
       # console.log 'get search fail', arguments
       deferred.reject(arguments)
 
-    if params.path
+    getLocalSearchDone = (data) =>
+      result.items = data
+      result.count = data.length
+      deferred.resolve(result)
+
+    getLocalSearchFail = ->
+      # console.log 'get search fail', arguments
+      deferred.reject()
+
+
+    if ajax is false
+      @localSearch(params)
+        .done(getLocalSearchDone)
+        .fail(getLocalSearchFail)
+    else if params.path
       @getCollection(params)
         .done(getCollectionDone)
         .fail(getCollectionFail)
@@ -66,6 +81,28 @@ Nex.Search =
 
     promise
 
+  # localsearch
+  localSearch: (params) ->
+    deferred = $.Deferred()
+    promise  = deferred.promise()
+
+    kind = params.kind
+
+    if params.hasOwnProperty('path')
+      path = params.path[0]
+      path = path.replace(/\/$/, "") unless path is '/'
+
+      Collection = @get_model('Collection')
+      collection = Collection.findByAttribute('path', path)
+
+      assets = (@globalFind(id) for id in collection.assets when @globalExists(id))
+      assets = (asset for asset in assets when asset.kind in params.kind) if params.kind
+
+      items = assets.filter((item) -> item.query(params.text[0]))
+      deferred.resolve(items)
+    promise
+
+
 
   containedInExcludes: (params) ->
     # function that determines which collections have to be
@@ -73,8 +110,8 @@ Nex.Search =
     return params if not params.hasOwnProperty('contained_in')
     objid    = params.contained_in[0]
     colModel = @get_model('Collection')
-    excludes = colModel.select((item) -> objid in item.assets)
-    params.excludes = (obj.id for obj in excludes)
+    @existing = colModel.select((item) -> objid in item.assets)
+    params.excludes = (obj.id for obj in @existing)
     params
 
   getSearch: (params) ->
@@ -126,8 +163,7 @@ Nex.Search =
 
     delete params.path
 
-
-    if collection.kind is 'Collection'
+    if collection.kind is 'Collection' and not params.sortoptions
       toFetch = collection.assets
       assets  = []
 
@@ -160,6 +196,15 @@ Nex.Search =
         assets = assets.concat(@parseData(data))
         deferred.resolve(assets)
       )
+
+    else if collection.kind is 'Collection' and params.sortoptions
+      @sortopts       = true
+      params.ancestor = collection.id
+
+      @getSearch(params).done( (data, status, xhr) =>
+        deferred.resolve(@parseData(data))
+      )
+
     else
       deferred.resolve([])
 

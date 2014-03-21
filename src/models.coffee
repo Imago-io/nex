@@ -40,15 +40,36 @@ class Asset extends Spine.Model
     params.related = context.getMeta?(params.propname, [])
     @get(params)
 
+
+  query: (params) ->
+    attributes = (key for key of @meta)
+    for key in attributes
+      value = @meta[key].value
+      if value && typeof value == "string"
+        value = value.toLowerCase()
+        return true if value.indexOf(params) != -1
+    return false
+
+
   related: (params) ->
     params.context = @
     Asset.related(params)
 
   getMeta: (field, fallback='') ->
     return fallback unless field
+
     if @meta[field]?.value?.hasOwnProperty('value')
-      return @meta[field].value?.value or fallback
-    @meta[field]?.value or fallback
+      value = @meta[field]?.value.value
+    else
+      value = @meta[field]?.value
+
+    # cover proxy asset
+    if @meta[field]?.original_value?.hasOwnProperty('value')
+      original_value = @meta[field]?.original_value.value
+    else
+      original_value = @meta[field]?.original_value
+
+    return value or original_value or fallback
 
   options: ->
     # the options available for this asset
@@ -64,6 +85,30 @@ class Asset extends Spine.Model
     (@variants[0].meta.discounted) and \
     ((@variants[0].meta.discounted.value > 0) or \
     (@variants[0].meta.discounted.value[Nex.currency] > 0))
+
+  upvote: ->
+    @meta.likes or= value: 0
+    @meta.likes.value++
+    @meta.likes.liked = true
+    @save()
+    successResponse = (data, status, xhr, options) =>
+      # update the local records with the newly
+      # fetched assets via fetch_asse
+      console.log 'likes +1', @meta.likes.value
+
+    host = if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.imagoapp.com" else ""
+
+    # fetch variants via ajax
+    $.ajax(
+      contentType : 'application/json'
+      dataType    : 'json'
+      processData : false
+      data        : JSON.stringify({'likes' : {'value' : @meta.likes.value}})
+      type        : 'PUT'
+      url         : host + '/api/v2/metaupdate/' + @id
+    ).success(successResponse)
+     .error(-> console.log 'error while upvoting')
+
 
 
 
