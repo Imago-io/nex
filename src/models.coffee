@@ -29,6 +29,25 @@ class Asset extends Spine.Model
   @get_model: (id_or_kind) ->
     return Nex.Models[id_or_kind] or Nex.Models[@id_to_kind(id_or_kind)]
 
+  @models: ->
+    models =
+      Collection : Nex.Models.Collection
+      Image      : Nex.Models.Image
+      Video      : Nex.Models.Video
+      Proxy      : Nex.Models.Proxy
+      Generic    : Nex.Models.Generic
+    return models
+
+  @filter: (callback, exclude = []) ->
+    models  = @models()
+    exclude = if Spine.isArray(exclude) then exclude else [exclude]
+    results   = []
+    for modelName of models
+      if modelName in exclude
+        continue
+      results = results.concat(models[modelName].select(callback))
+    results
+
   @create_or_update: (attrs, options) ->
     model = @get_model(attrs.id)
     return model.create(attrs, options) unless model.exists(attrs.id)

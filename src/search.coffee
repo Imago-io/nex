@@ -145,6 +145,10 @@ Nex.Search =
     Collection = @get_model('Collection')
     collection = Collection.findByAttribute('path', path)
 
+    if not collection
+      other = @filter((item) -> item.path is path)
+      collection = other[0] if other.length
+
     if collection
       return deferred.resolve(collection)
     else
