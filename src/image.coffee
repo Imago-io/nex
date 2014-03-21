@@ -217,9 +217,10 @@ class Nex.Widgets.Image extends Spine.Controller
     # @log 'css', css
 
     @image.css(css)
+    @el.removeClass('loaded')
 
   imgLoaded: =>
-    @el.removeClass('loaded')
+    # @el.removeClass('loaded')
 
     @image.css
       backgroundImage : "url(#{@servingUrl})"
