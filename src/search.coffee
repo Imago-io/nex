@@ -102,8 +102,6 @@ Nex.Search =
       deferred.resolve(items)
     promise
 
-
-
   containedInExcludes: (params) ->
     # function that determines which collections have to be
     # excluded from the search to avoid overwriting data

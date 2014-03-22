@@ -47,7 +47,7 @@ Nex.Panel =
     @relpromises = []
     @related     = []
     @relquery    = @toArray(query)
-    @log '@relquery', @relquery
+    # @log '@relquery', @relquery
     for q in @relquery
       @relpromises.push(Nex.Models.Asset.get(q, false if @relquery.length > 1 or not options.abortable).done(=>
             @related.push arguments...
