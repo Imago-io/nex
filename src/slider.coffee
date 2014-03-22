@@ -246,8 +246,8 @@ class Slide extends Spine.Controller
         lazy:         @lazy
 
       # render html
-      if typeof @enablehtml is 'boolean'
-        # @log 'boolean'
+      if typeof @enablehtml is 'boolean' and @enablehtml
+        # @log 'boolean and true'
         html = result.getMeta('text', result.getMeta('html', ''))
 
       else if typeof @enablehtml is 'string'
