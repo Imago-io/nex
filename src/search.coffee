@@ -16,15 +16,15 @@ Nex.Search =
       items: []
       count: 0
 
-
-    getAssetsDone = (assets) =>
+    # Response Methods
+    getAssetsDone = (assets, options = {}) =>
       # console.log 'getAssetsDone', assets
       if result.kind is 'Collection'
         result.items = if @sortopts then assets else @sortassets(result.assets, assets)
         result.count = assets.length
-        if @page
-          result.next  = if result.items.length is @pagesize then @page + 1
-          result.prev  = if @page > 1 then @page - 1
+        if options.page
+          result.next  = if result.items.length is options.pagesize then options.page + 1
+          result.prev  = if options.page > 1 then options.page - 1
       deferred.resolve(result)
 
     getAssetsFail = () ->
@@ -81,7 +81,6 @@ Nex.Search =
 
     promise
 
-  # localsearch
   localSearch: (params) ->
     deferred = $.Deferred()
     promise  = deferred.promise()
@@ -101,8 +100,6 @@ Nex.Search =
       items = assets.filter((item) -> item.query(params.text[0]))
       deferred.resolve(items)
     promise
-
-
 
   containedInExcludes: (params) ->
     # function that determines which collections have to be
@@ -145,6 +142,11 @@ Nex.Search =
     Collection = @get_model('Collection')
     collection = Collection.findByAttribute('path', path)
 
+    if not collection
+      selector = (item) -> item.path is path
+      other = @filter(selector, exlude=['Collection', 'Proxy'])
+      collection = other[0] if other.length
+
     if collection
       return deferred.resolve(collection)
     else
@@ -167,8 +169,8 @@ Nex.Search =
       toFetch = collection.assets
       assets  = []
 
-      @page     = if params.page then parseInt(params.page)
-      @pagesize = collection.meta.pagesize?.value or 5000
+      page     = if params.page then parseInt(params.page)
+      pagesize = collection.meta.pagesize?.value or 5000
 
       # get contained assets
       ids = collection.assets unless !!Object.keys(params).length
@@ -179,22 +181,22 @@ Nex.Search =
 
       # get contained assets paged and aventually filtered
       if Object.keys(params).length is 1 and params.hasOwnProperty('page')
-        @offset = (@page - 1) * params.pagesize = @pagesize
-        ids     = collection.assets[@offset...@pagesize * @page]
+        offset = (page - 1) * params.pagesize = pagesize
+        ids    = collection.assets[offset...pagesize * page]
 
 
       if ids?.length
         params.ids = toFetch = (id for id in ids when not @globalExists(id))
-        assets  = (@globalFind(id) for id in ids when @globalExists(id))
+        assets     = (@globalFind(id) for id in ids when @globalExists(id))
 
-      return deferred.resolve(assets) unless !!toFetch.length
+      return deferred.resolve(assets, {page, pagesize}) unless !!toFetch.length
 
       # fetch assets
       params.ancestor = collection.id
 
       @getSearch(params).done( (data, status, xhr) =>
         assets = assets.concat(@parseData(data))
-        deferred.resolve(assets)
+        deferred.resolve(assets, {page, pagesize})
       )
 
     else if collection.kind is 'Collection' and params.sortoptions
@@ -210,6 +212,7 @@ Nex.Search =
 
     promise
 
+  # Utils
   sortassets: (ids, assets) ->
     orderedlist = []
     for id in ids
