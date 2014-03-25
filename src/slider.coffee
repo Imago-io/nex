@@ -118,6 +118,9 @@ class Nex.Widgets.Slider extends Spine.Controller
       when 'prev'         then next = @getPrev(@current)
       else next = Number(slide)
 
+    # don't navigate if slider not ready yet
+    return unless @slides.length
+
     #If slider has one slide
     if @slides.length is 1
       @enablearrows = false
