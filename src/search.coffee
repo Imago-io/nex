@@ -143,7 +143,8 @@ Nex.Search =
     collection = Collection.findByAttribute('path', path)
 
     if not collection
-      other = @filter((item) -> item.path is path)
+      selector = (item) -> item.path is path
+      other = @filter(selector, exlude=['Collection', 'Proxy'])
       collection = other[0] if other.length
 
     if collection
