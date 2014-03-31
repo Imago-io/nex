@@ -414,6 +414,9 @@ Nex.Utils =
   inUsa: (value) ->
     value?.toLowerCase() in ['usa', 'united states', 'united states of america']
 
+  stateRequired: (value) ->
+    @inUsa(value) or value?.toLowerCase() in ['australia']
+
   getCurrencySymbol: (currency) ->
     SYMBOLS[currency] or SYMBOLS.GENERIC
 
