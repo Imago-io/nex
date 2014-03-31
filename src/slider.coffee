@@ -21,10 +21,8 @@ class Nex.Widgets.Slider extends Spine.Controller
 
   defaults:
     animation:    'fade'
-    easing:       'swing'
     sizemode:     'fit'
     current:      0
-    autoplay:     true
     enablekeys:   true
     enablearrows: true
     enablehtml:   true
@@ -238,7 +236,7 @@ class Slide extends Spine.Controller
       kind = if result.kind in ['Image', 'Video'] then result.kind else 'Image'
       @add @["media"] = new Nex.Widgets[kind]
         src:          result.serving_url
-        align:        @align or result.meta.crop?.value
+        align:        result.meta.crop?.value or @align
         resolution:   result.resolution
         uuid:         result.id
         formats:      result.formats
