@@ -124,15 +124,15 @@ class Nex.Widgets.Image extends Spine.Controller
       # fit width
       else if @height is 'auto' and typeof @width is 'number'
         # @log 'fit width', @width, @height
-        width = @width
-        height = @width * assetRatio
+        width  = @width
+        height = @width / assetRatio
         @el.height(height)
 
       # fit height
       else if @width is 'auto' and typeof @height is 'number'
         # @log 'fit height', @width, @height
         height = @height
-        width = @height * assetRatio
+        width  = @height * assetRatio
         @el.width(width)
 
       # width and height dynamic, needs to be defined via css
@@ -183,7 +183,7 @@ class Nex.Widgets.Image extends Spine.Controller
         # @log 'fit full width', width, height, assetRatio, height / assetRatio
         servingSize = Math.round(Math.max(width, width / assetRatio))
 
-    servingSize = Math.min(servingSize * dpr, @maxSize)
+    servingSize = parseInt Math.min(servingSize * dpr, @maxSize)
     # @log 'servingSize', servingSize, width, height
 
 
