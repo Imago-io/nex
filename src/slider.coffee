@@ -26,7 +26,6 @@ class Nex.Widgets.Slider extends Spine.Controller
     enablekeys:   true
     enablearrows: true
     enablehtml:   true
-    sizemode:     'fit'
     subslides:    false
     loop:         true
     noResize:     false
