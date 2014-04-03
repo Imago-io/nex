@@ -262,8 +262,8 @@ class Slide extends Spine.Controller
 
   activate: ->
     super
-    for cont in @controllers
-      cont.preload?()
+    cont.preload?() for cont in @controllers if @subslides
+
 
   deactivate: ->
     super
