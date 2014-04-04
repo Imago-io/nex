@@ -32,6 +32,8 @@ SYMBOLS =
   EUR     : '&#128;'
   USD     : '&#36;'
   SEK     : 'SEK'
+  YEN     : '&#165;'
+  GBP     : '&#163;'
   GENERIC : '&#164;'
 
 CURRENCY_MAPPING =
