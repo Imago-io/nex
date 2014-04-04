@@ -26,7 +26,6 @@ class Nex.Widgets.Slider extends Spine.Controller
     enablekeys:   true
     enablearrows: true
     enablehtml:   true
-    sizemode:     'fit'
     subslides:    false
     loop:         true
     noResize:     false
@@ -263,8 +262,8 @@ class Slide extends Spine.Controller
 
   activate: ->
     super
-    for cont in @controllers
-      cont.preload?()
+    cont.preload?() for cont in @controllers if @subslides
+
 
   deactivate: ->
     super

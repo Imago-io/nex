@@ -242,6 +242,7 @@ class Nex.Widgets.Image extends Spine.Controller
     width  =  +@width  or @el.width()
     height =  +@height or @el.height()
     # @log 'calcMediaSize: width, height', width, height
+    return unless width and height
     assetRatio = @resolution.width / @resolution.height
     wrapperRatio = width / height
     if @sizemode is 'crop'
