@@ -1,4 +1,4 @@
-Nex  = @Nex or require('nex')
+aNex  = @Nex or require('nex')
 
 KEYS =
   '16'  : 'onShift'
@@ -485,6 +485,19 @@ STATES =
     'WA'
     ]
 
+  CANADA : [
+    'AB'
+    'BC'
+    'MB'
+    'NB'
+    'NL'
+    'NS'
+    'ON'
+    'PE'
+    'QC'
+    'SK'
+    ]
+
   USA : [
     'AL'
     'AK'
@@ -750,7 +763,7 @@ Nex.Utils =
     value?.toLowerCase() in ['usa', 'united states', 'united states of america']
 
   stateRequired: (value) ->
-    @inUsa(value) or value?.toLowerCase() in ['australia']
+    @inUsa(value) or value?.toLowerCase() in ['australia', 'canada']
 
   getCurrencySymbol: (currency) ->
     SYMBOLS[currency] or SYMBOLS.GENERIC
