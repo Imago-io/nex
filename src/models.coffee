@@ -60,15 +60,29 @@ class Asset extends Spine.Model
     @get(params)
 
 
+  _normalizeValue: (value) ->
+    return '' if not value
+    value = value.value if value.hasOwnProperty('value')
+    if typeof value == "string"
+      value = value.toLowerCase()
+    else if Spine.isArray(value)
+      value = value.join(' ').toLowerCase()
+    # console.log 'value after normalize', value
+    return value
+
   query: (params) ->
+    # full text serach.
     attributes = (key for key of @meta)
     for key in attributes
-      value = @meta[key].value
-      if value && typeof value == "string"
-        value = value.toLowerCase()
-        return true if value.indexOf(params) != -1
+      value = @_normalizeValue(@meta[key].value)
+      return true if value.indexOf(params) != -1
     return false
 
+  metaQuery: (key, searchvalue) ->
+    # query on a specific field.
+    value = @_normalizeValue(@meta[key].value)
+    return true if value.indexOf(searchvalue) != -1
+    return false
 
   related: (params) ->
     params.context = @

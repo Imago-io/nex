@@ -86,18 +86,26 @@ Nex.Search =
     promise  = deferred.promise()
 
     kind = params.kind
+    delete params.kind if params.kind
 
     if params.hasOwnProperty('path')
       path = params.path[0]
       path = path.replace(/\/$/, "") unless path is '/'
 
+      delete params.path
+
       Collection = @get_model('Collection')
       collection = Collection.findByAttribute('path', path)
 
       assets = (@globalFind(id) for id in collection.assets when @globalExists(id))
-      assets = (asset for asset in assets when asset.kind in params.kind) if params.kind
+      assets = (asset for asset in assets when asset.kind in kind) if kind
 
-      items = assets.filter((item) -> item.query(params.text[0]))
+      for key of params
+        continue if key is 'text'
+        assets = assets.filter((item) -> item.metaQuery(key, params[key][0]))
+
+      items = if params.text then assets.filter((item) -> item.query(params.text[0])) else assets
+
       deferred.resolve(items)
     promise
 
