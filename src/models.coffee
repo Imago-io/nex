@@ -63,11 +63,8 @@ class Asset extends Spine.Model
   _normalizeValue: (value) ->
     return '' if not value
     value = value.value if value.hasOwnProperty('value')
-    if typeof value == "string"
-      value = value.toLowerCase()
-    else if Spine.isArray(value)
-      value = value.join(' ').toLowerCase()
-    # console.log 'value after normalize', value
+    value = value.join(' ').toLowerCase() if Spine.isArray(value)
+    value = value.toLowerCase() if typeof value == "string"
     return value
 
   query: (params, searchkey=undefined) ->
