@@ -102,7 +102,7 @@ Nex.Search =
 
       for key of params
         continue if key is 'text'
-        assets = assets.filter((item) -> item.metaQuery(key, params[key][0]))
+        assets = assets.filter((item) -> item.query(params[key][0], key))
 
       items = if params.text then assets.filter((item) -> item.query(params.text[0])) else assets
 

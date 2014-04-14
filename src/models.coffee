@@ -70,18 +70,13 @@ class Asset extends Spine.Model
     # console.log 'value after normalize', value
     return value
 
-  query: (params) ->
+  query: (params, searchkey=undefined) ->
     # full text serach.
     attributes = (key for key of @meta)
     for key in attributes
+      continue if searchkey and (searchkey isnt key)
       value = @_normalizeValue(@meta[key].value)
       return true if value.indexOf(params) != -1
-    return false
-
-  metaQuery: (key, searchvalue) ->
-    # query on a specific field.
-    value = @_normalizeValue(@meta[key].value)
-    return true if value.indexOf(searchvalue) != -1
     return false
 
   related: (params) ->
