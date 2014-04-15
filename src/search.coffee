@@ -18,9 +18,8 @@ Nex.Search =
 
     # Response Methods
     getAssetsDone = (assets, options = {}) =>
-      # console.log 'getAssetsDone', assets
       if result.kind is 'Collection'
-        result.items = if @sortopts then assets else @sortassets(result.assets, assets)
+        result.items = if params.sortoptions then assets else @sortassets(result.assets, assets)
         result.count = assets.length
         if options.page
           result.next  = if result.items.length is options.pagesize then options.page + 1
@@ -113,8 +112,8 @@ Nex.Search =
     # function that determines which collections have to be
     # excluded from the search to avoid overwriting data
     return params if not params.hasOwnProperty('contained_in')
-    objid    = params.contained_in[0]
-    colModel = @get_model('Collection')
+    objid     = params.contained_in[0]
+    colModel  = @get_model('Collection')
     @existing = colModel.select((item) -> objid in item.assets)
     params.excludes = (obj.id for obj in @existing)
     params
@@ -208,7 +207,6 @@ Nex.Search =
       )
 
     else if collection.kind is 'Collection' and params.sortoptions
-      @sortopts       = true
       params.ancestor = collection.id
 
       @getSearch(params).done( (data, status, xhr) =>
