@@ -13,7 +13,7 @@ class Nex.Page extends Spine.Controller
 
   constructor: ->
     super
-
+    @el.addClass @class if @class
     @controllers = []
 
     @bind 'ready', @render

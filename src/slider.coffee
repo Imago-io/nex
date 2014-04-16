@@ -234,8 +234,6 @@ class Slide extends Spine.Controller
 
       else
         kind = if col.kind in ['Image', 'Video'] then col.kind else 'Image'
-        # @log 'single slide', @sizemode, col, col.meta.crop or @align
-        # @log 'before', col, col.getMeta('crop', 'center center')
         @add @["media"] = new Nex.Widgets[kind]
           src:          col.serving_url
           align:        col.getMeta('crop', 'center center')
@@ -247,7 +245,6 @@ class Slide extends Spine.Controller
           width:        @width
           noResize:     @noResize
           lazy:         @lazy
-        @log 'after'
 
         # render html
         if typeof @enablehtml is 'boolean' and @enablehtml
