@@ -209,56 +209,60 @@ class Slide extends Spine.Controller
       @bind 'ready', @render
       @getData @asset.path
     else
-      @render(@asset)
+      @render([@asset])
 
   onClick: ->
     @slider.trigger 'click', @
 
   render: (result) ->
-    result = result[0] if result.length is 1
-    assets = result?.items or result
-    # @log 'assets: ', assets
+    # @log 'render result', result
+    for col in result
+      # @log col
+      if col.kind is 'Collection' and @subslides
+        # @log 'subslides slide', @sizemode
+        for asset,i in col.items
+          @add new Slide
+            slider:    @slider
+            asset:     asset
+            sizemode:  @sizemode
+            className: 'slidecontent'
+            height:    @height
+            width:     @width
+            noResize:  @noResize
+            lazy:      @lazy
+            align:     @align
 
-    if assets.length and @subslides
-      for asset,i in assets
-        @add new Slide
-          slider:    @slider
-          asset:     asset
-          sizemode:  @sizemode
-          className: 'slidecontent'
-          height:    @height
-          width:     @width
-          noResize:  @noResize
-          lazy:      @lazy
-          align:     @align
-    else
-      kind = if result.kind in ['Image', 'Video'] then result.kind else 'Image'
-      @add @["media"] = new Nex.Widgets[kind]
-        src:          result.serving_url
-        align:        result.meta.crop?.value or @align
-        resolution:   result.resolution
-        uuid:         result.id
-        formats:      result.formats
-        sizemode:     result.getMeta('sizemode', [@sizemode])[0]
-        height:       @height
-        width:        @width
-        noResize:     @noResize
-        lazy:         @lazy
+      else
+        kind = if col.kind in ['Image', 'Video'] then col.kind else 'Image'
+        # @log 'single slide', @sizemode, col, col.meta.crop or @align
+        # @log 'before', col, col.getMeta('crop', 'center center')
+        @add @["media"] = new Nex.Widgets[kind]
+          src:          col.serving_url
+          align:        col.getMeta('crop', 'center center')
+          resolution:   col.resolution
+          uuid:         col.id
+          formats:      col.formats
+          sizemode:     col.getMeta('sizemode', [@sizemode])[0]
+          height:       @height
+          width:        @width
+          noResize:     @noResize
+          lazy:         @lazy
+        @log 'after'
 
-      # render html
-      if typeof @enablehtml is 'boolean' and @enablehtml
-        # @log 'boolean and true'
-        html = result.getMeta('text', result.getMeta('html', ''))
+        # render html
+        if typeof @enablehtml is 'boolean' and @enablehtml
+          # @log 'boolean and true'
+          html = col.getMeta('text', col.getMeta('html', ''))
 
-      else if typeof @enablehtml is 'string'
-        # @log 'string'
-        html = result.getMeta('text', result.getMeta(@enablehtml, ''))
+        else if typeof @enablehtml is 'string'
+          # @log 'string'
+          html = col.getMeta('text', col.getMeta(@enablehtml, ''))
 
-      else if typeof @enablehtml is 'function'
-        # @log 'function'
-        html = @enablehtml(result)
+        else if typeof @enablehtml is 'function'
+          # @log 'function'
+          html = @enablehtml(col)
 
-      @append html if html
+        @append html if html
 
   activate: ->
     super

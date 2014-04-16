@@ -13,8 +13,8 @@ class Nex.Widgets.Image extends Spine.Controller
     maxSize   : 2560
     noResize  : false
     mediasize : false
-    width     : 'auto'
-    height    : 'auto'
+    width     : ''
+    height    : ''
 
   events:
     'resize' : 'render'
@@ -48,7 +48,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @window = $(window)
 
     # bind to window resize STOP if no dimentions are provided
-    @window.on "resizestop.#{@id}", @preload if @lazy #or !@noResize
+    @window.on "resizestop.#{@id}", @preload unless @noResize # if @lazy or !@noResize
 
     # bind css background size calculation to window resize START.
     @window.on "resize.#{@id}", _.throttle(@onResize, 250) unless @noResize
@@ -91,6 +91,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @image.css('backgroundSize', @calcMediaSize())
 
   preload: (options = {}) =>
+    # @log 'preload', @width, @height
 
     width    = options.width    or @width
     height   = options.height   or @height
@@ -126,14 +127,23 @@ class Nex.Widgets.Image extends Spine.Controller
         # @log 'fit width', @width, @height
         width  = @width
         height = @width / assetRatio
-        @el.height(height)
+        @el.height(parseInt height)
 
       # fit height
       else if @width is 'auto' and typeof @height is 'number'
         # @log 'fit height', @width, @height
         height = @height
         width  = @height * assetRatio
-        @el.width(width)
+        @el.width(parseInt width)
+
+      # we want dynamic resizing without css.
+      # like standard image behaviour. will get a height according to the width
+      else if @width is 'auto' and @height is 'auto'
+        # @log 'both auto'
+        width  = parseInt @el.css('width')
+        height = width / assetRatio
+        @el.height(parseInt height)
+        # @log 'both auto, width, height', width, height
 
       # width and height dynamic, needs to be defined via css
       # either width height or position
@@ -141,6 +151,9 @@ class Nex.Widgets.Image extends Spine.Controller
         # @log 'dynamic height and width', @width, @height
         width  = parseInt @el.css('width')
         height = parseInt @el.css('height')
+
+
+
 
     # check viewport here
     if not $.inviewport(@el, threshold: 0) and @lazy
