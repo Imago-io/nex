@@ -107,6 +107,20 @@ class Asset extends Spine.Model
         opts[key].push(obj.value) if obj.value not in opts[key]
     opts
 
+  filterOptions: (keyname, value) ->
+    # return available options based on existing key/value pair
+    console.log 'filterOptions', keyname, value
+    variants = @variants.filter((item) ->
+                  item.meta[Nex.Utils.singularize(keyname)]?.value is value
+                )
+    opts = {}
+    for variant in variants
+      for key, obj of variant.meta
+        key = Nex.Utils.pluralize(key)
+        opts[key] or= []
+        opts[key].push(obj.value) if obj.value not in opts[key]
+    opts
+
   discounted: ->
     (@variants[0].meta.discounted) and \
     ((@variants[0].meta.discounted.value > 0) or \
