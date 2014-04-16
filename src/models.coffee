@@ -174,6 +174,12 @@ class Setting extends Spine.Model
     settings.sort((a, b) -> a.order - b.order)
     settings
 
+  @currencies: ->
+    @findByAttribute('name', 'currencies').value
+
+  @mainCurrency: ->
+    @currencies()[0]
+
   @extend Spine.Model.Ajax
 
 
