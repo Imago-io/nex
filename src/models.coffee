@@ -109,7 +109,6 @@ class Asset extends Spine.Model
 
   filterOptions: (keyname, value) ->
     # return available options based on existing key/value pair
-    console.log 'filterOptions', keyname, value
     variants = @variants.filter((item) ->
                   item.meta[Nex.Utils.singularize(keyname)]?.value is value
                 )
@@ -188,11 +187,21 @@ class Setting extends Spine.Model
     settings.sort((a, b) -> a.order - b.order)
     settings
 
-  @currencies: ->
-    @findByAttribute('name', 'currencies').value
+  @findByName: (name) ->
+    @findByAttribute('name', name)
 
-  @mainCurrency: ->
-    @currencies()[0]
+  @currency: ->
+    sessioncur = Nex.Utils.getCurrencyByCode(Nex.country)
+    currencies = @findByName('currencies').value
+    if sessioncur in currencies then sessioncur else currencies[0]
+
+  @setSessionData: ->
+    Nex.currencies = @findByName('currencies').value
+    Nex.country    = @findByName('country').value
+    Nex.latlong    = @findByName('latlong').value
+    Nex.city       = @findByName('city').value.toUpperCase()
+    Nex.region     = @findByName('region').value.toUpperCase()
+    Nex.currency   = @currency()
 
   @extend Spine.Model.Ajax
 

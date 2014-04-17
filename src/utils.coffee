@@ -1,4 +1,4 @@
-aNex  = @Nex or require('nex')
+Nex  = @Nex or require('nex')
 
 KEYS =
   '16'  : 'onShift'
@@ -761,6 +761,13 @@ Nex.Utils =
 
   inUsa: (value) ->
     value?.toLowerCase() in ['usa', 'united states', 'united states of america']
+
+  countryByCode: (value) ->
+    for country, code of CODES
+      return country if code is value
+
+  getCurrencyByCode: (value) ->
+    @getCurrency(@countryByCode(value))
 
   stateRequired: (value) ->
     @inUsa(value) or value?.toLowerCase() in ['australia', 'canada']
