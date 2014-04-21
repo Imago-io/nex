@@ -133,9 +133,11 @@ class Asset extends Spine.Model
 
   price: (currency, discounted=false, decimals=true) ->
     currency or= Nex.currency
-    priceValue = @variants[0]?.meta.price.value[currency] or @getMeta('price', 0)
+    priceValue = @variants[0]?.meta.price.value[currency] or \
+                 @getMeta('price', {currency: 0})[currency]
     if discounted
-      priceValue = @variants[0]?.meta.discounted.value[currency] or @getMeta('discounted', 0)
+      priceValue = @variants[0]?.meta.discounted.value[currency] or \
+                   @getMeta('discounted', {currency: 0})[currency]
     Nex.Utils.toPrice(priceValue, currency, decimals)
 
   upvote: ->
