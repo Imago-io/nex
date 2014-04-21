@@ -121,9 +121,15 @@ class Asset extends Spine.Model
     opts
 
   discounted: ->
+    return false unless @variants.length
     (@variants[0].meta.discounted) and \
     ((@variants[0].meta.discounted.value > 0) or \
     (@variants[0].meta.discounted.value[Nex.currency] > 0))
+
+
+  totalStock: ->
+    return 100 unless @variants.length
+    (v.meta.stock?.value for v in @variants).reduce (t, s) -> t + s
 
   upvote: ->
     @meta.likes or= value: 0
