@@ -132,6 +132,7 @@ class Asset extends Spine.Model
     (v.meta.stock?.value for v in @variants).reduce (t, s) -> t + s
 
   price: (currency, discounted = false) ->
+    currency or= Nex.currency
     priceValue = @variants[0]?.meta.price.value[currency]
     if discounted
       priceValue = @variants[0]?.meta.discounted.value[currency]
