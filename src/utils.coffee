@@ -726,8 +726,9 @@ Nex.Utils =
 
     return "#{ints}.#{floats}"
 
-  toPrice: (value, currency) ->
+  toPrice: (value, currency, decimals=true) ->
     price  = @toFloat(value).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+    price  = price.split('.')[0] if not decimals
     symbol = @getCurrencySymbol(currency)
     "#{symbol} #{price}"
 

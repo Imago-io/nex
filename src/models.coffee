@@ -131,12 +131,12 @@ class Asset extends Spine.Model
     return 100 unless @variants.length
     (v.meta.stock?.value for v in @variants).reduce (t, s) -> t + s
 
-  price: (currency, discounted = false) ->
+  price: (currency, discounted=false, decimals=true) ->
     currency or= Nex.currency
-    priceValue = @variants[0]?.meta.price.value[currency]
+    priceValue = @variants[0]?.meta.price.value[currency] or @getMeta('price', 0)
     if discounted
-      priceValue = @variants[0]?.meta.discounted.value[currency]
-    Nex.Utils.toPrice(priceValue, currency)
+      priceValue = @variants[0]?.meta.discounted.value[currency] or @getMeta('discounted', 0)
+    Nex.Utils.toPrice(priceValue, currency, decimals)
 
   upvote: ->
     @meta.likes or= value: 0
