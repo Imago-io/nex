@@ -786,7 +786,7 @@ Nex.Utils =
     country = 'USA' if @inUsa(country)
     STATES[country.toUpperCase()]
 
-  limitNumberRange : (value, min=0, max=1) ->
+  limitRange : (value, min=0, max=1) ->
     Math.min(Math.max(value / 2, min), max)
 
 module.exports = Nex.Utils
