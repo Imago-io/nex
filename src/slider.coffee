@@ -78,7 +78,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       return unless col.items.length > 0
       for asset,i in col.items
         # @log 'asset in col.items', asset, asset.name
-        @add new Slide
+        @add @[asset.normname] = new Slide
           slider:      @
           asset:       asset
           sizemode:    @sizemode
