@@ -34,7 +34,8 @@ class Nex.Widgets.Image extends Spine.Controller
     return @log 'Error: image widget rquires src' unless @src
     return @log 'Error: image widget rquires resolution' unless @resolution
 
-    @id = Nex.Utils.uuid()
+    @id or= Nex.Utils.uuid()
+    @el.data @data if @data
 
     @html '<div class="image"></div><div class="spin"></div><div class="spin2"></div>'
 

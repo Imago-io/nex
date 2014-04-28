@@ -34,7 +34,8 @@ class Nex.Widgets.Video extends Spine.Controller
     super
     @logPrefix = '(App) Video: '
 
-    @id = Nex.Utils.uuid()
+    @id or= Nex.Utils.uuid()
+    @el.data @data if @data
 
     # play button
     @html '<div class="imagowrapper"><div class="spin"></div><div class="spin2"></div><a class="playbig icon-play" /></div>'

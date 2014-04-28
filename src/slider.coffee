@@ -47,11 +47,12 @@ class Nex.Widgets.Slider extends Spine.Controller
 
     @bind 'ready', @render
 
-    @id = Nex.Utils.uuid()
+    @id or= Nex.Utils.uuid()
 
     $(document).on "keydown.#{@id}", @onKeyup if @enablekeys
 
     @el.addClass @class if @class
+    @el.data @data if @data
 
     @html '<div class="prev"></div><div class="next"></div>' if @enablearrows
 
