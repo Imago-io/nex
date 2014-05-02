@@ -92,6 +92,8 @@ class Nex.Widgets.Slider extends Spine.Controller
           enablehtml:  @enablehtml
     @goto @current
 
+    @trigger 'rendered', result
+
   clear: ->
     for cont in @controllers
       @controllers[0].release()
@@ -220,7 +222,7 @@ class Slide extends Spine.Controller
     for col in result
       # @log col
       if col.kind is 'Collection' and @subslides
-        # @log 'subslides slide', @sizemode
+        # @log 'subslides slide', @sizemode, @align
         for asset,i in col.items
           @add new Slide
             slider:    @slider
@@ -235,6 +237,7 @@ class Slide extends Spine.Controller
 
       else
         kind = if col.kind in ['Image', 'Video'] then col.kind else 'Image'
+        # @log 'crop', col.getMeta('crop', 'center center')
         @add @["media"] = new Nex.Widgets[kind]
           src:          col.serving_url
           align:        col.getMeta('crop', 'center center')
