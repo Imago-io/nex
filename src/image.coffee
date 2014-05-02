@@ -115,43 +115,44 @@ class Nex.Widgets.Image extends Spine.Controller
     assetRatio = @resolution.width / @resolution.height
 
     # use pvrovided dimentions or current size of @el
-    if width is @width or width is 'auto' and height is @height or height is 'auto'
+    # if width is @width or width is 'auto' and height is @height or height is 'auto'
       # fixed size asset, we have with and height
       # @log 'IfElse Block: ', width, @width, height, @height
-      if typeof @width is 'number' and typeof @height is 'number'
-        # @log 'fixed size', @width, @height
-        width = @width
-        height = @height
 
-      # fit width
-      else if @height is 'auto' and typeof @width is 'number'
-        # @log 'fit width', @width, @height
-        width  = @width
-        height = @width / assetRatio
-        @el.height(parseInt height)
+    if typeof @width is 'number' and typeof @height is 'number'
+      # @log 'fixed size', @width, @height
+      width = @width
+      height = @height
 
-      # fit height
-      else if @width is 'auto' and typeof @height is 'number'
-        # @log 'fit height', @width, @height
-        height = @height
-        width  = @height * assetRatio
-        @el.width(parseInt width)
+    # fit width
+    else if @height is 'auto' and typeof @width is 'number'
+      # @log 'fit width', @width, @height
+      width  = @width
+      height = @width / assetRatio
+      @el.height(parseInt height)
 
-      # we want dynamic resizing without css.
-      # like standard image behaviour. will get a height according to the width
-      else if @width is 'auto' and @height is 'auto'
-        # @log 'both auto'
-        width  = parseInt @el.css('width')
-        height = width / assetRatio
-        @el.height(parseInt height)
-        # @log 'both auto, width, height', width, height
+    # fit height
+    else if @width is 'auto' and typeof @height is 'number'
+      # @log 'fit height', @width, @height
+      height = @height
+      width  = @height * assetRatio
+      @el.width(parseInt width)
 
-      # width and height dynamic, needs to be defined via css
-      # either width height or position
-      else
-        # @log 'dynamic height and width', @width, @height
-        width  = parseInt @el.css('width')
-        height = parseInt @el.css('height')
+    # we want dynamic resizing without css.
+    # like standard image behaviour. will get a height according to the width
+    else if @width is 'auto' and @height is 'auto'
+      # @log 'both auto'
+      width  = parseInt @el.css('width')
+      height = width / assetRatio
+      @el.height(parseInt height)
+      # @log 'both auto, width, height', width, height
+
+    # width and height dynamic, needs to be defined via css
+    # either width height or position
+    else
+      # @log @el, parseInt(@el.css('width')), @el.css('width'), @el.height()
+      width  = parseInt @el.css('width')
+      height = parseInt @el.css('height')
 
 
 
