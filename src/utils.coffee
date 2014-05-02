@@ -706,6 +706,9 @@ Nex.Utils =
   isSafari: ->
     return !!navigator.userAgent.match(/Safari/i) and not @isChrome()
 
+  isMobile: ->
+    return !!navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i)
+
   isEven: (n) ->
     return @isNumber(n) and (n % 2 is 0)
 
