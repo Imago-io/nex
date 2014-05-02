@@ -172,12 +172,10 @@ class Nex.Widgets.Slider extends Spine.Controller
     else
       @el.removeClass('first last')
 
-  getPrev: (e,i) ->
-    @log 'e: ', e
+  getPrev: (i) ->
     if i is 0 then @slides.length - 1 else i - 1
 
-  getNext: (e,i) ->
-    @log 'e: ', e
+  getNext: (i) ->
     if i is @slides.length - 1 then  0 else i + 1
 
   getLast: () ->
