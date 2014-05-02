@@ -18,6 +18,9 @@ class Nex.Widgets.Slider extends Spine.Controller
     'swipeLeft' : 'goNext'
     'swipeRight': 'goPrev'
     'keyup'     : 'onKeyup'
+    'touchstart': 'onTouchStart'
+    'touchmove' : 'onTouchMove'
+    'touchend'  : 'onTouchEnd'
 
   defaults:
     animation:    'fade'
@@ -49,6 +52,8 @@ class Nex.Widgets.Slider extends Spine.Controller
 
     @id or= Nex.Utils.uuid()
 
+    @touch = {}
+
     $(document).on "keydown.#{@id}", @onKeyup if @enablekeys
 
     @el.addClass @class if @class
@@ -68,6 +73,46 @@ class Nex.Widgets.Slider extends Spine.Controller
       # when 38 then @log 'up'
       when 39 then @goNext()
       # when 40 then @log 'down'
+
+  swipeDirection: (x1, x2, y1, y2) ->
+    xDelta = Math.abs(x1 - x2)
+    yDelta = Math.abs(y1 - y2)
+
+    if xDelta >= yDelta
+      if x1 - x2 > 0 then 'Left' else 'Right'
+    else
+      if y1 - y2 > 0 then 'Up' else 'Down'
+
+  onTouchStart: (e) =>
+    e.preventDefault()
+    e.stopPropagation()
+    e = e.originalEvent
+    now   = Date.now()
+    delta = now - (@touch.last or now)
+    @touch.x1 = e.touches[0].pageX
+    @touch.y1 = e.touches[0].pageY
+    @touch.last = now
+
+  onTouchMove: (e)=>
+    e.preventDefault()
+    e.stopPropagation()
+    e = e.originalEvent
+    @touch.x2 = e.touches[0].pageX
+    @touch.y2 = e.touches[0].pageY
+
+  onTouchEnd: (e) =>
+    e.preventDefault()
+    e.stopPropagation()
+    e = e.originalEvent
+    if @touch.x2 > 0 or @touch.y2 > 0
+      (Math.abs(@touch.x1 - @touch.x2) > 30 or Math.abs(@touch.y1 - @touch.y2) > 30) and
+        @el.trigger('swipe') and
+        @el.trigger('swipe' + (@swipeDirection(@touch.x1, @touch.x2, @touch.y1, @touch.y2)))
+      @touch.x1 = @touch.x2 = @touch.y1 = @touch.y2 = @touch.last = 0
+    else if 'last' of @touch
+        @el.trigger('tap')
+        @touch = {}
+
 
   render: (result) =>
     # @log 'render result: ', result
