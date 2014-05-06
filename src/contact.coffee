@@ -23,6 +23,8 @@ class Nex.Contact extends Spine.Controller
   constructor: ->
     super
 
+    @defaultFields = ['email', 'message', 'subscribe']
+
   onkeyup: (e) ->
     @validate(e.target)
 
@@ -48,15 +50,19 @@ class Nex.Contact extends Spine.Controller
     array = $(form).serializeArray()
     obj   = {}
 
+    message = ''
     for elem in array
+      if elem.name not in @defaultFields
+        message += "#{elem.name}: #{elem.value}\r\n\r\\"
       obj[elem.name] = elem.value or= ''
+
+    obj.message = message + obj.message
 
     return JSON.stringify(obj)
 
   send: (e) =>
     e.preventDefault()
-
-    for field in $('input,textarea')
+    for field in $('input,textarea,select')
       @validate field
 
     return unless @form[0].checkValidity()
