@@ -53,12 +53,15 @@ class Nex.Contact extends Spine.Controller
     message = ''
     for elem in array
       if elem.name not in @defaultFields
-        message += "#{elem.name}: #{elem.value}\r\n\r\\"
+        message += "#{Nex.Utils.titleCase(elem.name)}: #{elem.value}<br><br>"
       obj[elem.name] = elem.value or= ''
 
-    obj.message = message + obj.message
+    obj.message = message + @replaceNewLines(obj.message)
 
     return JSON.stringify(obj)
+
+  replaceNewLines: (msg) ->
+    msg.replace(/(\r\n\r\n|\r\n|\n|\r)/gm, "<br>")
 
   send: (e) =>
     e.preventDefault()

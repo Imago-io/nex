@@ -628,6 +628,10 @@ Nex.Utils =
   singularize: (str) ->
     str.replace(/s$/, '')
 
+  titleCase: (str) ->
+    return str if typeof str isnt 'string'
+    str.charAt(0).toUpperCase() + str.slice(1)
+
   normalize: (s) ->
     return if typeof s isnt 'string'
     mapping =
