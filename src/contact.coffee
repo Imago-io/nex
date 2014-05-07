@@ -7,8 +7,9 @@ class Nex.Contact extends Spine.Controller
     'contact'
 
   events:
-    'tap .send' : 'send'
-    'keyup'     : 'onkeyup'
+    'tap .send'       : 'send'
+    'keyup'           : 'onkeyup'
+    # 'change select'   : 'onchange'
 
   elements:
     'form' : 'form'
@@ -18,7 +19,7 @@ class Nex.Contact extends Spine.Controller
     processData: false
     headers  : {'X-Requested-With': 'XMLHttpRequest'}
 
-  logPrefix: '(App) Contact: '
+  logPrefix: '(App) NexContact: '
 
   constructor: ->
     super
@@ -28,8 +29,12 @@ class Nex.Contact extends Spine.Controller
   onkeyup: (e) ->
     @validate(e.target)
 
+  onchange: (e) ->
+    @log 'onchange'
+    @validate(e.target)
+
   validate: (el) ->
-    field = $(el).parent()
+    field = $(el).closest('.field')
     if el.checkValidity()
       field.removeClass('error')
     else
@@ -56,12 +61,9 @@ class Nex.Contact extends Spine.Controller
         message += "#{Nex.Utils.titleCase(elem.name)}: #{elem.value}<br><br>"
       obj[elem.name] = elem.value or= ''
 
-    obj.message = message + @replaceNewLines(obj.message)
+    obj.message = message + Nex.Util.replaceNewLines(obj.message)
 
     return JSON.stringify(obj)
-
-  replaceNewLines: (msg) ->
-    msg.replace(/(\r\n\r\n|\r\n|\n|\r)/gm, "<br>")
 
   send: (e) =>
     e.preventDefault()
