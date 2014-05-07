@@ -61,7 +61,7 @@ class Nex.Contact extends Spine.Controller
         message += "#{Nex.Utils.titleCase(elem.name)}: #{elem.value}<br><br>"
       obj[elem.name] = elem.value or= ''
 
-    obj.message = message + Nex.Util.replaceNewLines(obj.message)
+    obj.message = message + Nex.Utils.replaceNewLines(obj.message)
 
     return JSON.stringify(obj)
 
