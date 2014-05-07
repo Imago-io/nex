@@ -780,6 +780,9 @@ Nex.Utils =
   stateRequired: (value) ->
     @inUsa(value) or value?.toLowerCase() in ['australia', 'canada']
 
+  replaceNewLines: (msg) ->
+    msg.replace(/(\r\n\r\n|\r\n|\n|\r)/gm, "<br>")
+
   getCurrencySymbol: (currency) ->
     SYMBOLS[currency] or SYMBOLS.GENERIC
 
