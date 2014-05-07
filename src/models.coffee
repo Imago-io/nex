@@ -212,11 +212,21 @@ class Setting extends Spine.Model
 
   @setSessionData: ->
     Nex.currencies = @findByName('currencies').value
-    Nex.country    = @findByName('country').value
-    Nex.latlong    = @findByName('latlong').value
-    Nex.city       = @findByName('city').value.toUpperCase()
-    Nex.region     = @findByName('region').value.toUpperCase()
-    Nex.currency   = @currency()
+    Nex.ipaddress  = @findByName('ipaddress').value
+    $.ajax(
+      type: 'GET'
+      url:  'http://freegeoip.net/json/'+Nex.ipaddress
+    ).success(
+      (data) =>
+        console.log 'data', data
+        Nex.country  = data.country_code
+        Nex.city     = data.city
+        Nex.region   = data.region_code
+        Nex.currency = @currency()
+      )
+     .error(-> deferred.resolve())
+
+
 
   @extend Spine.Model.Ajax
 
