@@ -210,15 +210,15 @@ class Setting extends Spine.Model
     currencies = @findByName('currencies').value
     if sessioncur in currencies then sessioncur else currencies[0]
 
+
   @setSessionData: ->
     Nex.currencies = @findByName('currencies').value
     Nex.ipaddress  = @findByName('ipaddress').value
+
     $.ajax(
       type: 'GET'
       url:  'http://freegeoip.net/json/'+Nex.ipaddress
-    ).success(
-      (data) =>
-        console.log 'data', data
+    ).success((data) =>
         Nex.country  = data.country_code
         Nex.city     = data.city
         Nex.region   = data.region_code
