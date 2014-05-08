@@ -224,7 +224,12 @@ class Setting extends Spine.Model
         Nex.region   = data.region_code
         Nex.currency = @currency()
       )
-     .error(-> deferred.resolve())
+     .error(=>
+        Nex.country  = @findByName('country').value
+        Nex.city     = @findByName('city').value
+        Nex.region   = @findByName('region').value
+        Nex.currency = @currency()
+      )
 
 
 
