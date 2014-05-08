@@ -104,11 +104,25 @@ class Nex.Widgets.Slider extends Spine.Controller
     @manager.add controller
     @append controller
 
-  goNext: =>
+  goNext: (e) =>
     @goto 'next'
 
-  goPrev: =>
+  goPrev: (e) =>
     @goto 'prev'
+
+  reset: (slide=0) ->
+    @current = slide
+    @prev    = @getPrev(@current)
+    @next    = @getNext(@current)
+
+    @slides[@prev].el.addClass 'prevslide'
+    @slides[@next].el.addClass 'nextslide'
+
+    @slides[@current]?.active()
+
+    #make sure next slides are loaded
+    @slides[@prev].onDeck()
+    @slides[@next].onDeck()
 
   goto: (slide) ->
     return @log 'no slides' unless @slides
