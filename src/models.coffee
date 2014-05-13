@@ -112,12 +112,15 @@ class Asset extends Spine.Model
     variants = @variants.filter((item) ->
                   item.meta[Nex.Utils.singularize(keyname)]?.value is value
                 )
-    opts = {}
+    opts = {
+      mapping : {}
+    }
     for variant in variants
       for key, obj of variant.meta
         key = Nex.Utils.pluralize(key)
         opts[key] or= []
         opts[key].push(obj.value) if obj.value not in opts[key]
+        opts.mapping[obj.value] = variant.meta.stock.value
     opts
 
   discounted: ->
