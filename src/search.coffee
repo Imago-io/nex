@@ -158,7 +158,10 @@ Nex.Search =
       return deferred.resolve(collection)
     else
       # fetch collection
-      @getSearch({'path' : params.path}).done( (data, status, xhr) =>
+      query =
+        'path' : params.path
+      query.recursive = true if params.recursive
+      @getSearch(query).done( (data, status, xhr) =>
         delete params.path
         collection = @parseData(data)[0]
         deferred.resolve(collection)
@@ -171,6 +174,7 @@ Nex.Search =
     promise  = deferred.promise()
 
     delete params.path
+    delete params.recursive
 
     if collection.kind is 'Collection' and not params.sortoptions
       toFetch = collection.assets
@@ -190,7 +194,6 @@ Nex.Search =
       if Object.keys(params).length is 1 and params.hasOwnProperty('page')
         offset = (page - 1) * params.pagesize = pagesize
         ids    = collection.assets[offset...pagesize * page]
-
 
       if ids?.length
         params.ids = toFetch = (id for id in ids when not @globalExists(id))
