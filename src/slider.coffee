@@ -17,7 +17,6 @@ class Nex.Widgets.Slider extends Spine.Controller
     'tap .prev' : 'goPrev'
     'swipeLeft' : 'goNext'
     'swipeRight': 'goPrev'
-    'keyup'     : 'onKeyup'
 
   defaults:
     animation:    'fade'
@@ -190,6 +189,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     super
 
 
+
 module.exports = Nex.Widgets.Slider
 
 
@@ -273,7 +273,6 @@ class Slide extends Spine.Controller
     super
     cont.preload?() for cont in @controllers if @subslides
 
-
   deactivate: ->
     super
     @el.removeClass('prev next')
@@ -291,3 +290,8 @@ class Slide extends Spine.Controller
       @controllers[0].release()
     @controllers =[]
     @html ''
+
+  release: ->
+    @clear()
+    console.log 'release'
+    super
