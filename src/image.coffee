@@ -20,7 +20,7 @@ class Nex.Widgets.Image extends Spine.Controller
     'resize' : 'render'
 
   elements:
-    '.image' : 'image'
+    '.imagox23' : 'image'
 
   constructor: ->
     # set default values before init
@@ -37,7 +37,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @id or= Nex.Utils.uuid()
     @el.data @data if @data
 
-    @html '<div class="image"></div><div class="spin"></div><div class="spin2"></div>'
+    @html '<div class="imagox23"></div><div class="spin"></div><div class="spin2"></div>'
 
     # set size of wrapper if provided
     @el.width(@width)   if typeof @width  is 'number'
