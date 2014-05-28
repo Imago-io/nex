@@ -134,7 +134,7 @@ Nex.Search =
     jqXHR.always => @jqXHR = null
 
     jqXHR.fail (jqXHR, textStatus, error) =>
-      console.log 'aborted!' if textStatus is 'abort'
+      # console?.log 'aborted!' if textStatus is 'abort'
 
     @jqXHR = jqXHR if @abortable
     jqXHR

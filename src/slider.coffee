@@ -293,5 +293,5 @@ class Slide extends Spine.Controller
 
   release: ->
     @clear()
-    console.log 'release'
+    @log 'release'
     super

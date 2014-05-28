@@ -2,6 +2,7 @@ Search = require("./search")
 
 class Asset extends Spine.Model
   @configure 'Asset'
+  @include Log
 
   @extend Search
 
@@ -151,7 +152,6 @@ class Asset extends Spine.Model
     successResponse = (data, status, xhr, options) =>
       # update the local records with the newly
       # fetched assets via fetch_asse
-      console.log 'likes +1', @meta.likes.value
 
     host = if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.imagoapp.com" else ""
 
@@ -164,7 +164,7 @@ class Asset extends Spine.Model
       type        : 'PUT'
       url         : host + '/api/v2/metaupdate/' + @id
     ).success(successResponse)
-     .error(-> console.log 'error while upvoting')
+     .error(=> @log 'error while upvoting')
 
 
 
@@ -230,7 +230,7 @@ class Setting extends Spine.Model
         Nex.region   = data.region_code
         Nex.currency = @currency()
       )
-     .error(-> console.log 'fetch error for geoip')
+     .error(=> @log 'fetch error for geoip')
 
 
 
@@ -289,7 +289,7 @@ class Member extends Spine.Model
         window.location = data.url
       else
         deferred.resolve(data)
-    ).error(-> console.log 'error')
+    ).error(=> @log 'error')
 
     promise
 

@@ -603,8 +603,6 @@ Nex.Utils =
 
     (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4())
 
-  urlify: (query) ->
-    console.log 'urlify'
 
   queryfy: (url) ->
     query = []
