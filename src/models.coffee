@@ -2,7 +2,6 @@ Search = require("./search")
 
 class Asset extends Spine.Model
   @configure 'Asset'
-  @include Log
 
   @extend Search
 
@@ -164,7 +163,7 @@ class Asset extends Spine.Model
       type        : 'PUT'
       url         : host + '/api/v2/metaupdate/' + @id
     ).success(successResponse)
-     .error(=> @log 'error while upvoting')
+     .error(-> Nex.log 'error while upvoting')
 
 
 
@@ -230,7 +229,7 @@ class Setting extends Spine.Model
         Nex.region   = data.region_code
         Nex.currency = @currency()
       )
-     .error(=> @log 'fetch error for geoip')
+     .error(-> Nex.log 'fetch error for geoip')
 
 
 
@@ -289,7 +288,7 @@ class Member extends Spine.Model
         window.location = data.url
       else
         deferred.resolve(data)
-    ).error(=> @log 'error')
+    ).error(-> Nex.log 'error')
 
     promise
 
