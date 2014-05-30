@@ -93,7 +93,8 @@ class Nex.Widgets.Slider extends Spine.Controller
           enablehtml:  @enablehtml
     @goto @current
 
-    @trigger 'rendered', result
+    @delay =>
+      @trigger 'rendered', result
 
   clear: ->
     for cont in @controllers
@@ -156,6 +157,8 @@ class Nex.Widgets.Slider extends Spine.Controller
     @slides[@next].el.addClass 'nextslide'
 
     @slides[@current]?.active()
+
+    @trigger 'change', @
 
     # #make sure next slides are loaded
     # @slides[@prev].onDeck()
