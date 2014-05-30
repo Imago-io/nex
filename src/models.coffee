@@ -74,7 +74,7 @@ class Asset extends Spine.Model
       continue if searchkey and (searchkey isnt key)
       value = @_normalizeValue(@meta[key].value)
       for q in params
-        return true if value.indexOf(q) != -1
+        return true if value.indexOf?(q) != -1
     return false
 
   related: (params) ->
