@@ -134,7 +134,7 @@ Nex.Search =
     jqXHR.always => @jqXHR = null
 
     jqXHR.fail (jqXHR, textStatus, error) =>
-      console.log 'aborted!' if textStatus is 'abort'
+      # console?.log 'aborted!' if textStatus is 'abort'
 
     @jqXHR = jqXHR if @abortable
     jqXHR
@@ -144,7 +144,7 @@ Nex.Search =
     promise  = deferred.promise()
 
     path = params.path[0]
-    path = path.replace(/\/$/, "") unless path is '/'
+    path = path?.replace(/\/$/, "") unless path is '/'
 
     Collection = @get_model('Collection')
     collection = Collection.findByAttribute('path', path)

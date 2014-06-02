@@ -84,7 +84,7 @@ class Nex.Contact extends Spine.Controller
       .success( (e) =>
         @el.addClass('success')
       )
-      .error( (e) -> console.log("error with form", e) )
+      .error( (e) => @log("error with form", e) )
 
   onKeyup: (e) =>
     return unless @isActive()

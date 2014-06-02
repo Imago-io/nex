@@ -74,7 +74,9 @@ class Asset extends Spine.Model
       continue if searchkey and (searchkey isnt key)
       value = @_normalizeValue(@meta[key].value)
       for q in params
-        return true if value.indexOf(q) != -1
+        result = value.indexOf?(q)
+        continue if result is undefined
+        return true if result != -1
     return false
 
   related: (params) ->
@@ -151,7 +153,6 @@ class Asset extends Spine.Model
     successResponse = (data, status, xhr, options) =>
       # update the local records with the newly
       # fetched assets via fetch_asse
-      console.log 'likes +1', @meta.likes.value
 
     host = if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.imagoapp.com" else ""
 
@@ -164,7 +165,7 @@ class Asset extends Spine.Model
       type        : 'PUT'
       url         : host + '/api/v2/metaupdate/' + @id
     ).success(successResponse)
-     .error(-> console.log 'error while upvoting')
+     .error(-> Nex.log 'error while upvoting')
 
 
 
@@ -230,7 +231,7 @@ class Setting extends Spine.Model
         Nex.region   = data.region_code
         Nex.currency = @currency()
       )
-     .error(-> console.log 'fetch error for geoip')
+     .error(-> Nex.log 'fetch error for geoip')
 
 
 
@@ -289,7 +290,7 @@ class Member extends Spine.Model
         window.location = data.url
       else
         deferred.resolve(data)
-    ).error(-> console.log 'error')
+    ).error(-> Nex.log 'error')
 
     promise
 
