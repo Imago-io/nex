@@ -93,7 +93,8 @@ class Nex.Widgets.Slider extends Spine.Controller
           enablehtml:  @enablehtml
     @goto @current
 
-    @trigger 'rendered', result
+    @delay =>
+      @trigger 'rendered', result
 
   clear: ->
     for cont in @controllers
@@ -110,6 +111,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     @goto 'prev'
 
   goto: (slide) ->
+    # @log 'goto', slide
     return @log 'no slides' unless @slides
 
     @trigger 'slide', @
@@ -121,7 +123,10 @@ class Nex.Widgets.Slider extends Spine.Controller
       when 'prev'         then next = @getPrev(@current)
       else next = Number(slide)
 
+    # @log 'goto next', next
+
     # don't navigate if slider not ready yet
+    @log @slides.length
     return unless @slides.length
 
     #If slider has one slide
@@ -155,7 +160,11 @@ class Nex.Widgets.Slider extends Spine.Controller
     @slides[@prev].el.addClass 'prevslide'
     @slides[@next].el.addClass 'nextslide'
 
+    # @log 'goto @current', @current
+
     @slides[@current]?.active()
+
+    @trigger 'change', @
 
     # #make sure next slides are loaded
     # @slides[@prev].onDeck()
@@ -293,5 +302,4 @@ class Slide extends Spine.Controller
 
   release: ->
     @clear()
-    console.log 'release'
     super
