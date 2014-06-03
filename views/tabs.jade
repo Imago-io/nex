@@ -1,0 +1,7 @@
+.tabNav
+  -for asset, i in col
+    a(href="#tab#{i}" class="tabLink #{if (i === 0) {"active"}}") #{asset.getMeta('title', '')}
+.content
+  -for asset, i in col
+    .tab(id="#{i}") #{asset.getMeta('text')}
+
