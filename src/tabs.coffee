@@ -14,6 +14,9 @@ class Nex.Widgets.Tabs extends Spine.Controller
     '.content': 'content'
     '.tab'    : 'tab'
 
+  events:
+    'tap .tabLink' : 'onClick'
+
   constructor: ->
     super
 
@@ -23,8 +26,6 @@ class Nex.Widgets.Tabs extends Spine.Controller
         <div class="content"></div>
       """
     )
-
-    # @tmpl = require('views/tabs')
 
     @controllers = []
 
@@ -39,9 +40,11 @@ class Nex.Widgets.Tabs extends Spine.Controller
       for asset in col.items
         @appendMedia (asset)
 
+    @tabLink.eq(0).addClass('active')
+    @tab.eq(0).addClass('active')
+
   onClick: (e)->
     e.preventDefault()
-    e.stopPropagation()
 
     @tabLink.removeClass 'active'
     @tab.removeClass 'active'
