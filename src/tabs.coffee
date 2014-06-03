@@ -9,21 +9,21 @@ class Nex.Widgets.Tabs extends Spine.Controller
   className: 'tabs'
 
   elements:
-    '.tabNav' : 'tabNav'
-    '.tabLink': 'tabLink'
-    '.content': 'content'
-    '.tab'    : 'tab'
+    'nav' : 'navigation'
+    'nav a': 'links'
+    'section': 'section'
+    'section article': 'content'
 
   events:
-    'tap .tabLink' : 'onClick'
+    'tap nav a' : 'onClick'
 
   constructor: ->
     super
 
     @html(
       """
-        <div class="tabNav"></div>
-        <div class="content"></div>
+        <nav></nav>
+        <section></section>
       """
     )
 
@@ -35,22 +35,22 @@ class Nex.Widgets.Tabs extends Spine.Controller
 
   render: (result) ->
     for col in result
-      @tabNav.append "<a href='#tab#{i}' class='tabLink'>#{asset.getMeta('title')}</a>" for asset, i in col.items
-      @content.append "<div id='#tab#{i}' class='tab'>#{asset.getMeta('text')}</div>" for asset, i in col.items
+      @navigation.append "<a href='#tab#{i}'>#{asset.getMeta('title', asset.getMeta('headline'))}</a>" for asset, i in col.items
+      @section.append "<article id='#tab#{i}'>#{asset.getMeta('text', asset.getMeta('html'))}</article>" for asset, i in col.items
       for asset in col.items
         @appendMedia (asset)
 
-    @tabLink.eq(0).addClass('active')
-    @tab.eq(0).addClass('active')
+    @links.eq(0).addClass('active')
+    @content.eq(0).addClass('active')
 
   onClick: (e)->
     e.preventDefault()
 
-    @tabLink.removeClass 'active'
-    @tab.removeClass 'active'
+    @links.removeClass 'active'
+    @content.removeClass 'active'
 
     $(e.target).addClass 'active'
-    @tab.filter(target.attr('href')).addClass('active')
+    @content.filter(target.attr('href')).addClass('active')
 
   appendMedia: (asset) =>
     # @log 'asset: ', asset
