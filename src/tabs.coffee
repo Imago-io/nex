@@ -61,3 +61,5 @@ class Nex.Widgets.Tabs extends Spine.Controller
   deactivate: ->
     @clear()
     super
+
+module.exports = Nex.Widgets.Tabs
