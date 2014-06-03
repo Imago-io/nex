@@ -36,7 +36,7 @@ class Nex.Widgets.Tabs extends Spine.Controller
   render: (result) ->
     for col in result
       @navigation.append "<a href='#tab#{i}'>#{asset.getMeta('title', asset.getMeta('headline'))}</a>" for asset, i in col.items
-      @section.append "<article id='#tab#{i}'>#{asset.getMeta('text', asset.getMeta('html'))}</article>" for asset, i in col.items
+      @section.append "<article id='tab#{i}'>#{asset.getMeta('text', asset.getMeta('html'))}</article>" for asset, i in col.items
       for asset in col.items
         @appendMedia (asset)
 
