@@ -15,7 +15,7 @@ class Nex.Widgets.Tabs extends Spine.Controller
   constructor: ->
     super
 
-    @tmpl = require('views/tabs')
+    # @tmpl = require('views/tabs')
 
     @controllers = new Spine.Manager
 
