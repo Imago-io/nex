@@ -49,7 +49,8 @@ class Nex.Widgets.Tabs extends Spine.Controller
     @links.removeClass 'active'
     @content.removeClass 'active'
 
-    $(e.target).addClass 'active'
+    target = $(e.target)
+    target.addClass 'active'
     @content.filter(target.attr('href')).addClass('active')
 
   appendMedia: (asset) =>
