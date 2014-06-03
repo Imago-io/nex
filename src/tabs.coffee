@@ -10,14 +10,23 @@ class Nex.Widgets.Tabs extends Spine.Controller
 
   elements:
     '.tabNav' : 'tabNav'
+    '.tabLink': 'tabLink'
     '.content': 'content'
+    '.tab'    : 'tab'
 
   constructor: ->
     super
 
+    @html(
+      """
+        <div class="tabNav"></div>
+        <div class="content"></div>
+      """
+    )
+
     # @tmpl = require('views/tabs')
 
-    @controllers = new Spine.Manager
+    @controllers = []
 
     @bind 'ready', @render
 
@@ -25,10 +34,20 @@ class Nex.Widgets.Tabs extends Spine.Controller
 
   render: (result) ->
     for col in result
-      @html @tmpl(col: col)
+      @tabNav.append "<a href='#tab#{i}' class='tabLink'>#{asset.getMeta('title')}</a>" for asset, i in col.items
+      @content.append "<div id='#tab#{i}' class='tab'>#{asset.getMeta('text')}</div>" for asset, i in col.items
       for asset in col.items
         @appendMedia (asset)
 
+  onClick: (e)->
+    e.preventDefault()
+    e.stopPropagation()
+
+    @tabLink.removeClass 'active'
+    @tab.removeClass 'active'
+
+    $(e.target).addClass 'active'
+    @tab.filter(target.attr('href')).addClass('active')
 
   appendMedia: (asset) =>
     # @log 'asset: ', asset
