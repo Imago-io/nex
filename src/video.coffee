@@ -254,7 +254,7 @@ class VideoElement extends Spine.Controller
     @el.empty()
     for format, i in @player.formats
       continue unless codec is format.codec
-      src = "http://#{Nex.tenant}.imagoapp.com/assets/api/play_redirect?uuid=#{@player.uuid}&codec=#{format.codec}&quality=hd&max_size=#{format.size}"
+      src = "/assets/api/play_redirect?uuid=#{@player.uuid}&codec=#{format.codec}&quality=hd&max_size=#{format.size}"
       srcEl = $('<source />', { src: src, 'data-size': format.size, 'data-codec': format.codec, type: "video/#{codec}"})
       @el.append srcEl
 
