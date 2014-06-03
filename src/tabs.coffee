@@ -1,7 +1,7 @@
 require("./panel")
 Nex  = @Nex or require('nex')
 
-class Tabs extends Spine.Controller
+class Nex.Widgets.Tabs extends Spine.Controller
   @include Nex.Panel
   logPrefix:
     '(App) Tabs: '
