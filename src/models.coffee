@@ -209,6 +209,14 @@ class Setting extends Spine.Model
   @findByName: (name) ->
     @findByAttribute('name', name)
 
+  @ensureCurrency: ->
+    Nex.log 'ensuing correct currency', Nex.currency, Nex.Utils.cookie 'currency'
+    return if Nex.currency is Nex.Utils.cookie 'currency'
+    Nex.Utils.cookie 'currency', Nex.currency
+    jqxhr = $.ajax "/api/v2/cart",
+      type: "POST"
+      data: JSON.stringify(currency: Nex.currency)
+
   @currency: ->
     sessioncur = Nex.Utils.getCurrencyByCode(Nex.country)
     currencies = @findByName('currencies').value
