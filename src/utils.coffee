@@ -582,7 +582,7 @@ Nex.Utils =
     unless value
       # get cookie
       for cookie in document.cookie.split(';')
-        if cookie.indexOf(name) == 1
+        if cookie.indexOf(name) >= 0
           return cookie.split('=')[1]
       return false
     # set cookie

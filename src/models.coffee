@@ -206,7 +206,6 @@ class Setting extends Spine.Model
     @findByAttribute('name', name)
 
   @ensureCurrency: ->
-    console?.log 'ensuing correct currency', Nex.currency, Nex.Utils.cookie 'currency'
     return if Nex.currency is Nex.Utils.cookie 'currency'
     Nex.Utils.cookie 'currency', Nex.currency
     jqxhr = $.ajax "/api/v2/cart",
@@ -274,6 +273,7 @@ class Member extends Spine.Model
     @_axaxCall('POST', {action : 'logouturl'})
 
   @checkout: ->
+    Setting.ensureCurrency()
     @_axaxCall('POST', {action : 'checkout'})
 
   @_axaxCall: (type, data) ->
