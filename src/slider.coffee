@@ -126,7 +126,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     # @log 'goto next', next
 
     # don't navigate if slider not ready yet
-    @log @slides.length
+    # @log @slides.length
     return unless @slides.length
 
     #If slider has one slide
