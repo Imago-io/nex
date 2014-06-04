@@ -1,7 +1,6 @@
 Search = require("./search")
 
 class Asset extends Spine.Model
-  @include Spine.Log
   @configure 'Asset'
 
   @extend Search
@@ -194,7 +193,6 @@ class Proxy extends Asset
                       'normname', 'proxypath', 'thumb'
 
 class Setting extends Spine.Model
-  @include Spine.Log
 
   @configure 'Setting', 'label', 'name', 'value', 'section', 'order',
              'type', 'visible', 'width', 'options'
@@ -208,7 +206,7 @@ class Setting extends Spine.Model
     @findByAttribute('name', name)
 
   @ensureCurrency: ->
-    Nex.log 'ensuing correct currency', Nex.currency, Nex.Utils.cookie 'currency'
+    console?.log 'ensuing correct currency', Nex.currency, Nex.Utils.cookie 'currency'
     return if Nex.currency is Nex.Utils.cookie 'currency'
     Nex.Utils.cookie 'currency', Nex.currency
     jqxhr = $.ajax "/api/v2/cart",
@@ -237,14 +235,13 @@ class Setting extends Spine.Model
         Nex.region   = data.region_code
         Nex.currency = @currency()
       )
-     .error(-> Nex.log 'fetch error for geoip')
+     .error(-> console?.log 'fetch error for geoip')
 
 
 
   @extend Spine.Model.Ajax
 
 class Member extends Spine.Model
-  @include Spine.Log
   @configure 'Member', 'email', 'first_name', 'last_name'
 
   @getMember: ->
@@ -296,12 +293,11 @@ class Member extends Spine.Model
         window.location = data.url
       else
         deferred.resolve(data)
-    ).error(-> Nex.log 'error')
+    ).error(-> console?.log 'error')
 
     promise
 
 class CartItem extends Spine.Model
-  @include Spine.Log
   @configure 'CartItem', 'meta', 'serving_url', 'quantity', 'price',
                                  'color', 'size', 'itemid', 'headline', 'description'
 
