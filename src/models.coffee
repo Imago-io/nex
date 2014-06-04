@@ -1,6 +1,7 @@
 Search = require("./search")
 
 class Asset extends Spine.Model
+  @include Spine.Log
   @configure 'Asset'
 
   @extend Search
@@ -165,16 +166,12 @@ class Asset extends Spine.Model
       type        : 'PUT'
       url         : host + '/api/v2/metaupdate/' + @id
     ).success(successResponse)
-     .error(-> Nex.log 'error while upvoting')
-
-
-
+     .error(-> @log 'error while upvoting')
 
 class Collection extends Asset
   @configure 'Collection', 'kind', 'name', 'meta', 'path', 'serving_url', 'variants',
                            'date_created', 'date_modified', 'resolution', 'sort_by',
                            'sort_order', 'assets', 'hidden', 'normname', 'canonical'
-
 
 class Image extends Asset
   @configure 'Image', 'kind', 'name', 'meta', 'path', 'serving_url', 'variants',
@@ -197,6 +194,7 @@ class Proxy extends Asset
                       'normname', 'proxypath', 'thumb'
 
 class Setting extends Spine.Model
+  @include Spine.Log
 
   @configure 'Setting', 'label', 'name', 'value', 'section', 'order',
              'type', 'visible', 'width', 'options'
@@ -245,8 +243,8 @@ class Setting extends Spine.Model
 
   @extend Spine.Model.Ajax
 
-
 class Member extends Spine.Model
+  @include Spine.Log
   @configure 'Member', 'email', 'first_name', 'last_name'
 
   @getMember: ->
@@ -302,8 +300,8 @@ class Member extends Spine.Model
 
     promise
 
-
 class CartItem extends Spine.Model
+  @include Spine.Log
   @configure 'CartItem', 'meta', 'serving_url', 'quantity', 'price',
                                  'color', 'size', 'itemid', 'headline', 'description'
 
