@@ -278,9 +278,9 @@ class Slide extends Spine.Controller
 
         @append html if html
 
-      @listenTo @slider, 'change', () =>
-        if @kind is 'Video'
-          @media.pause()
+      if @kind is 'Video'
+        @listenTo @slider, 'change', () =>
+            @media.pause()
 
   activate: ->
     super
