@@ -278,6 +278,10 @@ class Slide extends Spine.Controller
 
         @append html if html
 
+      @listenTo @slider, 'change', () =>
+        if @kind is 'Video'
+          @media.pause()
+
   activate: ->
     super
     cont.preload?() for cont in @controllers if @subslides
