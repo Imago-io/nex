@@ -249,9 +249,9 @@ class Slide extends Spine.Controller
             align:     @align
 
       else
-        kind = if col.kind in ['Image', 'Video'] then col.kind else 'Image'
+        @kind = if col.kind in ['Image', 'Video'] then col.kind else 'Image'
         # @log 'crop', col.getMeta('crop', 'center center')
-        @add @["media"] = new Nex.Widgets[kind]
+        @add @["media"] = new Nex.Widgets[@kind]
           src:          col.serving_url
           align:        col.getMeta('crop', 'center center')
           resolution:   col.resolution
