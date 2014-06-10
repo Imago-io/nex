@@ -121,22 +121,20 @@ class Nex.Widgets.Image extends Spine.Controller
 
     if typeof @width is 'number' and typeof @height is 'number'
       # @log 'fixed size', @width, @height
-      width = @width
-      height = @height
+      # width  = width
+      # height = height
 
     # fit width
     else if @height is 'auto' and typeof @width is 'number'
       # @log 'fit width', @width, @height
-      width  = @width
-      height = @width / assetRatio
-      @el.height(parseInt height)
+      # width  = @width
+      @el.height(parseInt width / assetRatio)
 
     # fit height
     else if @width is 'auto' and typeof @height is 'number'
       # @log 'fit height', @width, @height
-      height = @height
-      width  = @height * assetRatio
-      @el.width(parseInt width)
+      # height = @height
+      @el.width(parseInt height * assetRatio)
 
     # we want dynamic resizing without css.
     # like standard image behaviour. will get a height according to the width
@@ -226,8 +224,10 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # @log 'width, height', width, height
     #Only apply witdh and height if a fixed size is requested
-    css.width           = "#{parseInt width,  10}px" if typeof @width  is 'number'
-    css.height          = "#{parseInt height, 10}px" if typeof @height is 'number'
+
+    # we commented this out to allow size up with images inatanciated with numbers
+    # css.width           = "#{parseInt width,  10}px" if typeof @width  is 'number'
+    # css.height          = "#{parseInt height, 10}px" if typeof @height is 'number'
 
     # @log 'css', css
 
