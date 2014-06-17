@@ -165,8 +165,6 @@ class Nex.Widgets.Image extends Spine.Controller
     @window.off "scrollstop.#{@id}" if @lazy
 
     wrapperRatio = @width / @height
-    # @log 'width, height, wrapperRatio', wrapperRatio, @width, @height
-    # debugger
 
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
     # servingSize = Math.min(Math[if @sizemode is 'fit' then 'min' else 'max'](width, height) * dpr, @maxSize)
@@ -192,8 +190,6 @@ class Nex.Widgets.Image extends Spine.Controller
 
     servingSize = parseInt Math.min(servingSize * dpr, @maxSize)
     # @log 'servingSize', servingSize, @width, @height, dpr, @maxSize
-
-
 
     # make sure we only load a new size
     if servingSize is @servingSize
