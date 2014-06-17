@@ -121,12 +121,15 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # fit width
     else if @height is 'auto' and typeof @width is 'number'
-      @el.height(parseInt @width / assetRatio)
+      @height = parseInt @width / assetRatio
+      @el.height @height
+
       # @log 'fit width', @width, @height
 
     # fit height
     else if @width is 'auto' and typeof @height is 'number'
-      @el.width(parseInt @height * assetRatio)
+      @width = parseInt @width / assetRatio
+      @el.width @width
       # @log 'fit height', @width, @height
 
     # we want dynamic resizing without css.
@@ -143,7 +146,7 @@ class Nex.Widgets.Image extends Spine.Controller
       @width  = parseInt @el.css('width')
       @height = parseInt @el.css('height')
 
-      @log 'fit el', @width, @height
+      # @log 'fit el', @width, @height
 
 
     # check viewport here
@@ -162,7 +165,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @window.off "scrollstop.#{@id}" if @lazy
 
     wrapperRatio = @width / @height
-    # @log 'width, height, wrapperRatio', width, height, wrapperRatio
+    # @log 'width, height, wrapperRatio', wrapperRatio, @width, @height
     # debugger
 
     dpr = if @hires then Math.ceil(window.devicePixelRatio) or 1 else 1
@@ -174,7 +177,7 @@ class Nex.Widgets.Image extends Spine.Controller
         # @log 'crop full width'
         servingSize = Math.round(Math.max(@width, @width / assetRatio))
       else
-        # @log 'crop full height'
+        # @log 'crop full height', @height, @width, assetRatio, wrapperRatio
         servingSize = Math.round(Math.max(@height, @height * assetRatio))
 
     # sizemode fit
@@ -188,7 +191,7 @@ class Nex.Widgets.Image extends Spine.Controller
         servingSize = Math.round(Math.max(@width, @width / assetRatio))
 
     servingSize = parseInt Math.min(servingSize * dpr, @maxSize)
-    # @log 'servingSize', servingSize, @width, @height
+    # @log 'servingSize', servingSize, @width, @height, dpr, @maxSize
 
 
 
