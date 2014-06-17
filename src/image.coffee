@@ -15,7 +15,7 @@ class Nex.Widgets.Image extends Spine.Controller
     mediasize : false
     width     : ''
     height    : ''
-    responsive: false
+    responsive: true
 
   events:
     'resize' : 'render'
@@ -101,6 +101,8 @@ class Nex.Widgets.Image extends Spine.Controller
 
     for key, value of options
       @[key] = value
+
+    @onResize()
 
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
     # @log 'preloading :', width, @width, height, @height
@@ -235,8 +237,8 @@ class Nex.Widgets.Image extends Spine.Controller
       @[key] = value
 
     # @log 'calcMediaSize', @sizemode
-    @width  or= @el.width()
-    @height or= @el.height()
+    @width  = @el.width()  or @width
+    @height = @el.height() or @height
     # @log 'calcMediaSize: @width, @height', @width, @height
     return unless @width and @height
     assetRatio = @resolution.width / @resolution.height

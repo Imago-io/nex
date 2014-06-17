@@ -197,7 +197,10 @@ class Nex.Widgets.Slider extends Spine.Controller
       @slides[0].release()
     super
 
-
+  preload: ->
+    for cont in @slides
+      continue unless cont.isActive()
+      cont.preload?()
 
 module.exports = Nex.Widgets.Slider
 
