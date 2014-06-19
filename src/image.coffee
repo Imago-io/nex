@@ -128,7 +128,7 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # fit height
     else if @width is 'auto' and typeof @height is 'number'
-      @width = parseInt @width / assetRatio
+      @width = parseInt @height * assetRatio
       @el.width @width
       # @log 'fit height', @width, @height
 
