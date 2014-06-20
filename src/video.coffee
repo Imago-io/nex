@@ -25,6 +25,7 @@ class Nex.Widgets.Video extends Spine.Controller
 
   elements:
     '.imagowrapper' : 'wrapper'
+    'video'         : 'video'
 
   constructor: ->
     # set default values before init
@@ -37,13 +38,28 @@ class Nex.Widgets.Video extends Spine.Controller
     @id or= Nex.Utils.uuid()
     @el.data @data if @data
 
+    # convert resolution string to object
+    if typeof @resolution is 'string'
+      r = @resolution.split('x')
+      @resolution =
+        width:  r[0]
+        height: r[1]
+      @assetRatio = r[0]/r[1]
+
     # play button
-    @html '<div class="imagowrapper"><div class="spin"></div><div class="spin2"></div><a class="playbig icon-play" /></div>'
+    @html """
+            <div class="imagowrapper">
+              <div class="spin"></div>
+              <div class="spin2"></div>
+              <a class="playbig fa fa-play" />
+              <video></video>
+            </div>
+          """
 
-    @videoEl = new VideoElement(player: @)
-    @wrapper.append @videoEl.el
 
-    @video = @videoEl.video
+    @video = new VideoElement
+        el:     @video
+        player: @
 
     @el.addClass "#{@class or ''} #{@size} #{@align} #{@sizemode}"
     # @el.attr('style', @style) if @style
@@ -56,8 +72,39 @@ class Nex.Widgets.Video extends Spine.Controller
 
 
     # set size of wrapper if provided
-    @el.width(@width)   if @width  and typeof @width  is 'Number'
-    @el.height(@height) if @height and typeof @height is 'Number'
+    if typeof @width is 'number' and typeof @height is 'number'
+      @el.width  @width
+      @el.height @height
+      # @log 'both number', @width, @height
+
+    # fit width
+    else if @height is 'auto' and typeof @width is 'number'
+      @height = parseInt @width / @assetRatio
+      @el.height @height
+      # @log 'fit width', @width, @height
+
+    # fit height
+    else if @width is 'auto' and typeof @height is 'number'
+      @width = parseInt @height * @assetRatio
+      @el.css
+        width:  @width
+        height: @height
+      # @log 'fit height', @width, @height
+
+    # we want dynamic resizing without css.
+    # like standard image behaviour. will get a height according to the width
+    else if @width is 'auto' and @height is 'auto'
+      @width  = parseInt @el.css('width')
+      @height = @width / assetRatio
+      @el.height(parseInt @height)
+      # @log 'dynamic resizing without css', @width, @height
+
+    # width and height dynamic, needs to be defined via css
+    # either width height or position
+    else
+      @width  = parseInt @el.css('width')
+      @height = parseInt @el.css('height')
+      @log 'fit width', @width, @height
 
     @window = $(window)
 
@@ -66,13 +113,6 @@ class Nex.Widgets.Video extends Spine.Controller
 
     # load poster if enters the viewport
     @window.on "scrollstop.#{@id}", @setupPosterFrame if @lazy
-
-    # convert resolution string to object
-    if typeof @resolution is 'string'
-      r = @resolution.split('x')
-      @resolution =
-        width:  r[0]
-        height: r[1]
 
     @delay ->
       # @resize()
@@ -83,15 +123,13 @@ class Nex.Widgets.Video extends Spine.Controller
     @
 
   resize: =>
-    assetRatio   = @resolution.width / @resolution.height
-    # @log 'resize assetRatio', @resolution, assetRatio
 
     # sizemode crop
     if @sizemode is 'crop'
       width  = @el.width()
       height = @el.height()
       wrapperRatio = width / height
-      if assetRatio < wrapperRatio
+      if @assetRatio < wrapperRatio
         # @log 'full width'
         if Nex.Utils.isiOS()
           s =
@@ -107,10 +145,10 @@ class Nex.Widgets.Video extends Spine.Controller
           if @align is 'center center'
             s.top  = '50%'
             s.left = 'auto'
-            s.marginTop  = "-#{ (width / assetRatio / 2) }px"
+            s.marginTop  = "-#{ (width / @assetRatio / 2) }px"
             s.marginLeft = "0px"
 
-        @videoEl.el.css s
+        @video.el.css s
         @wrapper.css
           backgroundSize: '100% auto'
           backgroundPosition: @align
@@ -132,9 +170,9 @@ class Nex.Widgets.Video extends Spine.Controller
             s.top  = 'auto'
             s.left = '50%'
             s.marginTop  = "0px"
-            s.marginLeft = "-#{ (height * assetRatio / 2) }px"
+            s.marginLeft = "-#{ (height * @assetRatio / 2) }px"
 
-        @videoEl.el.css s
+        @video.el.css s
         @wrapper.css
           backgroundSize: 'auto 100%'
           backgroundPosition: @align
@@ -145,27 +183,27 @@ class Nex.Widgets.Video extends Spine.Controller
       width  = @el.width()
       height = @el.height()
       wrapperRatio = width / height
-      if assetRatio > wrapperRatio
+      if @assetRatio > wrapperRatio
         # full width
-        # @log 'full width', width, parseInt(width / assetRatio, 10)
-        @videoEl.el.css
+        # @log 'full width', width, parseInt(width / @assetRatio, 10)
+        @video.el.css
           width: '100%'
           height: if Nex.Utils.isiOS() then '100%' else 'auto'
         @wrapper.css
           backgroundSize: '100% auto'
           backgroundPosition: @align
           width:  "#{ width }px"
-          height: "#{ parseInt(width / assetRatio, 10) }px"
+          height: "#{ parseInt(width / @assetRatio, 10) }px"
       else
         # full height
-        # @log 'full height', parseInt(height * assetRatio, 10), height
-        @videoEl.el.css
+        # @log 'full height', parseInt(height * @assetRatio, 10), height
+        @video.el.css
           width: if Nex.Utils.isiOS() then '100%' else 'auto'
           height: '100%'
         @wrapper.css
           backgroundSize: 'auto 100%'
           backgroundPosition: @align
-          width:  "#{ parseInt(height * assetRatio, 10) }px"
+          width:  "#{ parseInt(height * @assetRatio, 10) }px"
           height: "#{ height }px"
 
   setupPosterFrame: =>
@@ -198,16 +236,16 @@ class Nex.Widgets.Video extends Spine.Controller
     @controlBar.activate()
 
   play: ->
-    @delay @videoEl.play, 500
+    @delay @video.play, 500
 
   pause: =>
-    @videoEl.pause()
+    @video.pause()
 
   stop: =>
     @pause()
 
   togglePlay: =>
-    @videoEl.togglePlay()
+    @video.togglePlay()
 
 module.exports = Nex.Widgets.Video
 
@@ -251,7 +289,7 @@ class VideoElement extends Spine.Controller
     codec = @detectCodec()
     @player.formats.sort( (a, b) -> return b.height - a.height )
 
-    @el.empty()
+    # @el.empty()
     for format, i in @player.formats
       continue unless codec is format.codec
       src = "//#{Nex.tenant}.imagoapp.com/assets/api/play_redirect?uuid=#{@player.uuid}&codec=#{format.codec}&quality=hd&max_size=#{format.size}"
@@ -263,8 +301,7 @@ class VideoElement extends Spine.Controller
   # public functions
 
   detectCodec: ->
-    tag = document.createElement 'video'
-    return unless tag.canPlayType
+    return unless @el[0].canPlayType
 
     codecs =
       mp4:  'video/mp4; codecs="mp4v.20.8"'
@@ -274,7 +311,7 @@ class VideoElement extends Spine.Controller
       ogg:  'video/ogg; codecs="theora"'
 
     for key, value of codecs
-      if tag.canPlayType value
+      if @el[0].canPlayType value
         return key
 
   setSize: (size) ->
@@ -423,17 +460,32 @@ class Controls extends Spine.Controller
     'click  .fullscreen'       : 'onEnterFullScreen'
     'change .seek'             : 'onSeek'
     'change .volume input'     : 'onVolumeChnage'
-    'click  .icon-volume-down' : 'muteVolume'
-    'click  .icon-volume-up'   : 'fullVolume'
+    'click  .fa-volume-down' : 'muteVolume'
+    'click  .fa-volume-up'   : 'fullVolume'
 
   constructor: ->
     super
     @logPrefix = '(App) Controls: '
 
-    @html '<a class="play icon-play"></a><a class="pause icon-pause"></a><span class="time">00:00</span><span class="seekbar"><input type="range" value="0" class="seek"/></span><a class="size">hd</a><span class="volume"><span class="icon-volume-up"></span><input type="range" value="100"/><span class="icon-volume-down"></span></span><a class="fullscreen icon-resize-full"></a><a class="screen icon-resize-small"></a>'
+    @html """
+            <a class="play fa fa-play"></a>
+            <a class="pause fa fa-pause"></a>
+            <span class="time">00:00</span>
+            <span class="seekbar">
+              <input type="range" value="0" class="seek"/>
+            </span>
+            <a class="size">hd</a>
+            <span class="volume">
+              <span class="fa fa-volume-up"></span>
+              <input type="range" value="100"/>
+              <span class="fa fa-volume-down"></span>
+            </span>
+            <a class="fullscreen fa fa-expand"></a>
+            <a class="screen fa fa-compress></a>
+          """
 
-    @player.videoEl.on 'timeupdate'  , @ontimeupdate
-    @player.videoEl.on 'volumechange', @onvolumeupdate
+    @player.video.on 'timeupdate'  , @ontimeupdate
+    @player.video.on 'volumechange', @onvolumeupdate
 
     document.addEventListener(screenfull.raw.fullscreenchange, @onfullscreenchange)
 
@@ -441,19 +493,19 @@ class Controls extends Spine.Controller
 
   play: (e) ->
     # e.stopPropagation()
-    @player.videoEl.play()
+    @player.video.play()
     # @activate()
 
   pause: (e) ->
     # e.stopPropagation()
-    @player.videoEl.pause()
+    @player.video.pause()
 
   ontimeupdate: (e) =>
-    @time.html @formatTime @player.videoEl.getCurrentTime()
-    @seek.val @player.videoEl.getCurrentTime() / @player.videoEl.getEndTime() * 100
+    @time.html @formatTime @player.video.getCurrentTime()
+    @seek.val @player.video.getCurrentTime() / @player.video.getEndTime() * 100
 
   onvolumeupdate: (e) =>
-    volume = @player.videoEl.getVolume() * 100
+    volume = @player.video.getVolume() * 100
     @volume.val(volume) unless Number(@volume.val()) is volume
 
   pad: (num) ->
@@ -472,10 +524,10 @@ class Controls extends Spine.Controller
     result.join ":"
 
   onSeek: (e) =>
-    # console.log 'onSeek', @player.videoEl.getEndTime()
-    value = @player.videoEl.getEndTime() / 100 * $(e.target).val()
+    # console.log 'onSeek', @player.video.getEndTime()
+    value = @player.video.getEndTime() / 100 * $(e.target).val()
     # @log value
-    @player.videoEl.seek value
+    @player.video.seek value
 
   toggleSize: (e) =>
     # @log 'toggleSize', "from #{ @player.size }"
@@ -486,27 +538,25 @@ class Controls extends Spine.Controller
 
     @player.el.addClass(size).removeClass(@player.size)
     @player.size = size
-    @player.videoEl.setSize size
+    @player.video.setSize size
 
   onVolumeChnage: (e) =>
     value = $(e.target).val() / 100
-    @player.videoEl.setVolume(value)
+    @player.video.setVolume(value)
 
   onEnterFullScreen: (e) =>
-    # @log 'onEnterFullScreen', screenfull.enabled
     return unless screenfull.enabled
-    screenfull.request @player.video
-    @player.videoEl.video.setAttribute('controls','controls')
-    # @player.videoEl.video.webkitEnterFullScreen()
+    screenfull.request @player.video.el[0]
+    @player.video.el[0].setAttribute('controls','controls')
 
   onfullscreenchange: (e) =>
-    @player.videoEl.video.removeAttribute('controls') unless screenfull.isFullscreen
+    @player.video.el[0].removeAttribute('controls') unless screenfull.isFullscreen
 
   muteVolume: ->
-    @player.videoEl.setVolume(0)
+    @player.video.setVolume(0)
 
   fullVolume: ->
-    @player.videoEl.setVolume(1)
+    @player.video.setVolume(1)
 
   doDelayed: (func, sec) =>
     clearTimeout(@idleTimer) if @idleTimer
