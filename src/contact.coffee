@@ -55,6 +55,9 @@ class Nex.Contact extends Spine.Controller
     array = $(form).serializeArray()
     obj   = {}
 
+
+    console.log 'array is', array
+
     message = ''
     for elem in array
       if elem.name not in @defaultFields
@@ -62,6 +65,8 @@ class Nex.Contact extends Spine.Controller
       obj[elem.name] = elem.value or= ''
 
     obj.message = message + Nex.Utils.replaceNewLines(obj.message)
+
+    console.log 'message', message
 
     return JSON.stringify(obj)
   send: (e) =>
