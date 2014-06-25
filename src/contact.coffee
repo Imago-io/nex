@@ -60,11 +60,11 @@ class Nex.Contact extends Spine.Controller
       if elem.name not in @defaultFields
         message += "#{Nex.Utils.titleCase(elem.name)}: #{elem.value}<br><br>"
       obj[elem.name] = elem.value or= ''
+    message = "email: #{obj.email}<br><br>" + message
 
     obj.message = message + Nex.Utils.replaceNewLines(obj.message)
 
     return JSON.stringify(obj)
-
   send: (e) =>
     e.preventDefault()
     for field in $('input,textarea,select')
