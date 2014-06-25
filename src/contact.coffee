@@ -24,7 +24,7 @@ class Nex.Contact extends Spine.Controller
   constructor: ->
     super
 
-    @defaultFields = ['email', 'message', 'subscribe']
+    @defaultFields = ['message', 'subscribe']
 
   onkeyup: (e) ->
     @validate(e.target)
@@ -60,7 +60,6 @@ class Nex.Contact extends Spine.Controller
       if elem.name not in @defaultFields
         message += "#{Nex.Utils.titleCase(elem.name)}: #{elem.value}<br><br>"
       obj[elem.name] = elem.value or= ''
-    message = "email: #{obj.email}<br><br>" + message
 
     obj.message = message + Nex.Utils.replaceNewLines(obj.message)
 
