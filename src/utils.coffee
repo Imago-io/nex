@@ -604,6 +604,16 @@ Nex.Utils =
     (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4())
 
 
+  shuffle: (arr) ->
+    return [] unless arr.length
+    i = arr.length
+    while --i
+      j = Math.floor(Math.random() * (i + 1))
+      temp = arr[i]
+      arr[i] = arr[j]
+      arr[j] = temp
+    return arr
+
   queryfy: (url) ->
     query = []
 
