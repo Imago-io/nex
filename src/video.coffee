@@ -95,7 +95,7 @@ class Nex.Widgets.Video extends Spine.Controller
     # like standard image behaviour. will get a height according to the width
     else if @width is 'auto' and @height is 'auto'
       @width  = parseInt @el.css('width')
-      @height = @width / assetRatio
+      @height = @width / @assetRatio
       @el.height(parseInt @height)
       # @log 'dynamic resizing without css', @width, @height
 
