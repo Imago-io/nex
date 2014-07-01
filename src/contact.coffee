@@ -80,11 +80,11 @@ class Nex.Contact extends Spine.Controller
 
     settings = $.extend({}, @defaults, settings)
 
-    # $.ajax(settings)
-    #   .success( (e) =>
-    #     @el.addClass('success')
-    #   )
-    #   .error( (e) => @log("error with form", e) )
+    $.ajax(settings)
+      .success( (e) =>
+        @el.addClass('success')
+      )
+      .error( (e) => @log("error with form", e) )
 
   onKeyup: (e) =>
     return unless @isActive()
