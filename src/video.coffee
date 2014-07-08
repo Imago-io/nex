@@ -3,6 +3,8 @@ Nex  = @Nex or require('nex')
 class Nex.Widgets.Video extends Spine.Controller
   className: 'imagovideo'
 
+  logPrefix: '(App) Video: '
+
   defaults:
     autobuffer  : null
     autoplay    : false
@@ -12,6 +14,8 @@ class Nex.Widgets.Video extends Spine.Controller
     size        : 'hd'
     align       : 'left top'
     sizemode    : 'fit'
+    width       : ''
+    height      : ''
     lazy        : true
 
   events:
@@ -20,12 +24,11 @@ class Nex.Widgets.Video extends Spine.Controller
     'DOMMouseScroll'  : 'activateControls'
     'mousewheel'      : 'activateControls'
     'mousedown'       : 'activateControls'
-    # 'click .playbig'  : 'togglePlay'
     'tap .playbig'    : 'togglePlay'
 
   elements:
     '.imagowrapper' : 'wrapper'
-    'video'         : 'video'
+    'video'         : 'videoEl'
 
   constructor: ->
     # set default values before init
@@ -33,7 +36,6 @@ class Nex.Widgets.Video extends Spine.Controller
       @[key] = value
 
     super
-    @logPrefix = '(App) Video: '
 
     @id or= Nex.Utils.uuid()
     @el.data @data if @data
@@ -56,10 +58,9 @@ class Nex.Widgets.Video extends Spine.Controller
             </div>
           """
 
-
     @video = new VideoElement
-        el:     @video
-        player: @
+      el:     @videoEl
+      player: @
 
     @el.addClass "#{@class or ''} #{@size} #{@align} #{@sizemode}"
     # @el.attr('style', @style) if @style
@@ -71,43 +72,6 @@ class Nex.Widgets.Video extends Spine.Controller
         @wrapper.append @controlBar.el
 
 
-    # set size of wrapper if provided
-    if typeof @width is 'number' and typeof @height is 'number'
-      @el.width  @width
-      @el.height @height
-      # @log 'both number', @width, @height
-
-    # fit width
-    else if @height is 'auto' and typeof @width is 'number'
-      @height = parseInt @width / @assetRatio
-      @el.height @height
-      # @log 'fit width', @width, @height
-
-    # fit height
-    else if @width is 'auto' and typeof @height is 'number'
-      @width = parseInt @height * @assetRatio
-      @el.css
-        width:  @width
-        height: @height
-      # @log 'fit height', @width, @height
-
-    # we want dynamic resizing without css.
-    # like standard image behaviour. will get a height according to the width
-    else if @width is 'auto' and @height is 'auto'
-      @width  = parseInt @el.css('width')
-      @height = @width / @assetRatio
-      @el.height(parseInt @height)
-      # @log 'dynamic resizing without css', @width, @height
-
-    # width and height dynamic, needs to be defined via css
-    # either width height or position
-    else
-      @width  = parseInt @el.css('width')
-      @height = parseInt @el.css('height')
-      @log 'fit width', @width, @height
-
-    @log @width, @height
-
     @window = $(window)
 
     # resize video
@@ -116,22 +80,51 @@ class Nex.Widgets.Video extends Spine.Controller
     # load poster if enters the viewport
     @window.on "scrollstop.#{@id}", @setupPosterFrame if @lazy
 
-    @delay =>
-      @setupPosterFrame()
-      @resize()
-    , 330
+    @preload()
 
-    @
+  preload: ->
+    @setupPosterFrame()
+    @resize()
 
-  # ugly preload fix
-  preload: =>
-      @delay =>
-        @setupPosterFrame()
-        @resize()
-      , 2000
+  # calcSize: =>
+  #   @log 'preload', @width, @height
+  #   # set size of wrapper if provided
+  #   if typeof @width is 'number' and typeof @height is 'number'
+  #     @el.width  @width
+  #     @el.height @height
+  #     @log 'both number', @width, @height
+
+  #   # fit width
+  #   else if @height is 'auto' and typeof @width is 'number'
+  #     @height = parseInt @width / @assetRatio
+  #     @el.height @height
+  #     @log 'fit width', @width, @height
+
+  #   # fit height
+  #   else if @width is 'auto' and typeof @height is 'number'
+  #     @width = parseInt @height * @assetRatio
+  #     @el.css
+  #       width:  @width
+  #       height: @height
+  #     @log 'fit height', @width, @height
+
+  #   # we want dynamic resizing without css.
+  #   # like standard image behaviour. will get a height according to the width
+  #   else if @width is 'auto' and @height is 'auto'
+  #     @width  = parseInt @el.css('width')
+  #     @height = @width / @assetRatio
+  #     @el.height(parseInt @height)
+  #     @log 'dynamic resizing without css', @width, @height
+
+  #   # width and height dynamic, needs to be defined via css
+  #   # either width height or position
+  #   else
+  #     @log 'xxx', @el[0].clientWidth, @el.css('width')
+  #     @width  = parseInt @el.css('width')
+  #     @height = parseInt @el.css('height')
+  #     @log 'fit dynamic css', @width, @height
 
   resize: =>
-    @log 'resize'
     # sizemode crop
     if @sizemode is 'crop'
       width  = @el.width()
@@ -155,7 +148,7 @@ class Nex.Widgets.Video extends Spine.Controller
             s.left = 'auto'
             s.marginTop  = "-#{ (width / @assetRatio / 2) }px"
             s.marginLeft = "0px"
-        @log @video.el
+
         @video.el.css s
         @wrapper.css
           backgroundSize: '100% auto'
@@ -179,7 +172,7 @@ class Nex.Widgets.Video extends Spine.Controller
             s.left = '50%'
             s.marginTop  = "0px"
             s.marginLeft = "-#{ (height * @assetRatio / 2) }px"
-        @log @video.el
+
         @video.el.css s
         @wrapper.css
           backgroundSize: 'auto 100%'
@@ -205,7 +198,6 @@ class Nex.Widgets.Video extends Spine.Controller
       else
         # full height
         # @log 'full height', parseInt(height * @assetRatio, 10), height
-        @log @video.el
         @video.el.css
           width: if Nex.Utils.isiOS() then '100%' else 'auto'
           height: '100%'
@@ -286,7 +278,7 @@ class VideoElement extends Spine.Controller
 
     @el.attr
       autoplay:   @player.autoplay
-      preload:    @player.preload
+      preload:    'none'
       autobuffer: @player.autobuffer
       'x-webkit-airplay':    'allow'
       webkitAllowFullscreen: 'true'

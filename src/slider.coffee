@@ -27,7 +27,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     enablehtml:   true
     subslides:    false
     loop:         true
-    noResize:     false
+    responsive:   true
     current:      0
     lazy:         false
     align:         'center center'
@@ -87,7 +87,7 @@ class Nex.Widgets.Slider extends Spine.Controller
           subslides:   @subslides
           height:      @height
           width:       @width
-          noResize:    @noResize
+          responsive:  @responsive
           lazy:        @lazy
           align:       @align
           enablehtml:  @enablehtml
@@ -159,6 +159,9 @@ class Nex.Widgets.Slider extends Spine.Controller
 
     @slides[@prev].el.addClass 'prevslide'
     @slides[@next].el.addClass 'nextslide'
+
+    # @slides[@prev].preload()
+    # @slides[@next].preload()
 
     # @log 'goto @current', @current
 
@@ -245,9 +248,9 @@ class Slide extends Spine.Controller
             asset:      asset
             sizemode:   @sizemode
             className:  "slidecontent #{asset.getMeta('crop', '')} #{asset.getMeta('cssclass', '')}"
-            height:     @height
-            width:      @width
-            noResize:   @noResize
+            # height:     @height
+            # width:      @width
+            responsive: @responsive
             lazy:       @lazy
             align:      @align
             enablehtml: @enablehtml
@@ -264,7 +267,7 @@ class Slide extends Spine.Controller
           sizemode:     col.getMeta('sizemode', [@sizemode])[0]
           height:       @height
           width:        @width
-          noResize:     @noResize
+          responsive:   @responsive
           lazy:         @lazy
 
         # render html
@@ -284,6 +287,7 @@ class Slide extends Spine.Controller
 
       if @kind is 'Video'
         @listenTo @slider, 'change', () =>
+            @media.preload()
             @media.pause()
 
   activate: ->
