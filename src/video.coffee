@@ -7,7 +7,7 @@ class Nex.Widgets.Video extends Spine.Controller
     autobuffer  : null
     autoplay    : false
     controls    : true
-    preload     : 'none'
+    # preload     : 'none'
     # keyShortcut : true
     size        : 'hd'
     align       : 'left top'
@@ -106,6 +106,8 @@ class Nex.Widgets.Video extends Spine.Controller
       @height = parseInt @el.css('height')
       @log 'fit width', @width, @height
 
+    @log @width, @height
+
     @window = $(window)
 
     # resize video
@@ -114,16 +116,22 @@ class Nex.Widgets.Video extends Spine.Controller
     # load poster if enters the viewport
     @window.on "scrollstop.#{@id}", @setupPosterFrame if @lazy
 
-    @delay ->
-      # @resize()
+    @delay =>
       @setupPosterFrame()
       @resize()
     , 330
 
     @
 
-  resize: =>
+  # ugly preload fix
+  preload: =>
+      @delay =>
+        @setupPosterFrame()
+        @resize()
+      , 2000
 
+  resize: =>
+    @log 'resize'
     # sizemode crop
     if @sizemode is 'crop'
       width  = @el.width()
@@ -147,7 +155,7 @@ class Nex.Widgets.Video extends Spine.Controller
             s.left = 'auto'
             s.marginTop  = "-#{ (width / @assetRatio / 2) }px"
             s.marginLeft = "0px"
-
+        @log @video.el
         @video.el.css s
         @wrapper.css
           backgroundSize: '100% auto'
@@ -171,7 +179,7 @@ class Nex.Widgets.Video extends Spine.Controller
             s.left = '50%'
             s.marginTop  = "0px"
             s.marginLeft = "-#{ (height * @assetRatio / 2) }px"
-
+        @log @video.el
         @video.el.css s
         @wrapper.css
           backgroundSize: 'auto 100%'
@@ -197,6 +205,7 @@ class Nex.Widgets.Video extends Spine.Controller
       else
         # full height
         # @log 'full height', parseInt(height * @assetRatio, 10), height
+        @log @video.el
         @video.el.css
           width: if Nex.Utils.isiOS() then '100%' else 'auto'
           height: '100%'
@@ -568,4 +577,3 @@ class Controls extends Spine.Controller
 
   deactivate: ->
     @el.removeClass('active')
-
