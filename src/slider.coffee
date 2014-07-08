@@ -241,15 +241,16 @@ class Slide extends Spine.Controller
         # @log 'subslides slide', @sizemode, @align
         for asset,i in col.items
           @add new Slide
-            slider:    @slider
-            asset:     asset
-            sizemode:  @sizemode
-            className: 'slidecontent'
-            height:    @height
-            width:     @width
-            noResize:  @noResize
-            lazy:      @lazy
-            align:     @align
+            slider:     @slider
+            asset:      asset
+            sizemode:   @sizemode
+            className:  "slidecontent #{asset.getMeta('crop', '')} #{asset.getMeta('cssclass', '')}"
+            height:     @height
+            width:      @width
+            noResize:   @noResize
+            lazy:       @lazy
+            align:      @align
+            enablehtml: @enablehtml
 
       else
         @kind = if col.kind in ['Image', 'Video'] then col.kind else 'Image'

@@ -199,7 +199,7 @@ class Nex.Widgets.Image extends Spine.Controller
 
     @servingSize = servingSize
     # @log @servingSize * @scale
-    @servingUrl = "#{ @src }=s#{ @servingSize * @scale }"
+    @servingUrl = "#{ @src }=s#{ parseInt(@servingSize * @scale) }"
 
     # @log 'servingURl', @servingUrl
 
