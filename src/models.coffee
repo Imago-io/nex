@@ -63,6 +63,9 @@ class Asset extends Spine.Model
   _normalizeValue: (value) ->
     return '' if not value
     value = value.value if value.hasOwnProperty('value')
+    if Spine.isArray(value)
+      normalized = (Nex.Utils.normalize(val) for val in value)
+      value.push val for val in normalized when val not in value
     value = value.join(' ').toLowerCase() if Spine.isArray(value)
     value = value.toLowerCase() if typeof value == "string"
     return value
