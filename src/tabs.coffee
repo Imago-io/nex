@@ -10,9 +10,7 @@ class Nex.Widgets.Tabs extends Spine.Controller
 
   elements:
     'nav' : 'navigation'
-    'nav a': 'links'
     'section': 'section'
-    'section article': 'content'
 
   events:
     'tap nav a' : 'onClick'
@@ -40,7 +38,10 @@ class Nex.Widgets.Tabs extends Spine.Controller
       for asset in col.items
         @appendMedia (asset)
 
+    @links = @$('nav a')
     @links.eq(0).addClass('active')
+
+    @content = @$('section article')
     @content.eq(0).addClass('active')
 
   onClick: (e)->
