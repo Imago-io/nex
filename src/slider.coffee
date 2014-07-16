@@ -31,6 +31,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     current:      0
     lazy:         false
     align:         'center center'
+    controls:     false
 
 
   constructor: ->
@@ -91,6 +92,8 @@ class Nex.Widgets.Slider extends Spine.Controller
           lazy:        @lazy
           align:       @align
           enablehtml:  @enablehtml
+          controls:    @controls
+
     @goto @current
 
     @delay =>
@@ -254,6 +257,7 @@ class Slide extends Spine.Controller
             lazy:       @lazy
             align:      @align
             enablehtml: @enablehtml
+            controls:   @controls
 
       else
         @kind = if col.kind in ['Image', 'Video'] then col.kind else 'Image'
@@ -269,6 +273,7 @@ class Slide extends Spine.Controller
           width:        @width
           responsive:   @responsive
           lazy:         @lazy
+          controls:     @controls
 
         # render html
         if typeof @enablehtml is 'boolean' and @enablehtml
