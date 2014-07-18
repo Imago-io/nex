@@ -36,6 +36,21 @@ class Nex.Page extends Spine.Controller
     @controllers.push(controller)
     wrapper.replaceWith(controller.el or controller)
 
+  appendWidget: (asset) ->
+    return unless asset and el = @$(".#{asset.normname}")
+
+    @controllers.push new Nex.Widgets[if asset.kind is 'Collection' then 'Slider' else asset.kind]
+      el:         el
+      src:        asset.serving_url
+      align:      asset.getMeta 'crop', 'center center'
+      resolution: asset.resolution
+      uuid:       asset.id
+      formats:    asset.formats
+      path:       asset.path
+      lazy:       false
+      animation:  asset.getMeta 'animation', 'scalerotate'
+      sizemode:   asset.getMeta('sizemode', ['crop'])[0]
+
   activate: ->
     $('body').on 'keyup.page', @onKeyup
     $('body').addClass @className
