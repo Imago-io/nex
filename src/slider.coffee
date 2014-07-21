@@ -171,6 +171,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     @slides[@current]?.active()
 
     @trigger 'change', @
+    @preload()
 
     # #make sure next slides are loaded
     # @slides[@prev].onDeck()
