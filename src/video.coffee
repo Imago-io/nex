@@ -84,45 +84,9 @@ class Nex.Widgets.Video extends Spine.Controller
 
   preload: ->
     @setupPosterFrame()
-    @resize()
-
-  # calcSize: =>
-  #   @log 'preload', @width, @height
-  #   # set size of wrapper if provided
-  #   if typeof @width is 'number' and typeof @height is 'number'
-  #     @el.width  @width
-  #     @el.height @height
-  #     @log 'both number', @width, @height
-
-  #   # fit width
-  #   else if @height is 'auto' and typeof @width is 'number'
-  #     @height = parseInt @width / @assetRatio
-  #     @el.height @height
-  #     @log 'fit width', @width, @height
-
-  #   # fit height
-  #   else if @width is 'auto' and typeof @height is 'number'
-  #     @width = parseInt @height * @assetRatio
-  #     @el.css
-  #       width:  @width
-  #       height: @height
-  #     @log 'fit height', @width, @height
-
-  #   # we want dynamic resizing without css.
-  #   # like standard image behaviour. will get a height according to the width
-  #   else if @width is 'auto' and @height is 'auto'
-  #     @width  = parseInt @el.css('width')
-  #     @height = @width / @assetRatio
-  #     @el.height(parseInt @height)
-  #     @log 'dynamic resizing without css', @width, @height
-
-  #   # width and height dynamic, needs to be defined via css
-  #   # either width height or position
-  #   else
-  #     @log 'xxx', @el[0].clientWidth, @el.css('width')
-  #     @width  = parseInt @el.css('width')
-  #     @height = parseInt @el.css('height')
-  #     @log 'fit dynamic css', @width, @height
+    @delay ->
+      @resize()
+    , 0
 
   resize: =>
     # sizemode crop
@@ -146,7 +110,7 @@ class Nex.Widgets.Video extends Spine.Controller
           if @align is 'center center'
             s.top  = '50%'
             s.left = 'auto'
-            s.marginTop  = "-#{ (width / @assetRatio / 2) }px"
+            s.marginTop  = "-#{ parseInt(width / @assetRatio / 2) }px"
             s.marginLeft = "0px"
 
         @video.el.css s
@@ -276,9 +240,10 @@ class VideoElement extends Spine.Controller
     @codecs  = ['mp4', 'webm']
     @video = @el[0]
 
+    @el.prop('autoplay', @player.autoplay)
+
     @el.attr
-      autoplay:   @player.autoplay
-      preload:    'none'
+      preload:    'true'
       autobuffer: @player.autobuffer
       'x-webkit-airplay':    'allow'
       webkitAllowFullscreen: 'true'
