@@ -135,7 +135,7 @@ class Nex.Widgets.Video extends Spine.Controller
             s.top  = 'auto'
             s.left = '50%'
             s.marginTop  = "0px"
-            s.marginLeft = "-#{ (height * @assetRatio / 2) }px"
+            s.marginLeft = "-#{ parseInt(height * @assetRatio / 2) }px"
 
         @video.el.css s
         @wrapper.css
