@@ -163,19 +163,11 @@ class Nex.Widgets.Slider extends Spine.Controller
     @slides[@prev].el.addClass 'prevslide'
     @slides[@next].el.addClass 'nextslide'
 
-    # @slides[@prev].preload()
-    # @slides[@next].preload()
-
     # @log 'goto @current', @current
 
     @slides[@current]?.active()
 
     @trigger 'change', @
-    @preload()
-
-    # #make sure next slides are loaded
-    # @slides[@prev].onDeck()
-    # @slides[@next].onDeck()
 
     # trigger class and fire events
     if @current is 0
