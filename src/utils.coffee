@@ -560,6 +560,10 @@ STATES =
     'WY'
     ]
 
+
+TAXINCLUDED =
+  'EUR' : true
+
 Nex.Utils =
 
   toType : (obj) ->
@@ -796,6 +800,9 @@ Nex.Utils =
 
   getCurrency: (country) ->
     CURRENCY_MAPPING[country]
+
+  includesTax: (currency) ->
+    TAXINCLUDED[currency] or false
 
   getCountryCode : (country) ->
     CODES[country]
