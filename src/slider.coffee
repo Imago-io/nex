@@ -108,9 +108,11 @@ class Nex.Widgets.Slider extends Spine.Controller
     @append controller
 
   goNext: (e) =>
+    @direction = 'next'
     @goto 'next'
 
   goPrev: (e) =>
+    @direction = 'prev'
     @goto 'prev'
 
   goto: (slide) ->
@@ -141,13 +143,12 @@ class Nex.Widgets.Slider extends Spine.Controller
       return
 
     # loop
-    if not @loop
-      if @current is @slides.length - 1 and next is @getNext(@current)
-        unless @slides.length is 2
+    unless @loop
+      if @slides.length > 1
+        if @current is @slides.length - 1 and next is 0 and @direction is 'next'
           @trigger 'end'
           return
-      if @current is 0 and next is @getPrev(@current)
-        unless @slides.length is 2
+        else if @current is 0 and next is @slides.length - 1 and @direction is 'prev'
           @trigger 'start'
           return
 
@@ -168,6 +169,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     @slides[@current]?.active()
 
     @trigger 'change', @
+    @direction = ''
 
     # trigger class and fire events
     if @current is 0
