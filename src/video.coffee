@@ -243,7 +243,7 @@ class VideoElement extends Spine.Controller
     @el.prop('autoplay', @player.autoplay)
 
     @el.attr
-      preload:    'true'
+      preload:    'none'
       autobuffer: @player.autobuffer
       'x-webkit-airplay':    'allow'
       webkitAllowFullscreen: 'true'
