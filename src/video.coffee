@@ -322,10 +322,10 @@ class VideoElement extends Spine.Controller
     # @log 'togglePlay', @state
 
     if @state is 'playing'
-      @el.css display: 'none' if @isiOS()
+      @el.css display: 'none' if Nex.Utils.isiOS()
       @pause()
     else
-      @el.css display: 'block' if @isiOS()
+      @el.css display: 'block' if Nex.Utils.isiOS()
       @play()
 
   getDuration: ->
@@ -401,7 +401,7 @@ class VideoElement extends Spine.Controller
     # @log 'onpause'
     @state = 'paused'
     @player.el.removeClass 'playing'
-    @el.css display: 'none' if @isiOS()
+    @el.css display: 'none' if Nex.Utils.isiOS()
 
   onplay: =>
     # @log 'onplay'
@@ -413,7 +413,7 @@ class VideoElement extends Spine.Controller
   onended: =>
     # @log 'onended', @player
     #this enables video in slider on iphone
-    @el.css display: 'none' if @isiOS()
+    @el.css display: 'none' if Nex.Utils.isiOS()
     @player.trigger 'end'
     @state = 'stopped'
 
