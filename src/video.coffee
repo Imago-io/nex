@@ -83,8 +83,8 @@ class Nex.Widgets.Video extends Spine.Controller
     @preload()
 
   preload: ->
-    @setupPosterFrame()
     @delay ->
+      @setupPosterFrame()
       @resize()
     , 0
 
@@ -184,7 +184,6 @@ class Nex.Widgets.Video extends Spine.Controller
 
     @serving_url = @src
     @serving_url += "=s#{ Math.ceil(Math.min(Math.max(width, height) * dpr, 1600)) }"
-
     css =
       backgroundImage    : "url(#{@serving_url})"
       backgroundPosition : @align
@@ -322,10 +321,10 @@ class VideoElement extends Spine.Controller
     # @log 'togglePlay', @state
 
     if @state is 'playing'
-      @el.css display: 'none' if @isiOS()
+      @el.css display: 'none' if Nex.Utils.isiOS()
       @pause()
     else
-      @el.css display: 'block' if @isiOS()
+      @el.css display: 'block' if Nex.Utils.isiOS()
       @play()
 
   getDuration: ->
@@ -401,7 +400,7 @@ class VideoElement extends Spine.Controller
     # @log 'onpause'
     @state = 'paused'
     @player.el.removeClass 'playing'
-    @el.css display: 'none' if @isiOS()
+    @el.css display: 'none' if Nex.Utils.isiOS()
 
   onplay: =>
     # @log 'onplay'
@@ -413,7 +412,7 @@ class VideoElement extends Spine.Controller
   onended: =>
     # @log 'onended', @player
     #this enables video in slider on iphone
-    @el.css display: 'none' if @isiOS()
+    @el.css display: 'none' if Nex.Utils.isiOS()
     @player.trigger 'end'
     @state = 'stopped'
 
