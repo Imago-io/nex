@@ -83,8 +83,8 @@ class Nex.Widgets.Video extends Spine.Controller
     @preload()
 
   preload: ->
-    @setupPosterFrame()
     @delay ->
+      @setupPosterFrame()
       @resize()
     , 0
 
@@ -184,7 +184,6 @@ class Nex.Widgets.Video extends Spine.Controller
 
     @serving_url = @src
     @serving_url += "=s#{ Math.ceil(Math.min(Math.max(width, height) * dpr, 1600)) }"
-
     css =
       backgroundImage    : "url(#{@serving_url})"
       backgroundPosition : @align
@@ -216,6 +215,7 @@ module.exports = Nex.Widgets.Video
 
 
 class VideoElement extends Spine.Controller
+  # @include Nex.Utils
   tag: 'video'
 
   events:
@@ -243,10 +243,13 @@ class VideoElement extends Spine.Controller
     @el.prop('autoplay', @player.autoplay)
 
     @el.attr
-      preload:    'true'
+      preload:    'none'
       autobuffer: @player.autobuffer
       'x-webkit-airplay':    'allow'
       webkitAllowFullscreen: 'true'
+
+
+    @el.css display: 'none' if Nex.Utils.isiOS()
 
     @loadSources()
 
@@ -316,9 +319,12 @@ class VideoElement extends Spine.Controller
 
   togglePlay: ->
     # @log 'togglePlay', @state
+
     if @state is 'playing'
+      @el.css display: 'none' if Nex.Utils.isiOS()
       @pause()
     else
+      @el.css display: 'block' if Nex.Utils.isiOS()
       @play()
 
   getDuration: ->
@@ -394,6 +400,7 @@ class VideoElement extends Spine.Controller
     # @log 'onpause'
     @state = 'paused'
     @player.el.removeClass 'playing'
+    @el.css display: 'none' if Nex.Utils.isiOS()
 
   onplay: =>
     # @log 'onplay'
@@ -404,6 +411,8 @@ class VideoElement extends Spine.Controller
 
   onended: =>
     # @log 'onended', @player
+    #this enables video in slider on iphone
+    @el.css display: 'none' if Nex.Utils.isiOS()
     @player.trigger 'end'
     @state = 'stopped'
 
@@ -420,12 +429,12 @@ class Controls extends Spine.Controller
     '.volume input' : 'volume'
 
   events:
-    'click  .play'             : 'play'
-    'click  .pause'            : 'pause'
-    'click  .size'             : 'toggleSize'
-    'click  .fullscreen'       : 'onEnterFullScreen'
-    'change .seek'             : 'onSeek'
-    'change .volume input'     : 'onVolumeChnage'
+    'click  .play'           : 'play'
+    'click  .pause'          : 'pause'
+    'click  .size'           : 'toggleSize'
+    'click  .fullscreen'     : 'onEnterFullScreen'
+    'change .seek'           : 'onSeek'
+    'change .volume input'   : 'onVolumeChnage'
     'click  .fa-volume-down' : 'muteVolume'
     'click  .fa-volume-up'   : 'fullVolume'
 

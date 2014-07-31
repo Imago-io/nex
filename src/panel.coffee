@@ -21,9 +21,10 @@ Nex.Panel =
     ajax        = if options.ajax is undefined then true else options.ajax
     for q in @query
       @promises.push(Nex.Models.Asset.get(q, abortable, fetchassets, ajax)
-        .done(=>
+        .done((result)=>
           # @log '(Nex.Panel) result: ', arguments...
-          @data.push arguments...
+          return if not result.id and result.count is 0
+          @data.push result
         )
         .fail(=> @log "Panel: Could not get data for panel #{@query}")
       )
