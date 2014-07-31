@@ -562,7 +562,7 @@ STATES =
 
 
 TAXINCLUDED =
-  'EUR' : true
+  'USD' : false
 
 Nex.Utils =
 
@@ -802,7 +802,7 @@ Nex.Utils =
     CURRENCY_MAPPING[country]
 
   includesTax: (currency) ->
-    TAXINCLUDED[currency] or false
+    TAXINCLUDED[currency] or true
 
   getCountryCode : (country) ->
     CODES[country]
