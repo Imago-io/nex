@@ -4,7 +4,6 @@ _ = require('underscore')
 Nex.Panel =
   getData: (query, options={}) ->
     return @log "Panel: query is empty, aborting #{query}" unless query
-    console.log 'optoins in panel', options
     # return if path is @path
     @query = query
     if Nex.Utils.toType(query) is 'string'
