@@ -4,6 +4,7 @@ _ = require('underscore')
 Nex.Panel =
   getData: (query, options={}) ->
     return @log "Panel: query is empty, aborting #{query}" unless query
+    console.log 'optoins in panel', options
     # return if path is @path
     @query = query
     if Nex.Utils.toType(query) is 'string'
@@ -19,8 +20,9 @@ Nex.Panel =
     abortable   = false if @query.length > 1 or not options.abortable
     fetchassets = if options.fetchAsses is undefined then true else options.fetchAsses
     ajax        = if options.ajax is undefined then true else options.ajax
+    lean        = if options.lean is undefined then false else options.lean
     for q in @query
-      @promises.push(Nex.Models.Asset.get(q, abortable, fetchassets, ajax)
+      @promises.push(Nex.Models.Asset.get(q, abortable, fetchassets, ajax, lean)
         .done((result)=>
           # @log '(Nex.Panel) result: ', arguments...
           return if not result.id and result.count is 0

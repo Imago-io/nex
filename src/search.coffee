@@ -2,13 +2,14 @@ Nex  = @Nex or require('nex')
 
 Nex.Search =
 
-  get: (params, @abortable, fetchAssets=true, ajax=true) ->
+  get: (params, @abortable, fetchAssets=true, ajax=true, lean=false) ->
     if @abortable is undefined and Nex.client is 'public'
       @abortable = true
 
     @jqXHR?.abort('abort')
 
-    params   = @objListToDict(params)
+    params      = @objListToDict(params)
+    params.lean = lean
     deferred = $.Deferred()
     promise  = deferred.promise()
 
@@ -161,6 +162,7 @@ Nex.Search =
       query =
         'path' : params.path
       query.recursive = true if params.recursive
+      query.lean      = true if params.lean
       @getSearch(query).done( (data, status, xhr) =>
         delete params.path
         collection = @parseData(data)[0]
@@ -263,7 +265,7 @@ Nex.Search =
     querydict
 
   getSearchUrl: ->
-    if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.imagoapp.com/api/v2/search" else "/api/v2/search"
+    if (Nex.data is 'online' and Nex.debug) then "http://#{Nex.tenant}.pepe.imagoapp.com/api/v2/search" else "/api/v2/search"
 
 
 module.exports = Nex.Search
