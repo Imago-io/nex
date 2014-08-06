@@ -9,7 +9,7 @@ Nex.Search =
     @jqXHR?.abort('abort')
 
     params      = @objListToDict(params)
-    params.lean = lean
+    params.lean = lean if lean is true
     deferred = $.Deferred()
     promise  = deferred.promise()
 
@@ -177,6 +177,8 @@ Nex.Search =
 
     delete params.path
     delete params.recursive
+    lean = params.lean if params.lean is true
+    delete params.lean
 
     if collection.kind is 'Collection' and not params.sortoptions
       toFetch = collection.assets
@@ -205,6 +207,7 @@ Nex.Search =
 
       # fetch assets
       params.ancestor = collection.id
+      params.lean     = lean if lean is true
 
       @getSearch(params).done( (data, status, xhr) =>
         assets = assets.concat(@parseData(data))
