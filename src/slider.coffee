@@ -43,7 +43,9 @@ class Nex.Widgets.Slider extends Spine.Controller
 
     @el.addClass @animation
     @manager = new Spine.Manager
+
     @slides  = @manager.controllers
+    @slidesObj = {}
 
     @bind 'ready', @render
 
@@ -81,7 +83,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       return unless col.items.length > 0
       for asset,i in col.items
         # @log 'asset in col.items', asset, asset.name
-        @add @[asset.normname] = new Slide
+        @add @slidesObj[asset.normname] = new Slide
           slider:      @
           asset:       asset
           sizemode:    @sizemode
