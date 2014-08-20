@@ -51,8 +51,6 @@ class Nex.Widgets.Video extends Spine.Controller
     # play button
     @html """
             <div class="imagowrapper">
-              <div class="spin"></div>
-              <div class="spin2"></div>
               <a class="playbig fa fa-play" />
               <video></video>
             </div>
