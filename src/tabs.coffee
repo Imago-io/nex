@@ -100,7 +100,7 @@ class Tab extends Spine.Controller
       break
 
   appendWidget: (asset) ->
-    return unless asset and el = @$(".#{asset.normname}")
+    return unless asset and el = @$(".#{asset.normname}")[0]
     @controllers.push new Nex.Widgets[if asset.kind is 'Collection' then 'Slider' else asset.kind]
       el:         el
       src:        asset.serving_url
