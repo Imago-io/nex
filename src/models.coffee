@@ -222,15 +222,15 @@ class Setting extends Spine.Model
 
 
   @setSessionData: ->
-    Nex.currencies = @findByName('currencies').value
-    Nex.ipaddress  = @findByName('ipaddress').value
-    Nex.country    = @findByName('country').value
-    Nex.city       = @findByName('city').value
-    Nex.region     = @findByName('region').value
+    Nex.currencies = @findByName('currencies')?.value
+    Nex.ipaddress  = @findByName('ipaddress')?.value
+    Nex.country    = @findByName('country')?.value
+    Nex.city       = @findByName('city')?.value
+    Nex.region     = @findByName('region')?.value
     Nex.currency   = @currency()
     $.ajax(
       type: 'GET'
-      url:  'http://freegeoip.net/json/'+Nex.ipaddress
+      url:  'http://freegeoip.net/json/'
     ).success((data) =>
         Nex.country  = data.country_code
         Nex.city     = data.city
