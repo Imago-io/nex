@@ -83,7 +83,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       return unless col.items.length > 0
       for asset,i in col.items
         # @log 'asset in col.items', asset, asset.name
-        continue unless asset.serving_url
+        continue unless asset.serving_url and @subslides
         @add @slidesObj[asset.normname] = new Slide
           slider:      @
           asset:       asset
