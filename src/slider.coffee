@@ -83,7 +83,6 @@ class Nex.Widgets.Slider extends Spine.Controller
       return unless col.items.length > 0
       for asset,i in col.items
         # @log 'asset in col.items', asset, asset.name
-        continue unless asset.serving_url and @subslides
         @add @slidesObj[asset.normname] = new Slide
           slider:      @
           asset:       asset
@@ -260,6 +259,7 @@ class Slide extends Spine.Controller
       else
         @kind = if col.kind in ['Image', 'Video'] then col.kind else 'Image'
         # @log 'crop', col.getMeta('crop', 'center center')
+        return @log 'no serving_url for widget in slide' unless col.serving_url
         @add @["media"] = new Nex.Widgets[@kind]
           src:          col.serving_url
           align:        col.getMeta('crop', 'center center')
