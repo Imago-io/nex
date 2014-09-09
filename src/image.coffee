@@ -28,15 +28,16 @@ class Nex.Widgets.Image extends Spine.Controller
     for key, value of @defaults
       @[key] = value
 
-    @initialWidth = @width
-    @intialHeight = @height
-
     if @noResize
       @log '@noResize depricated will be removed soon, use responsive: false'
       @responsive = false
 
     super
     @logPrefix = '(App) Image: '
+
+    @log 'constructor: ', @width, @height
+    @initialWidth = @width
+    @initialHeight = @height
 
     # check requirements
     return @log 'Error: image widget rquires src' unless @src
@@ -72,7 +73,6 @@ class Nex.Widgets.Image extends Spine.Controller
     # load image if enters the viewport
     @window.on "scrollstop.#{@id}", @preload if @lazy
 
-
     # convert resolution string to object
     if typeof @resolution is 'string'
       r = @resolution.split('x')
@@ -84,7 +84,6 @@ class Nex.Widgets.Image extends Spine.Controller
 
   render: =>
     # wait till @el is added to dom
-    @log 'render', @width, @height
     return if @released
     unless @el.width() or @el.height()
       # @log 'el not ready delay render for 250ms', @width, @height
@@ -126,31 +125,31 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # sizemode crop
     assetRatio = @resolution.width / @resolution.height
-    # @log 'before conditional: ', @width, @height
+
     # use pvrovided dimentions.
-    if typeof @width is 'number' and typeof @height is 'number'
-      # @log 'fixed size', @width, @height
+    if typeof @initialWidth is 'number' and typeof @initialHeight is 'number'
+      @log 'fixed size', @width, @height
 
     # fit width
-    else if @height is 'auto' and typeof @width is 'number'
+    else if @initialHeight is 'auto' and typeof @initialWidth is 'number'
       @height = parseInt @width / assetRatio
       @el.height @height
 
-      # @log 'fit width', @width, @height
+      @log 'fit width', @width, @height
 
     # fit height
-    else if @width is 'auto' and typeof @height is 'number'
+    else if @initialWidth is 'auto' and typeof @initialHeight is 'number'
       @width = parseInt @height * assetRatio
       @el.width @width
-      # @log 'fit height', @width, @height
+      @log 'fit height', @width, @height
 
     # we want dynamic resizing without css.
     # like standard image behaviour. will get a height according to the width
-    else if @width is 'auto' and @height is 'auto'
+    else if @initialWidth is 'auto' and @initialHeight is 'auto'
       @width  = parseInt @el.css('width')
       @height = @width / assetRatio
       @el.height(parseInt @height)
-      # @log 'both auto', @width, @height
+      @log 'both auto', @width, @height
 
     # width and height dynamic, needs to be defined via css
     # either width height or position
@@ -158,7 +157,7 @@ class Nex.Widgets.Image extends Spine.Controller
       @width  = parseInt @el.css('width')
       @height = parseInt @el.css('height')
 
-      # @log 'fit el', @width, @height
+      @log 'fit el', @width, @height, @initialWidth, @initialHeight
 
 
     # check viewport here
@@ -248,9 +247,9 @@ class Nex.Widgets.Image extends Spine.Controller
       @[key] = value
 
     # @log 'calcMediaSize', @sizemode
-    @width  = @width or @el.width()
-    @height =  @height or @el.height()
-    # @log 'calcMediaSize: @width, @height', @width, @height
+    @width  = @el.width() or @width
+    @height = @el.height() or @height
+    @log 'calcMediaSize: @width, @height', @width, @height
     return unless @width and @height
     assetRatio = @resolution.width / @resolution.height
     wrapperRatio = @width / @height
