@@ -28,6 +28,9 @@ class Nex.Widgets.Image extends Spine.Controller
     for key, value of @defaults
       @[key] = value
 
+    @initialWidth = @width
+    @intialHeight = @height
+
     if @noResize
       @log '@noResize depricated will be removed soon, use responsive: false'
       @responsive = false
@@ -56,6 +59,13 @@ class Nex.Widgets.Image extends Spine.Controller
     # bind to window resize STOP if no dimentions are provided
     @window.on "resizestop.#{@id}", @preload if @responsive
 
+    # preload on orientation change
+    @window.on "orientationchange", () =>
+      if @responsive
+        @width  = @initialWidth
+        @height = @initalHeight
+        @render()
+
     # bind css background size calculation to window resize START.
     @window.on "resize.#{@id}", _.throttle(@onResize, 250) if @responsive
 
@@ -74,6 +84,7 @@ class Nex.Widgets.Image extends Spine.Controller
 
   render: =>
     # wait till @el is added to dom
+    @log 'render', @width, @height
     return if @released
     unless @el.width() or @el.height()
       # @log 'el not ready delay render for 250ms', @width, @height
@@ -115,10 +126,10 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # sizemode crop
     assetRatio = @resolution.width / @resolution.height
-
+    # @log 'before conditional: ', @width, @height
     # use pvrovided dimentions.
     if typeof @width is 'number' and typeof @height is 'number'
-      # @log 'fixed size', width, height
+      # @log 'fixed size', @width, @height
 
     # fit width
     else if @height is 'auto' and typeof @width is 'number'
@@ -139,7 +150,7 @@ class Nex.Widgets.Image extends Spine.Controller
       @width  = parseInt @el.css('width')
       @height = @width / assetRatio
       @el.height(parseInt @height)
-      # @log 'both auto', width, height
+      # @log 'both auto', @width, @height
 
     # width and height dynamic, needs to be defined via css
     # either width height or position
@@ -237,8 +248,8 @@ class Nex.Widgets.Image extends Spine.Controller
       @[key] = value
 
     # @log 'calcMediaSize', @sizemode
-    @width  = @el.width()  or @width
-    @height = @el.height() or @height
+    @width  = @width or @el.width()
+    @height =  @height or @el.height()
     # @log 'calcMediaSize: @width, @height', @width, @height
     return unless @width and @height
     assetRatio = @resolution.width / @resolution.height
