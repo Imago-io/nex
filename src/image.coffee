@@ -56,9 +56,6 @@ class Nex.Widgets.Image extends Spine.Controller
     # bind to window resize STOP if no dimentions are provided
     @window.on "resizestop.#{@id}", @preload if @responsive
 
-    # preload on orientation change
-    @window.on "orientationchange", @preload
-
     # bind css background size calculation to window resize START.
     @window.on "resize.#{@id}", _.throttle(@onResize, 250) if @responsive
 
