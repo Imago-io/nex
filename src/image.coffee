@@ -35,7 +35,7 @@ class Nex.Widgets.Image extends Spine.Controller
     super
     @logPrefix = '(App) Image: '
 
-    @log 'constructor: ', @width, @height
+    # @log 'constructor: ', @width, @height
     @initialWidth = @width
     @initialHeight = @height
 
@@ -128,20 +128,20 @@ class Nex.Widgets.Image extends Spine.Controller
 
     # use pvrovided dimentions.
     if typeof @initialWidth is 'number' and typeof @initialHeight is 'number'
-      @log 'fixed size', @width, @height
+      # @log 'fixed size', @width, @height
 
     # fit width
     else if @initialHeight is 'auto' and typeof @initialWidth is 'number'
       @height = parseInt @width / assetRatio
       @el.height @height
 
-      @log 'fit width', @width, @height
+      # @log 'fit width', @width, @height
 
     # fit height
     else if @initialWidth is 'auto' and typeof @initialHeight is 'number'
       @width = parseInt @height * assetRatio
       @el.width @width
-      @log 'fit height', @width, @height
+      # @log 'fit height', @width, @height
 
     # we want dynamic resizing without css.
     # like standard image behaviour. will get a height according to the width
@@ -149,7 +149,7 @@ class Nex.Widgets.Image extends Spine.Controller
       @width  = parseInt @el.css('width')
       @height = @width / assetRatio
       @el.height(parseInt @height)
-      @log 'both auto', @width, @height
+      # @log 'both auto', @width, @height
 
     # width and height dynamic, needs to be defined via css
     # either width height or position
@@ -157,7 +157,7 @@ class Nex.Widgets.Image extends Spine.Controller
       @width  = parseInt @el.css('width')
       @height = parseInt @el.css('height')
 
-      @log 'fit el', @width, @height, @initialWidth, @initialHeight
+      # @log 'fit el', @width, @height, @initialWidth, @initialHeight
 
 
     # check viewport here
@@ -249,7 +249,7 @@ class Nex.Widgets.Image extends Spine.Controller
     # @log 'calcMediaSize', @sizemode
     @width  = @el.width() or @width
     @height = @el.height() or @height
-    @log 'calcMediaSize: @width, @height', @width, @height
+    # @log 'calcMediaSize: @width, @height', @width, @height
     return unless @width and @height
     assetRatio = @resolution.width / @resolution.height
     wrapperRatio = @width / @height
