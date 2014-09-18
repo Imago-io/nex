@@ -35,6 +35,8 @@ SYMBOLS =
   YEN     : '&#165;'
   GBP     : '&#163;'
   GENERIC : '&#164;'
+  CHF     : 'CHF'
+  NOK     : 'NOK'
 
 CURRENCY_MAPPING =
   "United Arab Emirates"     : "AED"
