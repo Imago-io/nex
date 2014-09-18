@@ -17,7 +17,8 @@ class Nex.Page extends Spine.Controller
     @controllers = []
 
     @bind 'ready', @render
-    @active @getData
+    @active @cleanUp
+
 
   tmpl404: ->
     "<h1 class='#{Nex.language}'>Page not Found</h1>"
@@ -66,6 +67,12 @@ class Nex.Page extends Spine.Controller
     for cont in @controllers
       cont.release()
     @controllers = []
+
+  cleanUp: (data) ->
+    @clear()
+    @trigger 'cleanup'
+    @getData(data)
+
 
   onKeyup: (e) =>
     return unless @isActive()
