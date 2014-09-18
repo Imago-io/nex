@@ -64,7 +64,7 @@ CURRENCY_MAPPING =
   "Belarus"                  : "BYR"
   "Belize"                   : "BZD"
   "Canada"                   : "CAD"
-  "Switzerland Franc"        : "CHF"
+  "Switzerland"              : "CHF"
   "Chile"                    : "CLP"
   "China"                    : "CNY"
   "Colombia"                 : "COP"
