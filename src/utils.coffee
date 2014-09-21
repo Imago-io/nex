@@ -179,6 +179,8 @@ CURRENCY_MAPPING =
   "Ukraine"                  : "UAH"
   "Uganda"                   : "UGX"
   "United States"            : "USD"
+  "USA"                      : "USD"
+  "United States of America" : "USD"
   "Uruguay"                  : "UYU"
   "Uzbekistan"               : "UZS"
   "Venezuela"                : "VEF"
