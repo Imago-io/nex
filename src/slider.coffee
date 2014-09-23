@@ -15,6 +15,8 @@ class Nex.Widgets.Slider extends Spine.Controller
   events:
     'tap .next' : 'goNext'
     'tap .prev' : 'goPrev'
+    'swipeleft' : 'goNext'
+    'swiperight': 'goPrev'
     'swipeLeft' : 'goNext'
     'swipeRight': 'goPrev'
 
