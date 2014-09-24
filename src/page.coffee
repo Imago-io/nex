@@ -68,10 +68,10 @@ class Nex.Page extends Spine.Controller
       cont.release()
     @controllers = []
 
-  cleanUp: (data) ->
+  cleanUp: (data, opts) ->
     @clear()
     @trigger 'cleanup'
-    @getData(data)
+    @getData(data, opts)
 
 
   onKeyup: (e) =>
