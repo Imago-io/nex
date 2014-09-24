@@ -125,7 +125,7 @@ class Asset extends Spine.Model
         key = Nex.Utils.pluralize(key)
         opts[key] or= []
         opts[key].push(obj.value) if obj.value not in opts[key]
-        opts.mapping[obj.value] = variant.meta.stock.value
+        opts.mapping[obj.value] = variant.meta.stock?.value or 0
     opts
 
   discounted: ->
