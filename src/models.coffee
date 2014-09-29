@@ -232,7 +232,6 @@ class Setting extends Spine.Model
       type: 'GET'
       url:  'http://www.telize.com/geoip'
     ).success((data) =>
-        console.log 'data is', data
         Nex.country  = data.country_code
         Nex.city     = data.city
         Nex.region   = data.region_code
