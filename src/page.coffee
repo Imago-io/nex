@@ -70,7 +70,6 @@ class Nex.Page extends Spine.Controller
 
   cleanUp: (data, opts) ->
     @clear()
-    @trigger 'cleanup'
     @getData(data, opts)
 
 
