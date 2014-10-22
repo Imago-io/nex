@@ -144,6 +144,7 @@ class Nex.Widgets.Slider extends Spine.Controller
       @enablekeys   = false
       @slides[@current].active?()
       @el.addClass('first last')
+      if slide is 'next' then @trigger 'end' else if slide is 'prev' then @trigger 'start'
       return
 
     # loop
