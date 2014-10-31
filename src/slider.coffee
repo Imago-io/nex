@@ -63,7 +63,12 @@ class Nex.Widgets.Slider extends Spine.Controller
     @html '<div class="prev"></div><div class="next"></div>' if @enablearrows
 
     # fetch data or on active to fetch data
-    if @path then @getData @path else @active @getData
+    if @path
+      @getData @path
+    else if @collection and @collection.length > 0
+      @render @collection
+    else
+      @active @getData
 
     @el.addClass(@name) if @name
 
