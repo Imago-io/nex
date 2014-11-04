@@ -230,6 +230,7 @@ class VideoElement extends Spine.Controller
     'play'            : 'onplay'
     'ended'           : 'onended'
     'volumechange'    : 'onvolumechange'
+    'swipe'           : 'onSwipe'
 
   constructor: ->
     super
@@ -250,6 +251,9 @@ class VideoElement extends Spine.Controller
     @el.css display: 'none' if Nex.Utils.isiOS()
 
     @loadSources()
+
+  onSwipe: (e) =>
+    @log 'onSwipe'
 
   loadSources: ->
     return unless @player.uuid
@@ -435,6 +439,7 @@ class Controls extends Spine.Controller
     'change .volume input'   : 'onVolumeChnage'
     'click  .fa-volume-down' : 'muteVolume'
     'click  .fa-volume-up'   : 'fullVolume'
+    'input .seek'            : 'onInput'
 
   constructor: ->
     super
@@ -461,8 +466,10 @@ class Controls extends Spine.Controller
     @player.video.on 'volumechange', @onvolumeupdate
 
     document.addEventListener(screenfull.raw.fullscreenchange, @onfullscreenchange)
-
     @activate()
+
+  onInput: (e) =>
+    @seeking = true
 
   play: (e) ->
     # e.stopPropagation()
@@ -474,6 +481,7 @@ class Controls extends Spine.Controller
     @player.video.pause()
 
   ontimeupdate: (e) =>
+    return if @seeking
     @time.html @formatTime @player.video.getCurrentTime()
     @seek.val @player.video.getCurrentTime() / @player.video.getEndTime() * 100
 
@@ -501,6 +509,7 @@ class Controls extends Spine.Controller
     value = @player.video.getEndTime() / 100 * $(e.target).val()
     # @log value
     @player.video.seek value
+    @seeking = false
 
   toggleSize: (e) =>
     # @log 'toggleSize', "from #{ @player.size }"
