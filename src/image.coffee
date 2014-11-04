@@ -219,8 +219,9 @@ class Nex.Widgets.Image extends Spine.Controller
     img = $('<img>').bind 'load', @imgLoaded
     img.attr('src', @servingUrl)
 
+    css = {}
+
     if @sizemode is 'crop'
-      css = {}
       css.backgroundPosition = @align
       css.display            = "inline-block"
 
