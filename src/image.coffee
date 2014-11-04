@@ -52,7 +52,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @el.width(@width)   if typeof @width  is 'number'
     @el.height(@height) if typeof @height is 'number'
 
-    @el.addClass(@class)
+    @el.addClass "#{@class} #{@align}"
     @el.attr('style', @style) if @style
 
     @window = $(window)
@@ -105,7 +105,8 @@ class Nex.Widgets.Image extends Spine.Controller
 
   onResize: =>
     # return unless @isActive()
-    @image.css('backgroundSize', @calcMediaSize())
+    # console.log 'onResize', @calcMediaSize()
+    @image.css @calcMediaSize()
 
   preload: (options) =>
     # @log 'preload', @width, @height
@@ -218,9 +219,10 @@ class Nex.Widgets.Image extends Spine.Controller
     img = $('<img>').bind 'load', @imgLoaded
     img.attr('src', @servingUrl)
 
-    css = {}
-    css.backgroundPosition = @align
-    css.display            = "inline-block"
+    if @sizemode is 'crop'
+      css = {}
+      css.backgroundPosition = @align
+      css.display            = "inline-block"
 
     #Only apply witdh and height if responsive is false
     unless @responsive
@@ -231,9 +233,9 @@ class Nex.Widgets.Image extends Spine.Controller
     @el.removeClass('loaded')
 
   imgLoaded: =>
-    @image.css
-      backgroundImage : "url(#{@servingUrl})"
-      backgroundSize  : @calcMediaSize()
+    css = @calcMediaSize()
+    css.backgroundImage = "url(#{@servingUrl})"
+    @image.css css
 
     @delay ->
       @el.addClass('loaded')
@@ -247,18 +249,40 @@ class Nex.Widgets.Image extends Spine.Controller
       @[key] = value
 
     # @log 'calcMediaSize', @sizemode
-    @width  = @el.width() or @width
+    @width  = @el.width()  or @width
     @height = @el.height() or @height
     # @log 'calcMediaSize: @width, @height', @width, @height
     return unless @width and @height
-    assetRatio = @resolution.width / @resolution.height
+
+    assetRatio   = @resolution.width / @resolution.height
     wrapperRatio = @width / @height
+
+    # if @sizemode is 'crop'
+    #   # @log '@sizemode crop', assetRatio, wrapperRatio
+    #   if assetRatio < wrapperRatio then "100% auto" else "auto 100%"
+    # else
+    #   # @log '@sizemode fit', assetRatio, wrapperRatio
+    #   if assetRatio > wrapperRatio then "100% auto" else "auto 100%"
+
+
+
     if @sizemode is 'crop'
-      # @log '@sizemode crop', assetRatio, wrapperRatio
-      if assetRatio < wrapperRatio then "100% auto" else "auto 100%"
+      css =
+        width  : '100%'
+        height : '100%'
+        backgroundSize : if assetRatio < wrapperRatio then "100% auto" else "auto 100%"
+
     else
-      # @log '@sizemode fit', assetRatio, wrapperRatio
-      if assetRatio > wrapperRatio then "100% auto" else "auto 100%"
+      css = backgroundSize : '100% 100%'
+
+      if assetRatio > wrapperRatio
+        css.width  = "#{@width}px"
+        css.height = "#{@width / assetRatio}px"
+      else
+        css.width  = "#{@height * assetRatio}px"
+        css.height = "#{@height}px"
+
+    return css
 
 
   setBackgroundSize: (options) =>
