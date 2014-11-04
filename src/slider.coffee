@@ -178,10 +178,12 @@ class Nex.Widgets.Slider extends Spine.Controller
     @next    = @getNext(@current)
 
     @slides[@prev].el.addClass 'prevslide'
+    @slides[@prev].initialize()
     @slides[@next].el.addClass 'nextslide'
+    @slides[@next].initialize()
 
     # @log 'goto @current', @current
-
+    @slides[@current].initialize()
     @slides[@current]?.active()
 
     @trigger 'change', @
@@ -242,13 +244,21 @@ class Slide extends Spine.Controller
 
     # we have a collection fetch data for col path if subslides enabled
     if @asset.assets and @subslides
-      @bind 'ready', @render
+      @bind 'ready', (result) =>
+        @asset = result
+        @bind 'initialize', @render
       @getData @asset.path
     else
-      @render([@asset])
+      @bind 'initialize', @render
 
   onClick: ->
     @slider.trigger 'click', @
+
+  initialize: ->
+    if Nex.Utils.toType(@asset) is 'array'
+      @trigger 'initialize', @asset
+    else
+      @trigger 'initialize', [@asset]
 
   render: (result) ->
     # git  'render result', result
