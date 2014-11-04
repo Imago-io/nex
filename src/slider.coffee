@@ -41,7 +41,9 @@ class Nex.Widgets.Slider extends Spine.Controller
     if Nex.Utils.isMobile()
       @log 'isMobile'
       @el.on "swipeleft", @goNext
+      @el.on "swipeLeft", @goNext
       @el.on "swiperight", @goPrev
+      @el.on "swipeRight", @goPrev
 
     @el.addClass @animation
     @manager = new Spine.Manager
