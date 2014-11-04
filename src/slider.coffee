@@ -12,14 +12,6 @@ class Nex.Widgets.Slider extends Spine.Controller
   className:
     'nexslider'
 
-  events:
-    'tap .next' : 'goNext'
-    'tap .prev' : 'goPrev'
-    'swipeleft' : 'goNext'
-    'swiperight': 'goPrev'
-    'swipeLeft' : 'goNext'
-    'swipeRight': 'goPrev'
-
   defaults:
     animation:    'fade'
     sizemode:     'fit'
@@ -35,6 +27,9 @@ class Nex.Widgets.Slider extends Spine.Controller
     align:         'center center'
     controls:     false
 
+  events:
+    'tap .next' : 'goNext'
+    'tap .prev' : 'goPrev'
 
   constructor: ->
     # set default values before init
@@ -42,6 +37,11 @@ class Nex.Widgets.Slider extends Spine.Controller
       @[key] = value
 
     super
+
+    if Nex.Utils.isMobile()
+      @log 'isMobile'
+      @el.on "swipeleft", @goNext
+      @el.on "swiperight", @goPrev
 
     @el.addClass @animation
     @manager = new Spine.Manager
@@ -117,11 +117,13 @@ class Nex.Widgets.Slider extends Spine.Controller
     @append controller
 
   goNext: (e) =>
+    @log 'swipe triggered'
     return if e.target.type is 'range'
     @direction = 'next'
     @goto 'next'
 
   goPrev: (e) =>
+    @log 'swipe triggered'
     return if e.target.type is 'range'
     @direction = 'prev'
     @goto 'prev'
