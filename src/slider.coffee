@@ -255,6 +255,7 @@ class Slide extends Spine.Controller
     @slider.trigger 'click', @
 
   initialize: ->
+    @clear()
     if Nex.Utils.toType(@asset) is 'array'
       @trigger 'initialize', @asset
     else
