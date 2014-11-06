@@ -279,11 +279,11 @@ class Nex.Widgets.Image extends Spine.Controller
       if assetRatio > wrapperRatio
         css.width      = "#{@width}px"
         css.height     = "#{@width / assetRatio}px"
-        backgroundSize = "100% auto"
+        backgroundSize = "auto 100% "
       else
         css.width      = "#{@height * assetRatio}px"
         css.height     = "#{@height}px"
-        backgroundSize = "auto 100%"
+        backgroundSize = "100% auto"
 
     css
 
