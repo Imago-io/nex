@@ -114,7 +114,7 @@ class Nex.Widgets.Image extends Spine.Controller
     for key, value of options
       @[key] = value
 
-    @onResize()
+    # @onResize()
 
     return @log 'tried to preload during preloading!!' if @status is 'preloading'
     # @log 'preloading :', width, @width, height, @height
@@ -253,7 +253,7 @@ class Nex.Widgets.Image extends Spine.Controller
     @width  = @el.width()  or @width
     @height = @el.height() or @height
     # @log 'calcMediaSize: @width, @height', @width, @height
-    return unless @width and @height
+    return {} unless @width and @height
 
     assetRatio   = @resolution.width / @resolution.height
     wrapperRatio = @width / @height
@@ -274,16 +274,18 @@ class Nex.Widgets.Image extends Spine.Controller
         backgroundSize : if assetRatio < wrapperRatio then "100% auto" else "auto 100%"
 
     else
-      css = backgroundSize : '100% 100%'
+      css = {}
 
       if assetRatio > wrapperRatio
-        css.width  = "#{@width}px"
-        css.height = "#{@width / assetRatio}px"
+        css.width      = "#{@width}px"
+        css.height     = "#{@width / assetRatio}px"
+        backgroundSize = "100% auto"
       else
-        css.width  = "#{@height * assetRatio}px"
-        css.height = "#{@height}px"
+        css.width      = "#{@height * assetRatio}px"
+        css.height     = "#{@height}px"
+        backgroundSize = "auto 100%"
 
-    return css
+    css
 
 
   setBackgroundSize: (options) =>
