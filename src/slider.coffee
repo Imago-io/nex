@@ -39,8 +39,11 @@ class Nex.Widgets.Slider extends Spine.Controller
     super
 
     if Nex.Utils.isMobile()
+      @log 'isMobile'
       @el.on "swipeleft", @goNext
+      @el.on "swipeLeft", @goNext
       @el.on "swiperight", @goPrev
+      @el.on "swipeRight", @goPrev
 
     @el.addClass @animation
     @manager = new Spine.Manager
@@ -150,8 +153,7 @@ class Nex.Widgets.Slider extends Spine.Controller
     if @slides.length is 1
       @enablearrows = false
       @enablekeys   = false
-      @slides[@current].initialize()
-      @slides[@current]?.active()
+      @slides[@current].active?()
       @el.addClass('first last')
       if slide is 'next' then @trigger 'end' else if slide is 'prev' then @trigger 'start'
       return
@@ -176,12 +178,10 @@ class Nex.Widgets.Slider extends Spine.Controller
     @next    = @getNext(@current)
 
     @slides[@prev].el.addClass 'prevslide'
-    @slides[@prev].initialize()
     @slides[@next].el.addClass 'nextslide'
-    @slides[@next].initialize()
 
     # @log 'goto @current', @current
-    @slides[@current].initialize()
+
     @slides[@current]?.active()
 
     @trigger 'change', @
@@ -199,8 +199,6 @@ class Nex.Widgets.Slider extends Spine.Controller
     else
       @el.removeClass('first last')
 
-    @cleanUp()
-
   getPrev: (i) ->
     if i is 0 then @slides.length - 1 else i - 1
 
@@ -209,11 +207,6 @@ class Nex.Widgets.Slider extends Spine.Controller
 
   getLast: () ->
     @slides.length - 1
-
-  cleanUp: ->
-    for slide, i in @slides
-      continue if i in [@prev, @current, @next]
-      slide?.clear()
 
   release: ->
     $(document).off "keydown.#{@id}" if @enablekeys
@@ -249,25 +242,16 @@ class Slide extends Spine.Controller
 
     # we have a collection fetch data for col path if subslides enabled
     if @asset.assets and @subslides
-      @bind 'ready', (result) =>
-        @asset = result
-        @bind 'initialize', @render
+      @bind 'ready', @render
       @getData @asset.path
     else
-      @bind 'initialize', @render
+      @render([@asset])
 
   onClick: ->
     @slider.trigger 'click', @
 
-  initialize: ->
-    if Nex.Utils.toType(@asset) is 'array'
-      @trigger 'initialize', @asset
-    else
-      @trigger 'initialize', [@asset]
-
   render: (result) ->
-    # @log 'render result', result
-    return if @initated
+    # git  'render result', result
     for col in result
       # @log col
       if col.kind is 'Collection' and @subslides
@@ -323,8 +307,6 @@ class Slide extends Spine.Controller
             @media.preload()
             @media.pause()
 
-      @initated = true
-
   activate: ->
     super
     cont.preload?() for cont in @controllers if @subslides
@@ -346,7 +328,6 @@ class Slide extends Spine.Controller
       @controllers[0].release()
     @controllers =[]
     @html ''
-    @initated = false
 
   release: ->
     @clear()
