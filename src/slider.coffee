@@ -119,14 +119,14 @@ class Nex.Widgets.Slider extends Spine.Controller
     @append controller
 
   goNext: (e) =>
-    @log 'swipe triggered'
-    return if e.target.type is 'range'
+    # @log 'swipe triggered'
+    return if e?.target?.type is 'range'
     @direction = 'next'
     @goto 'next'
 
   goPrev: (e) =>
-    @log 'swipe triggered'
-    return if e.target.type is 'range'
+    # @log 'swipe triggered'
+    return if e?.target?.type is 'range'
     @direction = 'prev'
     @goto 'prev'
 
