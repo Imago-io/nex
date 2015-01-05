@@ -128,11 +128,11 @@ class Asset extends Spine.Model
         opts.mapping[obj.value] = variant.meta.stock?.value or 0
     opts
 
-  discounted: ->
+  discounted: (index=0)->
     return false unless @variants.length
-    (@variants[0].meta.discounted) and \
-    ((@variants[0].meta.discounted.value > 0) or \
-    (@variants[0].meta.discounted.value[Nex.currency] > 0))
+    (@variants[index].meta.discounted) and \
+    ((@variants[index].meta.discounted.value > 0) or \
+    (@variants[index].meta.discounted.value[Nex.currency] > 0))
 
 
   totalStock: ->
