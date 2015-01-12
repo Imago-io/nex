@@ -17,7 +17,7 @@ class Nex.Widgets.Shop extends Spine.Controller
   constructor: ->
     super
 
-    @tmpl = require('views/shopwidget')
+    @tmpl = require('views/shop')
 
     @controllers = []
 
@@ -33,7 +33,7 @@ class Nex.Widgets.Shop extends Spine.Controller
     @html @tmpl
       asset: @asset
       variant: variant
-      onSale: if variant then variant.meta.discounted else false
+      onSale: if variant and variant.meta.discounted?.value[Nex.currency] then variant.meta.discounted else false
       href:  window.location.href
       Nex :  Nex
 
@@ -169,7 +169,7 @@ class Option extends Spine.Controller
       for variant in variants
         totalStock += variant.meta.stock.value or 0
         #if any of the variants are discounted return onSale
-        if variant.meta.discounted
+        if variant.meta.discounted and variant.meta.discounted?.value[Nex.currency] > 0
           status.onSale = true
           continue
       #if totalStock of the variants is 0 return soldOut
