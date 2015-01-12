@@ -129,6 +129,8 @@ class Option extends Spine.Controller
       options: @opts
       checkOption: @checkOption
 
+    $('body').on 'tap', @globalClick
+
   checkOption: (option) =>
 
     status =
@@ -181,3 +183,8 @@ class Option extends Spine.Controller
       key:  @name
       value: $(e.target).data('value')
     @trigger 'update', data
+
+  globalClick: (e) =>
+    target = $(e.target)
+    if not target.closest('.option').length and @open
+      @toggleDropdown()
