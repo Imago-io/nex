@@ -188,3 +188,5 @@ class Option extends Spine.Controller
     target = $(e.target)
     if not target.closest('.option').length and @open
       @toggleDropdown()
+
+module.exports = Nex.ShopWidget
