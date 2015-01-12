@@ -1,4 +1,7 @@
-class ShopWidget extends Spine.Controller
+Nex = @Nex or require('nex')
+_ = require('underscore')
+
+class Nex.Widgets.Shop extends Spine.Controller
 
   logPrefix: '(App) ShopWidget: '
   className: 'shopWidget'
@@ -189,4 +192,4 @@ class Option extends Spine.Controller
     if not target.closest('.option').length and @open
       @toggleDropdown()
 
-module.exports = Nex.ShopWidget
+module.exports = Nex.Widgets.Shop
