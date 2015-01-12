@@ -103,6 +103,8 @@ class Nex.Widgets.Shop extends Spine.Controller
 
     Nex.Models.CartItem.addToCart(variant.id, 1, product)
 
+module.exports = Nex.Widgets.Shop
+
 class Option extends Spine.Controller
 
   logPrefix: '(App) option: '
@@ -191,5 +193,3 @@ class Option extends Spine.Controller
     target = $(e.target)
     if not target.closest('.option').length and @open
       @toggleDropdown()
-
-module.exports = Nex.Widgets.Shop
