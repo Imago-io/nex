@@ -4,7 +4,7 @@ _ = require('underscore')
 class Nex.Widgets.Shop extends Spine.Controller
 
   logPrefix: '(App) ShopWidget: '
-  className: 'shopWidget'
+  className: 'shop-widget'
 
   elements:
     '.wrapper' : 'wrapper'
@@ -16,8 +16,9 @@ class Nex.Widgets.Shop extends Spine.Controller
 
   constructor: ->
     super
+    return @log "shop widget requires template" unless @template
 
-    @tmpl = require('views/shop')
+    @tmpl = require(@template)
 
     @controllers = []
 
