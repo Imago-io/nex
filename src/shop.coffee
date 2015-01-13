@@ -166,15 +166,18 @@ class Option extends Spine.Controller
       status.notAvailable = true
     else
       totalStock = 0
+      onSale = true
       for variant in variants
         totalStock += variant.meta.stock.value or 0
-        #if any of the variants are discounted return onSale
-        if variant.meta.discounted and variant.meta.discounted?.value[Nex.currency] > 0
-          status.onSale = true
+        #unless all of the variants are on sale return false
+        unless variant.meta.discounted and variant.meta.discounted?.value[Nex.currency] > 0
+          onSale = false
           continue
       #if totalStock of the variants is 0 return soldOut
       unless totalStock > 0
         status.soldOut = true
+
+      status.onSale = onSale
 
     return status
 
