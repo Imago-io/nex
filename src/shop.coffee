@@ -30,10 +30,12 @@ class Nex.Widgets.Shop extends Spine.Controller
     @clear()
 
     variant = @getVariant()
+    onPresale = @checkPresale()
 
     @html @tmpl
       asset: @asset
       variant: variant
+      presale: onPresale or false
       onSale: if variant and variant.meta.discounted?.value[Nex.currency] then variant.meta.discounted else false
       href:  window.location.href
       Nex :  Nex
@@ -65,6 +67,10 @@ class Nex.Widgets.Shop extends Spine.Controller
       return status
 
     return variant[0]
+
+  checkPresale: =>
+    for variant in @asset.variants
+      return true if variant.meta.presale? is true
 
   closeOptions: (option) =>
     for controller in @controllers
@@ -171,6 +177,7 @@ class Option extends Spine.Controller
       for variant in variants
         totalStock += variant.meta.stock?.value? or 0
         #unless all of the variants are on sale return false
+
         unless variant.meta.discounted and variant.meta.discounted?.value[Nex.currency] > 0
           onSale = false
           continue
