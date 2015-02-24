@@ -169,7 +169,7 @@ class Option extends Spine.Controller
       totalStock = 0
       onSale = true
       for variant in variants
-        totalStock += variant.meta.stock?.value or 0
+        totalStock += variant.meta.stock?.value? or 0
         #unless all of the variants are on sale return false
         unless variant.meta.discounted and variant.meta.discounted?.value[Nex.currency] > 0
           onSale = false
