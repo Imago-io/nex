@@ -7,7 +7,7 @@ class Nex.Widgets.Shop extends Spine.Controller
   className: 'shop-widget'
 
   elements:
-    '.wrapper' : 'wrapper'
+    '.wrapper'          : 'wrapper'
     '.error'            : 'error'
     '.price'            : 'price'
 
@@ -22,7 +22,7 @@ class Nex.Widgets.Shop extends Spine.Controller
 
     @controllers = []
 
-    @item = {}
+    @item = @item or {}
 
     @render()
 
