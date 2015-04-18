@@ -63,7 +63,7 @@ class Nex.Widgets.Shop extends Spine.Controller
       status = true
       for key, value of @item
         key = Nex.Utils.singularize(key)
-        status = false unless variant.meta[key].value is value
+        status = false unless String(variant.meta[key].value) is String(value)
       return status
 
     return variant[0]
@@ -163,7 +163,7 @@ class Option extends Spine.Controller
           #Don't filter the variants by this selection's option
           continue if key is @name
           key = Nex.Utils.singularize(key)
-          unless variant.meta[key].value is value
+          unless String(variant.meta[key].value) is String(value)
             passed = false
 
       return passed
