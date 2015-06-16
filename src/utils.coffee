@@ -800,7 +800,7 @@ Nex.Utils =
     msg.replace(/(\r\n\r\n|\r\n|\n|\r)/gm, "<br>")
 
   getCurrencySymbol: (currency) ->
-    SYMBOLS[currency] or SYMBOLS.GENERIC
+    SYMBOLS[currency] or currency
 
   getCurrency: (country) ->
     CURRENCY_MAPPING[country]
