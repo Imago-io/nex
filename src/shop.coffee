@@ -163,7 +163,7 @@ class Option extends Spine.Controller
           #Don't filter the variants by this selection's option
           continue if key is @name
           key = Nex.Utils.singularize(key)
-          unless String(variant.meta[key].value) is String(value)
+          unless String(variant.meta[name].value).toLowerCase() is option.toLowerCase()
             passed = false
 
       return passed
