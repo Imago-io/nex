@@ -63,7 +63,7 @@ class Nex.Widgets.Shop extends Spine.Controller
       status = true
       for key, value of @item
         key = Nex.Utils.singularize(key)
-        status = false unless String(variant.meta[key].value) is String(value)
+        status = false unless String(variant.meta[key].value).toLowerCase() is String(value).toLowerCase()
       return status
 
     return variant[0]
