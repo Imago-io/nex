@@ -230,11 +230,11 @@ class Setting extends Spine.Model
     Nex.currency   = @currency()
     $.ajax(
       type: 'GET'
-      url:  'http://www.telize.com/geoip'
+      url:  'http://geoip.nekudo.com/api/'
     ).success((data) =>
-        Nex.country  = data.country_code
+        Nex.country  = data.country.code
         Nex.city     = data.city
-        Nex.region   = data.region_code
+        Nex.region   = ''
         Nex.currency = @currency()
       )
      .error(-> console?.log 'fetch error for geoip')
