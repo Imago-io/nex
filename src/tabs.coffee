@@ -110,7 +110,7 @@ class Tab extends Spine.Controller
       formats:    asset.formats
       path:       asset.path
       lazy:       false
-      animation:  asset.getMeta 'animation', 'scalerotate'
+      animation:  asset.getMeta('animation', ['scalerotate'])[0]
       sizemode:   asset.getMeta('sizemode', ['crop'])[0]
 
   deactivate: ->

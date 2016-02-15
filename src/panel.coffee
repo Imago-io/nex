@@ -17,7 +17,7 @@ Nex.Panel =
 
     # @log '(Nex.Panel) @query: ', @query if Nex.debug
     abortable   = false if @query.length > 1 or not options.abortable
-    fetchassets = if options.fetchAsses is undefined then true else options.fetchAsses
+    fetchassets = if options.fetchAssets is undefined then true else options.fetchAssets
     ajax        = if options.ajax is undefined then true else options.ajax
     lean        = if options.lean is undefined then false else options.lean
     for q in @query

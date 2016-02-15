@@ -96,7 +96,7 @@ class Nex.Widgets.Slider extends Spine.Controller
           slider:      @
           asset:       asset
           sizemode:    @sizemode
-          subslides:   @subslides
+          subslides:   asset.getMeta 'subslides', @subslides
           height:      @height
           width:       @width
           responsive:  @responsive
@@ -255,7 +255,7 @@ class Slide extends Spine.Controller
     for col in result
       # @log col
       if col.kind is 'Collection' and @subslides
-        # @log 'subslides slide', @sizemode, @align
+        # @log 'subslides slide', @subslides, col
         for asset,i in col.items
           @add new Slide
             slider:     @slider
@@ -273,6 +273,7 @@ class Slide extends Spine.Controller
       else
         @kind = if col.kind in ['Image', 'Video'] then col.kind else 'Image'
         # @log 'crop', col.getMeta('crop', 'center center')
+        # @log col
         return @log 'no serving_url for widget in slide' unless col.serving_url
         @add @["media"] = new Nex.Widgets[@kind]
           src:          col.serving_url
