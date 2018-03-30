@@ -258,7 +258,7 @@ class VideoElement extends Spine.Controller
   loadSources: ->
     return unless @player.uuid
     codec = @detectCodec()
-    @player.formats.sort( (a, b) -> return b.height - a.height )
+    @player.formats.sort( (a, b) -> return b.height + a.height )
 
     # @el.empty()
     for format, i in @player.formats
